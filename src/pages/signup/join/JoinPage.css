@@ -11,66 +11,80 @@
   font-family: 'Pretendard-Regular', sans-serif;
 }
 
-body {
+.join-page {
   background-color: #ffffff;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
   display: flex;
-  height: 100vh;
   justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px;
 }
 
-.login {
+.join-container {
   text-align: center;
   max-width: 320px;
   width: 100%;
-  margin-top: 100px;
 }
 
-.logo {
+.join-container svg {
   width: 120px;
-  margin-top: 0px;
+  margin-bottom: 20px;
 }
 
-.join {
+.login-link {
   font-size: 14px;
   color: #5c5c5c;
   margin-bottom: 40px;
 }
 
-.input {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.join a {
+.login-link a {
   color: #91bbff;
   font-weight: bold;
   text-decoration: none;
 }
 
-.input input {
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.join-form input {
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
 }
 
-.male,
-.female {
+.gender-buttons {
+  display: flex;
+  gap: 2%;
+}
+
+.gender-button {
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
   color: #858486;
   font-weight: 500;
-  width: auto;
   padding: 16px;
   width: 49%;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.major {
+.gender-button:hover {
+  border-color: #91bbff;
+  color: #91bbff;
+}
+
+.gender-button.male,
+.gender-button.female {
+  background-color: #ffffff;
+}
+
+.major-select {
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -79,9 +93,10 @@ body {
   font-weight: 500;
   padding: 16px;
   width: 100%;
+  cursor: pointer;
 }
 
-.next {
+.submit-button {
   padding: 14px;
   background-color: #cebeff;
   color: #fff;
@@ -94,6 +109,6 @@ body {
   font-weight: 600;
 }
 
-.next:hover {
+.submit-button:hover {
   background-color: #bbaaf5;
 }
