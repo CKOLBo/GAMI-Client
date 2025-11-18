@@ -7,7 +7,7 @@ export default function EmailPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate('/login');
+    navigate('/signup/password');
   };
 
   return (
