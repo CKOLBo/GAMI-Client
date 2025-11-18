@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom';
 import './LoginPage.css';
+import Logo from '@/assets/Logo/Logo';
 
 export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <img src="/logo.svg" alt="GAMI 로고" className="logo" />
+        <div className="logo">
+          <Logo />
+        </div>
+
         <p className="signup-link">
           GAMI가 처음이라면? <Link to="/signup">회원가입하기</Link>
         </p>
