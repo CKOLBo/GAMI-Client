@@ -6,58 +6,64 @@
   font-style: normal;
 }
 
-* {
-  box-sizing: border-box;
+.login-page {
   font-family: 'Pretendard-Regular', sans-serif;
-}
-
-body {
   background-color: #ffffff;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
   display: flex;
-  height: 100vh;
   justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
-.로그인 {
+.login-container {
   text-align: center;
   max-width: 320px;
   width: 100%;
-  margin-top: 150px;
+  margin-top: 100px;
 }
 
-.logo {
+.login-container .logo {
   width: 120px;
-  margin-top: 0px;
+  margin-bottom: 20px;
 }
 
-.회원가입 {
+.signup-link {
   font-size: 14px;
   color: #5c5c5c;
   margin-bottom: 40px;
 }
 
-.입력 {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.회원가입 a {
+.signup-link a {
   color: #91bbff;
   font-weight: bold;
   text-decoration: none;
 }
 
-.입력 input {
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form input {
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
+  font-family: 'Pretendard-Regular', sans-serif;
 }
 
-.입력 button {
+.login-form input:focus {
+  outline: none;
+  border-color: #91bbff;
+}
+
+.login-form button {
   padding: 14px;
   background-color: #cebeff;
   color: #fff;
@@ -68,22 +74,26 @@ body {
   transition: all 0.3s;
   margin-top: 10px;
   font-weight: 600;
+  font-family: 'Pretendard-Regular', sans-serif;
 }
 
-.입력 button:hover {
+.login-form button:hover {
   background-color: #bbaaf5;
 }
 
-.비번찾기 {
+.password-reset {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.reset-link {
   font-size: 13px;
   color: #5c5c5c;
   text-decoration: none;
-  align-self: flex-end;
 }
 
-.한국 {
-  width: 100%;
-  display: flex;
-  justify-content: right;
-  margin-top: 4px;
+.reset-link:hover {
+  text-decoration: underline;
 }

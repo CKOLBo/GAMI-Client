@@ -1,24 +1,25 @@
 import { Link } from 'react-router-dom';
+import './LoginPage.css';
 
 export default function LoginPage() {
   return (
-    <body>
-      <div className="로그인">
+    <div className="login-page">
+      <div className="login-container">
         <img src="/logo.svg" alt="GAMI 로고" className="logo" />
-        <p className="회원가입">
+        <p className="signup-link">
           GAMI가 처음이라면? <Link to="/signup">회원가입하기</Link>
         </p>
-        <form className="입력">
-          <input type="text" placeholder="이메일" required />
+        <form className="login-form">
+          <input type="email" placeholder="이메일" required />
           <input type="password" placeholder="비밀번호" required />
           <button type="submit">로그인</button>
         </form>
-        <div className="한국">
-          <Link to="/login" className="비번찾기">
+        <div className="password-reset">
+          <Link to="/login" className="reset-link">
             비밀번호 찾기
           </Link>
         </div>
       </div>
-    </body>
+    </div>
   );
 }
