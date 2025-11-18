@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '@/assets/Logo/Logo';
 import './JoinPage.css';
 
 export default function JoinPage() {
@@ -12,7 +13,7 @@ export default function JoinPage() {
   return (
     <div className="join-page">
       <div className="join-container">
-        <img src="/logo.svg" alt="GAMI 로고" className="logo" />
+        <Logo />
         <p className="login-link">
           이미 회원이신가요? <Link to="/login">로그인</Link>
         </p>
