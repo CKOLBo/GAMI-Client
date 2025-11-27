@@ -37,22 +37,6 @@ export default function Password() {
             className="p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[7px] text-[14px] outline-none"
           />
 
-          <div className="bg-[#f6f6f8] p-[16px] rounded-[7px] text-[14px] text-left text-[#858486]">
-            <label className="flex items-center gap-[8px] cursor-pointer">
-              <input type="checkbox" className="cursor-pointer" /> 전체 약관
-              동의
-            </label>
-          </div>
-
-          <label className="text-left text-[14px] text-[#858486] flex items-center gap-[8px] cursor-pointer">
-            <input type="checkbox" required className="cursor-pointer" /> [필수]
-            GAMI 이용 약관에 동의
-          </label>
-          <label className="text-left text-[14px] text-[#858486] flex items-center gap-[8px] cursor-pointer">
-            <input type="checkbox" required className="cursor-pointer" /> [필수]
-            개인정보 수집 및 이용에 동의
-          </label>
-
           <button
             type="submit"
             className="p-[14px] bg-[#cebeff] text-[white] text-[15px] border-none rounded-[7px] cursor-pointer transition-all duration-[300ms] mt-[10px] font-[600] hover:bg-[#bbaaf5] outline-none"
