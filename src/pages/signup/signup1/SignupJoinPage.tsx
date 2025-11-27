@@ -15,13 +15,13 @@ export default function JoinPage() {
         <div className="w-[120px] mb-[20px] mx-auto">
           <Logo />
         </div>
-        <p className="text-[14px] text-[#5c5c5c] mb-[40px]">
+        <p className="text-[14px] font-[500] text-[#333D48] mb-[40px]">
           이미 회원이신가요?{' '}
-          <Link to="/login" className="text-[#91bbff] font-[bold] no-underline">
+          <Link to="/login" className="text-[#73A9FF] font-[700] no-underline">
             로그인
           </Link>
         </p>
-        <form className="flex flex-col gap-[20px]" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-[16px]" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="이름"
