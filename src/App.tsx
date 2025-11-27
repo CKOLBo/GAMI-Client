@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/login/LoginPage';
+import LoginPage from '@/pages/login/LoginPage';
 import Password from '@/pages/signup/signup2/SignupPasswordPage';
-import JoinPage from './pages/signup/signup1/SignupJoinPage';
-import EmailPage from './pages/signup/signup3/SignupEmailPage';
+import JoinPage from '@/pages/signup/signup1/SignupJoinPage';
+import EmailPage from '@/pages/signup/signup3/SignupEmailPage';
 
 function App() {
   return (
