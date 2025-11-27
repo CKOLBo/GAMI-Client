@@ -28,13 +28,13 @@ export default function Password() {
             type="password"
             placeholder="비밀번호"
             required
-            className="p-[16px] border-[1px] border-[solid] border-[#ddd] rounded-[7px] text-[14px] outline-none"
+            className="p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[7px] text-[14px] outline-none"
           />
           <input
             type="password"
             placeholder="비밀번호 확인"
             required
-            className="p-[16px] border-[1px] border-[solid] border-[#ddd] rounded-[7px] text-[14px] outline-none"
+            className="p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[7px] text-[14px] outline-none"
           />
 
           <div className="bg-[#f6f6f8] p-[16px] rounded-[7px] text-[14px] text-left text-[#858486]">
