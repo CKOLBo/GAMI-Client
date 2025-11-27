@@ -41,7 +41,7 @@ export default function Password() {
             type="submit"
             className="p-[14px] bg-[#cebeff] text-[white] text-[15px] border-none rounded-[7px] cursor-pointer transition-all duration-[300ms] mt-[10px] font-[600] hover:bg-[#bbaaf5] outline-none"
           >
-            다음으로
+            회원가입
           </button>
         </form>
       </div>
