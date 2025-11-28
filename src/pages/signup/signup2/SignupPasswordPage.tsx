@@ -24,6 +24,35 @@ export default function Password() {
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-[20px]">
+          <div className="flex gap-[10px] items-stretch">
+            <input
+              type="email"
+              placeholder="이메일"
+              required
+              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#ddd] rounded-[6px] text-[14px] outline-none"
+            />
+            <button
+              type="button"
+              className="p-[16px] bg-[#91bbff] text-[white] text-[14px] border-none rounded-[6px] cursor-pointer transition-all duration-[300ms] font-[600] whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
+            >
+              인증하기
+            </button>
+          </div>
+
+          <div className="flex gap-[10px] items-stretch">
+            <input
+              type="text"
+              placeholder="인증번호"
+              required
+              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#ddd] rounded-[6px] text-[14px] outline-none"
+            />
+            <button
+              type="button"
+              className="p-[16px] bg-[#91bbff] text-[white] text-[14px] border-none rounded-[6px] cursor-pointer transition-all duration-[300ms] font-[600] whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
+            >
+              확인
+            </button>
+          </div>
           <input
             type="password"
             placeholder="비밀번호"
