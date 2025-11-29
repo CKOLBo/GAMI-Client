@@ -10,7 +10,7 @@ export default function Step2() {
   };
 
   return (
-    <div className="bg-[white] min-h-[100vh] flex justify-center items-start pt-[100px]">
+    <div className="text-[14px] bg-[white] min-h-[100vh] flex justify-center items-start pt-[100px]">
       <div className="text-center max-w-[320px] w-[100%]">
         <div className="w-[120px] mb-[28px] mx-auto">
           <Logo />

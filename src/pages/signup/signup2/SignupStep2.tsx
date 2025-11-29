@@ -42,7 +42,7 @@ export default function Step2() {
         <Logo />
       </div>
 
-      <p className="font-[500] mb-[36px] text-center">
+      <p className="text-[14px] font-[500] mb-[36px] text-center">
         자신의{' '}
         <span className="text-[#73A9FF] font-[700] no-underline">전공</span>을
         선택해 주세요.

@@ -16,7 +16,7 @@ export default function Step1() {
         <div className="w-[120px] mb-[28px] mx-auto">
           <Logo />
         </div>
-        <p className="font-[500] text-[#333D48] mb-[36px]">
+        <p className="text-[14px] font-[500] text-[#333D48] mb-[36px]">
           이미 회원이신가요?{' '}
           <Link to="/login" className="text-[#73A9FF] font-[700] no-underline">
             로그인
