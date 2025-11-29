@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/assets/Logo/Logo';
+import NextButton from '@/assets/components/NextButton';
 
 export default function Step1() {
   const navigate = useNavigate();
@@ -54,12 +55,7 @@ export default function Step1() {
             <option value="8기">8기</option>
             <option value="9기">9기</option>
           </select>
-          <button
-            type="submit"
-            className="p-[16px] bg-[#BFA9FF] text-[white] text-[16px] border-none rounded-[6px] cursor-pointer transition-all duration-[300ms] mt-[10px] font-[700] hover:bg-[#AA8EFF] outline-none"
-          >
-            다음으로
-          </button>
+          <NextButton />
         </form>
       </div>
     </div>
