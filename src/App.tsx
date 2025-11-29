@@ -3,6 +3,7 @@ import LoginPage from './pages/login/LoginPage';
 import Password from '@/pages/signup/signup2/SignupPasswordPage';
 import JoinPage from './pages/signup/signup1/SignupJoinPage';
 import EmailPage from './pages/signup/signup3/SignupEmailPage';
+import MainPage from './pages/main/MainPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/signup/join" element={<JoinPage />} />
         <Route path="/signup/email" element={<EmailPage />} />
         <Route path="/signup/password" element={<Password />} />
+        <Route path="/main" element={<MainPage />} />
       </Routes>
     </BrowserRouter>
   );
