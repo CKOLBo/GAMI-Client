@@ -38,7 +38,7 @@ export default function Step2() {
         선택해 주세요.
       </p>
 
-      <div className="flex flex-wrap justify-center gap-[10px] max-w-2xl mb-8">
+      <div className="flex flex-wrap justify-center gap-[10px] max-w-[320px] mb-[32px]">
         {interests.map((interest) => (
           <CategoryButton
             key={interest.id}
