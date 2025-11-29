@@ -43,11 +43,11 @@ export default function LoginPage() {
         <div className="w-[100px] mb-[30px] mx-auto">
           <Logo />
         </div>
-        <p className="text-[13px] text-[#3D3D48] mb-[40px]">
+        <p className="text-[14px] text-[#3D3D48] mb-[40px]">
           <span className="font-[500]">GAMI가 처음이라면?</span>{' '}
           <Link
             to="/signup/join"
-            className="text-[#73A9FF] font-[700] no-underline hover:underline"
+            className="text-[#73A9FF] font-[700] no-underline"
           >
             회원가입하기
           </Link>
@@ -93,7 +93,7 @@ export default function LoginPage() {
         <div className="mt-[8px] text-right">
           <Link
             to="/login"
-            className="font-[500] text-[14px] text-[#3D3D48] no-underline hover:underline"
+            className="font-[500] text-[14px] text-[#3D3D48] no-underline"
           >
             비밀번호 찾기
           </Link>
