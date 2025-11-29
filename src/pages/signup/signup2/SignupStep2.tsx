@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Logo from '@/assets/Logo/Logo';
 import CategoryButton from '@/assets/components/CategoryButton';
+import NextButton from '@/assets/components/NextButton';
 
 export default function Step2() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -48,9 +49,7 @@ export default function Step2() {
         ))}
       </div>
 
-      <button className="bg-purple-400 text-white text-lg font-medium px-32 py-4 rounded-2xl hover:bg-purple-500 transition-colors duration-200">
-        다음으로
-      </button>
+      <NextButton />
     </div>
   );
 }
