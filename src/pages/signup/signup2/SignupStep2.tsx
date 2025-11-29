@@ -40,7 +40,7 @@ export default function Step2() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-8">
       <Logo />
 
-      <p className="font-[500] mb-8 text-center">
+      <p className="font-[500] mb-[40px] text-center">
         자신의{' '}
         <span className="text-[#73A9FF] font-[700] no-underline">전공</span>을
         선택해 주세요.
