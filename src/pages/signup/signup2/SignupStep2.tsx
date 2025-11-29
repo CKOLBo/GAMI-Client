@@ -38,7 +38,7 @@ export default function Step2() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-[120px] mb-[20px] mx-auto">
+      <div className="w-[120px] mb-[28px] mx-auto">
         <Logo />
       </div>
 

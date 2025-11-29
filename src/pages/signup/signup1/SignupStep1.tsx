@@ -13,7 +13,7 @@ export default function Step1() {
   return (
     <div className="bg-[white] min-h-[100vh] flex justify-center items-center">
       <div className="text-center max-w-[320px] w-[100%]">
-        <div className="w-[120px] mb-[20px] mx-auto">
+        <div className="w-[120px] mb-[28px] mx-auto">
           <Logo />
         </div>
         <p className="font-[500] text-[#333D48] mb-[36px]">
