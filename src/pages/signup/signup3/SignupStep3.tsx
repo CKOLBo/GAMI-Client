@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/assets/Logo/Logo';
+import InputPassword from '@/assets/components/InputPassword';
 
 export default function Step2() {
   const navigate = useNavigate();
@@ -53,12 +54,7 @@ export default function Step2() {
               인증하기
             </button>
           </div>
-          <input
-            type="password"
-            placeholder="비밀번호"
-            required
-            className="p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[7px] text-[14px] outline-none"
-          />
+          <InputPassword />
           <input
             type="password"
             placeholder="비밀번호 확인"
