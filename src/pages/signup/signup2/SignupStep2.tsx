@@ -38,9 +38,11 @@ export default function Step2() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-8">
-      <Logo />
+      <div className="w-[120px] mb-[20px] mx-auto">
+        <Logo />
+      </div>
 
-      <p className="font-[500] mb-[40px] text-center">
+      <p className="font-[500] mb-[36px] text-center">
         자신의{' '}
         <span className="text-[#73A9FF] font-[700] no-underline">전공</span>을
         선택해 주세요.
