@@ -29,7 +29,7 @@ export default function Step2() {
               type="email"
               placeholder="이메일"
               required
-              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#ddd] rounded-[6px] text-[14px] outline-none"
+              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] outline-none"
             />
             <button
               type="button"
@@ -44,7 +44,7 @@ export default function Step2() {
               type="text"
               placeholder="인증번호"
               required
-              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#ddd] rounded-[6px] text-[14px] outline-none"
+              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] outline-none"
             />
             <button
               type="button"
