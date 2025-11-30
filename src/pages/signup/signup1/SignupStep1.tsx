@@ -2,10 +2,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Logo from '@/assets/Logo/Logo';
 import NextButton from '@/assets/components/NextButton';
+import GenderButton from '@/assets/components/GenderButton';
 
 export default function Step1() {
   const navigate = useNavigate();
-  const [selectedGender, setSelectedGender] = useState<string>('');
+  const [selectedGender, setSelectedGender] = useState<'male' | 'female' | ''>(
+    ''
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,28 +35,18 @@ export default function Step1() {
             className="p-[16px] border border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] placeholder:text-[#6D6F79] text-[#6D6F79] text-[14px] outline-none focus:outline-none focus:border-[#73A9FF]"
           />
           <div className="flex gap-[2%]">
-            <button
-              type="button"
+            <GenderButton
+              gender="male"
+              label="남자"
+              isSelected={selectedGender === 'male'}
               onClick={() => setSelectedGender('male')}
-              className={`border-[1px] border-[solid] rounded-[6px] text-[14px] font-[500] p-[16px] w-[49%] cursor-pointer transition-all duration-[300ms] outline-none ${
-                selectedGender === 'male'
-                  ? 'bg-[#BFA9FF] text-[white] border-[#BFA9FF]'
-                  : 'bg-[white] border-[#B7BCC8] text-[#6D6F79] hover:border-[#BFA9FF] hover:text-[#BFA9FF]'
-              }`}
-            >
-              남자
-            </button>
-            <button
-              type="button"
+            />
+            <GenderButton
+              gender="female"
+              label="여자"
+              isSelected={selectedGender === 'female'}
               onClick={() => setSelectedGender('female')}
-              className={`border-[1px] border-[solid] rounded-[6px] text-[14px] font-[500] p-[16px] w-[49%] cursor-pointer transition-all duration-[300ms] outline-none ${
-                selectedGender === 'female'
-                  ? 'bg-[#BFA9FF] text-[white] border-[#BFA9FF]'
-                  : 'bg-[white] border-[#B7BCC8] text-[#6D6F79] hover:border-[#BFA9FF] hover:text-[#BFA9FF]'
-              }`}
-            >
-              여자
-            </button>
+            />
           </div>
           <select
             required
