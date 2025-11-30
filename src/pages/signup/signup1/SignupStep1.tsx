@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Logo from '@/assets/svg/Logo/Logo';
 import NextButton from '@/assets/components/NextButton';
 import GenderButton from '@/assets/components/GenderButton';
+import Arrow from '@/assets/svg/Arrow';
 
 export default function Step1() {
   const navigate = useNavigate();
@@ -66,22 +67,9 @@ export default function Step1() {
               >
                 {selectedGeneration || '기수'}
               </span>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <Arrow
                 className={`transition-transform duration-[300ms] ${isGenerationOpen ? 'rotate-180' : ''}`}
-              >
-                <path
-                  d="M15 7.5L10 12.5L5 7.5"
-                  stroke="#6D6F79"
-                  strokeWidth="1.66667"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              />
             </button>
 
             {isGenerationOpen && (
