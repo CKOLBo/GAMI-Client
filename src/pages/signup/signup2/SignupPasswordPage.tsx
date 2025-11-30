@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/assets/Logo/Logo';
-import './PasswordPage.css';
+import '@/pages/signup/signup2/SignupPasswordPage.css';
 
 export default function Password() {
   const navigate = useNavigate();

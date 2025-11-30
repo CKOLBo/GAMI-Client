@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/assets/Logo/Logo';
-import './JoinPage.css';
+import '@/pages/signup/signup1/SignupJoinPage.css';
 
 export default function JoinPage() {
   const navigate = useNavigate();

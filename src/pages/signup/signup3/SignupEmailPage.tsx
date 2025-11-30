@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@/assets/Logo/Logo';
-import './EmailPage.css';
+import '@/pages/signup/signup3/SignupEmailPage.css';
 
 export default function EmailPage() {
   const navigate = useNavigate();
