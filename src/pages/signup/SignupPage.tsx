@@ -90,7 +90,7 @@ export default function Signup() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="p-[16px] border border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] placeholder:text-[#6D6F79] text-[#6D6F79] text-[14px] outline-none focus:outline-none focus:border-[#73A9FF]"
+            className="p-[16px] border border-[1px] border-[solid] border-[#B7BCC8] rounded-[8px] placeholder:text-[#6D6F79] text-[#6D6F79] text-[14px] outline-none focus:outline-none focus:border-[#73A9FF]"
           />
           <div className="flex gap-[2%]">
             <GenderButton
@@ -111,7 +111,7 @@ export default function Signup() {
             <button
               type="button"
               onClick={() => setIsGenerationOpen(!isGenerationOpen)}
-              className="bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] font-[500] p-[16px] w-[100%] cursor-pointer outline-none text-left flex justify-between items-center"
+              className="bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[8px] text-[14px] font-[500] p-[16px] w-[100%] cursor-pointer outline-none text-left flex justify-between items-center"
             >
               <span
                 className={
@@ -126,7 +126,7 @@ export default function Signup() {
             </button>
 
             {isGenerationOpen && (
-              <div className="absolute top-[calc(100%+4px)] left-0 w-[100%] bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] overflow-hidden z-10">
+              <div className="absolute top-[calc(100%+4px)] left-0 w-[100%] bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[8px] overflow-hidden z-10">
                 {generations.map((gen) => (
                   <button
                     key={gen}
@@ -200,11 +200,11 @@ export default function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] outline-none focus:border-[#73A9FF]"
+              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[8px] text-[14px] outline-none focus:border-[#73A9FF]"
             />
             <button
               type="button"
-              className="p-[16px] bg-[#73A9FF] text-[white] text-[14px] border-none rounded-[6px] cursor-pointer transition-all duration-[300ms] font-[600] whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
+              className="p-[16px] bg-[#73A9FF] text-[white] text-[14px] border-none rounded-[8px] cursor-pointer transition-all duration-[300ms] font-[600] whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
             >
               번호 발송
             </button>
@@ -217,11 +217,11 @@ export default function Signup() {
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
               required
-              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] outline-none focus:border-[#73A9FF]"
+              className="flex-[1] p-[16px] border-[1px] border-[solid] border-[#B7BCC8] rounded-[8px] text-[14px] outline-none focus:border-[#73A9FF]"
             />
             <button
               type="button"
-              className="p-[16px] bg-[#73A9FF] text-[white] text-[14px] border-none rounded-[6px] cursor-pointer transition-all duration-[300ms] font-[600] whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
+              className="p-[16px] bg-[#73A9FF] text-[white] text-[14px] border-none rounded-[8px] cursor-pointer transition-all duration-[300ms] font-[600] whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
             >
               인증하기
             </button>
@@ -238,7 +238,7 @@ export default function Signup() {
 
           <button
             type="submit"
-            className="p-[16px] bg-[#BFA9FF] text-[white] text-[16px] border-none rounded-[7px] cursor-pointer transition-all duration-[300ms] mt-[10px] font-[700] hover:bg-[#AA8EFF] outline-none"
+            className="p-[16px] bg-[#BFA9FF] text-[white] text-[16px] border-none rounded-[8px] cursor-pointer transition-all duration-[300ms] mt-[10px] font-[700] hover:bg-[#AA8EFF] outline-none"
           >
             회원가입
           </button>
