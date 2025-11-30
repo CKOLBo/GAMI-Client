@@ -6,7 +6,6 @@ interface GenderButtonProps {
 }
 
 export default function GenderButton({
-  gender,
   label,
   isSelected,
   onClick,
