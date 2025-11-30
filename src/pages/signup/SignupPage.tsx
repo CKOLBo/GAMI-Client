@@ -60,6 +60,10 @@ export default function Signup() {
 
   const handleStep3Submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (password !== passwordConfirm) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
     console.log({
       name,
       selectedGender,
