@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '@/assets/Logo/Logo';
+import Logo from '@/assets/svg/Logo/Logo';
 import InputPassword from '@/assets/components/InputPassword';
 
 export default function Step2() {

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Logo from '@/assets/Logo/Logo';
+import Logo from '@/assets/svg/Logo/Logo';
 import NextButton from '@/assets/components/NextButton';
 import GenderButton from '@/assets/components/GenderButton';
 
@@ -9,11 +9,15 @@ export default function Step1() {
   const [selectedGender, setSelectedGender] = useState<'male' | 'female' | ''>(
     ''
   );
+  const [selectedGeneration, setSelectedGeneration] = useState<string>('');
+  const [isGenerationOpen, setIsGenerationOpen] = useState<boolean>(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     navigate('/signup2');
   };
+
+  const generations = ['7기', '8기', '9기'];
 
   return (
     <div className="bg-[white] min-h-[100vh] flex justify-center items-center">
@@ -48,18 +52,57 @@ export default function Step1() {
               onClick={() => setSelectedGender('female')}
             />
           </div>
-          <select
-            required
-            defaultValue=""
-            className="bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] text-[#6D6F79] font-[500] p-[16px] w-[100%] cursor-pointer appearance-none outline-none"
-          >
-            <option value="" disabled>
-              기수
-            </option>
-            <option value="7기">7기</option>
-            <option value="8기">8기</option>
-            <option value="9기">9기</option>
-          </select>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsGenerationOpen(!isGenerationOpen)}
+              className="bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] text-[14px] font-[500] p-[16px] w-[100%] cursor-pointer outline-none text-left flex justify-between items-center"
+            >
+              <span
+                className={
+                  selectedGeneration ? 'text-[#333D48]' : 'text-[#6D6F79]'
+                }
+              >
+                {selectedGeneration || '기수'}
+              </span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`transition-transform duration-[300ms] ${isGenerationOpen ? 'rotate-180' : ''}`}
+              >
+                <path
+                  d="M15 7.5L10 12.5L5 7.5"
+                  stroke="#6D6F79"
+                  strokeWidth="1.66667"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+
+            {isGenerationOpen && (
+              <div className="absolute top-[calc(100%+4px)] left-0 w-[100%] bg-[white] border-[1px] border-[solid] border-[#B7BCC8] rounded-[6px] overflow-hidden z-10">
+                {generations.map((gen) => (
+                  <button
+                    key={gen}
+                    type="button"
+                    onClick={() => {
+                      setSelectedGeneration(gen);
+                      setIsGenerationOpen(false);
+                    }}
+                    className="w-[100%] p-[16px] text-left text-[14px] font-[500] text-[#333D48] hover:bg-[#F5F6F8] transition-colors duration-[200ms] border-none cursor-pointer"
+                  >
+                    {gen}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <NextButton />
         </form>
       </div>
