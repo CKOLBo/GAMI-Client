@@ -46,7 +46,7 @@ export default function LoginPage() {
         <p className="text-[14px] text-[#3D3D48] mb-[40px]">
           <span className="font-[500]">GAMI가 처음이라면?</span>{' '}
           <Link
-            to="/signup/join"
+            to="/signup1"
             className="text-[#73A9FF] font-[700] no-underline"
           >
             회원가입하기
