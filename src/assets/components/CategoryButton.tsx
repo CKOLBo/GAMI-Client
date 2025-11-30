@@ -11,6 +11,7 @@ export default function CategoryButton({
 }: CategoryButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`px-[12px] py-[12px] rounded-full text-[14px] font-[500] transition-all duration-200 ${
         isSelected
