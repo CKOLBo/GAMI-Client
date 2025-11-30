@@ -32,7 +32,10 @@ export default function LoginPage() {
       if (email === 'test@gsm.hs.kr' && password === '1234') {
         navigate('/main');
       } else {
-        setErrors({ email: '', password: '이메일 또는 비밀번호가 일치하지 않습니다.' });
+        setErrors({
+          email: '',
+          password: '이메일 또는 비밀번호가 일치하지 않습니다.',
+        });
       }
     }
   };
@@ -43,11 +46,11 @@ export default function LoginPage() {
         <div className="w-[100px] mb-[30px] mx-auto">
           <Logo />
         </div>
-        <p className="text-[13px] text-[#3D3D48] mb-[40px]">
+        <p className="text-[14px] text-[#3D3D48] mb-[40px]">
           <span className="font-[500]">GAMI가 처음이라면?</span>{' '}
           <Link
-            to="/signup/join"
-            className="text-[#73A9FF] font-[700] no-underline hover:underline"
+            to="/signup1"
+            className="text-[#73A9FF] font-[700] no-underline"
           >
             회원가입하기
           </Link>
@@ -62,7 +65,7 @@ export default function LoginPage() {
           />
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="비밀번호"
               className="w-full h-[52px] px-[20px] pr-14 border border-[#B7BCC8] rounded-[8px] text-[14px] text-[#3D3D48] placeholder:text-[#6D6F79] focus:outline-none focus:border-[#73A9FF]"
@@ -93,7 +96,7 @@ export default function LoginPage() {
         <div className="mt-[8px] text-right">
           <Link
             to="/login"
-            className="font-[500] text-[14px] text-[#3D3D48] no-underline hover:underline"
+            className="font-[500] text-[14px] text-[#3D3D48] no-underline"
           >
             비밀번호 찾기
           </Link>
