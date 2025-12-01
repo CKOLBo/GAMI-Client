@@ -94,7 +94,7 @@ export default function Signup() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="p-4 border border-solid border-[#B7BCC8] rounded-lg placeholder:text-[#6D6F79] text-[#3D3D48] text-sm outline-none focus:outline-none focus:border-[#73A9FF]"
+            className="p-4 border border-solid border-[#B7BCC8] rounded-lg placeholder:text-[#6D6F79] placeholder:font-medium text-[#3D3D48] text-sm outline-none focus:outline-none focus:border-[#73A9FF]"
           />
           <div className="flex gap-[2%]">
             <GenderButton
@@ -204,7 +204,7 @@ export default function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-1 p-4 border border-solid border-[#B7BCC8] placeholder:text-[#6D6F79] text-[#3D3D48] rounded-lg text-sm outline-none focus:border-[#73A9FF]"
+              className="flex-1 p-4 border border-solid border-[#B7BCC8] placeholder:text-[#6D6F79] placeholder:font-medium text-[#3D3D48] rounded-lg text-sm outline-none focus:border-[#73A9FF]"
             />
             <button
               type="button"
