@@ -9,24 +9,22 @@ import InputPassword from '@/assets/components/InputPassword';
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [step, setStep] = useState(1);
 
   const [name, setName] = useState('');
-  const [selectedGender, setSelectedGender] = useState<'male' | 'female' | ''>(
-    ''
-  );
-  const [selectedGeneration, setSelectedGeneration] = useState<string>('');
-  const [isGenerationOpen, setIsGenerationOpen] = useState<boolean>(false);
+  const [gender, setGender] = useState<'male' | 'female' | ''>('');
+  const [generation, setGeneration] = useState<string>('');
+  const [isGenOpen, setIsGenOpen] = useState<boolean>(false);
 
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [interests, setInterests] = useState<string[]>([]);
 
   const [email, setEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+  const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
 
   const generations = ['7기', '8기', '9기'];
-  const interests = [
+  const interestList = [
     { id: 'FE', label: 'FE' },
     { id: 'BE', label: 'BE' },
     { id: 'iOS', label: 'iOS' },
@@ -43,32 +41,32 @@ export default function Signup() {
   ];
 
   const toggleInterest = (id: string) => {
-    setSelectedInterests((prev) =>
+    setInterests((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
   const handleStep1Submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setCurrentStep(2);
+    setStep(2);
   };
 
   const handleStep2Submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setCurrentStep(3);
+    setStep(3);
   };
 
   const handleStep3Submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== passwordConfirm) {
+    if (password !== confirmPw) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
     console.log({
       name,
-      selectedGender,
-      selectedGeneration,
-      selectedInterests,
+      gender,
+      generation,
+      interests,
       email,
       password,
     });
@@ -100,44 +98,42 @@ export default function Signup() {
             <GenderButton
               gender="male"
               label="남자"
-              isSelected={selectedGender === 'male'}
-              onClick={() => setSelectedGender('male')}
+              isSelected={gender === 'male'}
+              onClick={() => setGender('male')}
             />
             <GenderButton
               gender="female"
               label="여자"
-              isSelected={selectedGender === 'female'}
-              onClick={() => setSelectedGender('female')}
+              isSelected={gender === 'female'}
+              onClick={() => setGender('female')}
             />
           </div>
 
           <div className="relative">
             <button
               type="button"
-              onClick={() => setIsGenerationOpen(!isGenerationOpen)}
+              onClick={() => setIsGenOpen(!isGenOpen)}
               className="bg-white border border-solid border-[#B7BCC8] rounded-lg text-sm font-medium p-4 w-full cursor-pointer outline-none text-left flex justify-between items-center"
             >
               <span
-                className={
-                  selectedGeneration ? 'text-[#333D48]' : 'text-[#6D6F79]'
-                }
+                className={generation ? 'text-[#333D48]' : 'text-[#6D6F79]'}
               >
-                {selectedGeneration || '기수'}
+                {generation || '기수'}
               </span>
               <Arrow
-                className={`transition-transform duration-300 ${isGenerationOpen ? 'rotate-180' : ''}`}
+                className={`transition-transform duration-300 ${isGenOpen ? 'rotate-180' : ''}`}
               />
             </button>
 
-            {isGenerationOpen && (
+            {isGenOpen && (
               <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white border border-solid border-[#B7BCC8] rounded-lg overflow-hidden z-10">
                 {generations.map((gen) => (
                   <button
                     key={gen}
                     type="button"
                     onClick={() => {
-                      setSelectedGeneration(gen);
-                      setIsGenerationOpen(false);
+                      setGeneration(gen);
+                      setIsGenOpen(false);
                     }}
                     className="w-full p-4 text-left text-sm font-medium text-[#333D48] bg-white hover:bg-[#F5F6F8] transition-colors duration-200 border-none cursor-pointer"
                   >
@@ -168,11 +164,11 @@ export default function Signup() {
 
       <form onSubmit={handleStep2Submit} className="flex flex-col items-center">
         <div className="flex flex-wrap justify-center gap-2.5 max-w-80 mb-8">
-          {interests.map((interest) => (
+          {interestList.map((interest) => (
             <CategoryButton
               key={interest.id}
               label={interest.label}
-              isSelected={selectedInterests.includes(interest.id)}
+              isSelected={interests.includes(interest.id)}
               onClick={() => toggleInterest(interest.id)}
             />
           ))}
@@ -218,8 +214,8 @@ export default function Signup() {
             <input
               type="text"
               placeholder="인증번호"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
               required
               className="flex-1 p-4 border border-solid border-[#B7BCC8] rounded-lg text-sm outline-none focus:border-[#73A9FF]"
             />
@@ -236,8 +232,8 @@ export default function Signup() {
           />
           <InputPassword
             placeholder="비밀번호 확인"
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
+            value={confirmPw}
+            onChange={(e) => setConfirmPw(e.target.value)}
           />
 
           <button
@@ -252,7 +248,7 @@ export default function Signup() {
   );
 
   const renderCurrentStep = () => {
-    switch (currentStep) {
+    switch (step) {
       case 1:
         return renderStep1();
       case 2:
