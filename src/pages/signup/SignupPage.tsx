@@ -7,7 +7,7 @@ import Arrow from '@/assets/svg/Arrow';
 import CategoryButton from '@/assets/components/CategoryButton';
 import InputPassword from '@/assets/components/InputPassword';
 
-export default function Signup() {
+export default function SignupPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
