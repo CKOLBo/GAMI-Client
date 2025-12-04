@@ -179,8 +179,8 @@ export default function SignupPage() {
   );
 
   const renderStep3 = () => (
-    <div className="text-sm bg-white min-h-screen flex justify-center items-start pt-[100px]">
-      <div className="text-center max-w-80 w-full">
+    <div className="text-sm bg-white min-h-screen flex justify-center">
+      <div className="text-center flex flex-col justify-center max-w-80 w-full">
         <div className="w-[120px] mb-7 mx-auto">
           <Logo />
         </div>
@@ -200,7 +200,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-1 p-4 border border-solid border-[#B7BCC8] placeholder:text-[#6D6F79] placeholder:font-medium text-[#3D3D48] rounded-lg text-sm outline-none focus:border-[#73A9FF]"
+              className="flex-1 p-4 border border-solid border-[#B7BCC8] placeholder:text-[#6D6F79] placeholder:font-medium rounded-lg text-sm outline-none focus:border-[#73A9FF]"
             />
             <button
               type="button"
@@ -217,7 +217,7 @@ export default function SignupPage() {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               required
-              className="flex-1 p-4 border border-solid border-[#B7BCC8] rounded-lg text-sm outline-none focus:border-[#73A9FF]"
+              className="flex-1 p-4 border border-solid placeholder:font-medium border-[#B7BCC8] placeholder:text-[#6D6F79] rounded-lg text-sm outline-none focus:border-[#73A9FF]"
             />
             <button
               type="button"
