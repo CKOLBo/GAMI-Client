@@ -43,10 +43,10 @@ export default function SigninPage() {
   return (
     <div className="bg-[#ffffff] h-screen flex justify-center items-center p-5 overflow-hidden">
       <div className="text-center max-w-xs w-full">
-        <div className="w-25 mb-[30px] mx-auto">
+        <div className="w-25 mb-7.5 mx-auto">
           <Logo />
         </div>
-        <p className="text-[14px] text-[#3D3D48] mb-[40px]">
+        <p className="text-sm text-[#3D3D48] mb-10">
           <span className="font-[500]">GAMI가 처음이라면?</span>{' '}
           <Link
             to="/signup"
@@ -61,24 +61,24 @@ export default function SigninPage() {
             type="text"
             name="email"
             placeholder="이메일"
-            className="w-full h-[52px] px-[20px] border border-[#B7BCC8] rounded-[8px] text-[14px] text-[#3D3D48] placeholder:text-[#6D6F79] focus:outline-none focus:border-[#73A9FF] mb-[14px]"
+            className="w-full h-13 px-5 border border-[#B7BCC8] rounded-lg text-sm text-[#3D3D48] placeholder:text-[#6D6F79] focus:outline-none focus:border-[#73A9FF] mb-3.5"
           />
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="비밀번호"
-              className="w-full h-[52px] px-[20px] pr-14 border border-[#B7BCC8] rounded-[8px] text-[14px] text-[#3D3D48] placeholder:text-[#6D6F79] focus:outline-none focus:border-[#73A9FF]"
+              className="w-full h-13 px-5 pr-14 border border-[#B7BCC8] rounded-lg text-sm text-[#3D3D48] placeholder:text-[#6D6F79] focus:outline-none focus:border-[#73A9FF]"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-[10px] top-1/2 -translate-y-1/2 flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer"
             >
               {showPassword ? <Show /> : <Hide />}
             </button>
           </div>
-          <div className="h-[22px] mb-[14px]">
+          <div className="h-5.5 mb-3.5">
             {(errors.email || errors.password) && (
               <p className="text-xs text-[#FF6B6B] text-left m-0 mt-1">
                 {errors.email || errors.password}
