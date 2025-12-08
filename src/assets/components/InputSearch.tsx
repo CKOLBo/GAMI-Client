@@ -1,4 +1,4 @@
-import Search from '@/assets/svg/search/Search';
+import Search from '@/assets/svg/Search';
 
 interface InputSearchProps {
   placeholder?: string;
