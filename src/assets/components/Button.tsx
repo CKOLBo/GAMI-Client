@@ -12,7 +12,7 @@ export default function Button({ text, to }: ButtonProps) {
       <button
         onClick={() => navigate(to)}
         type="button"
-        className="rounded-[10px] bg-main-1 w-38 h-16 text-white font-bold text-2xl"
+        className="rounded-[10px] bg-main-1 w-38 h-16 cursor-pointer text-white font-bold text-2xl"
       >
         {text}
       </button>
