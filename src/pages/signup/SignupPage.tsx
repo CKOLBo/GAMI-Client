@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Logo from '@/assets/svg/Logo/Logo';
+import Logo from '@/assets/svg/Logo';
 import NextButton from '@/assets/components/NextButton';
 import GenderButton from '@/assets/components/GenderButton';
 import Arrow from '@/assets/svg/Arrow';
