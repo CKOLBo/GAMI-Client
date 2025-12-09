@@ -23,7 +23,7 @@ export default function Post({
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <div className="flex flex-row justify-between w-375 border-y-2 -mt-[2px] cursor-pointer border-gray-2">
+    <div className="flex flex-col lg:flex-row justify-between w-full lg:w-375 border-y-2 -mt-[2px] cursor-pointer border-gray-2 px-4 lg:px-0">
       <div>
         <div>
           <p className="font-bold text-[32px] mt-11 mb-3">{title}</p>
