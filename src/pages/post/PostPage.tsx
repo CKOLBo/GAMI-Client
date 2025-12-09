@@ -53,7 +53,7 @@ export default function PostPage() {
           <div className="w-full sm:flex-1 lg:w-auto">
             <InputSearch />
           </div>
-          <div className="flex gap-14">
+          <div className="flex gap-3 lg:gap-14">
             <Button text="글 쓰기" to="/post/write" />
             <Button text="내가 쓴 글" to="/post/my" />
           </div>
