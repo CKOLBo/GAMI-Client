@@ -49,7 +49,7 @@ export default function PostPage() {
             익명 게시판
           </p>
         </div>
-        <div className="flex flex-row gap-114">
+        <div className="flex flex-col sm:flex-row w-full lg:w-auto items-stretch sm:items-center gap-4 lg:gap-114">
           <div>
             <InputSearch />
           </div>
