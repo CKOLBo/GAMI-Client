@@ -24,16 +24,22 @@ export default function Post({
 
   return (
     <div className="flex flex-col lg:flex-row justify-between w-full lg:w-375 border-y-2 -mt-[2px] cursor-pointer border-gray-2 px-4 lg:px-0">
-      <div>
+      <div className="flex-1">
         <div>
-          <p className="font-bold text-[32px] mt-11 mb-3">{title}</p>
-          <p className="text-gray-3 text-2xl font-bold mb-9">{content}</p>
+          <p className="font-bold text-2xl lg:text-[32px] mt-6 lg:mt-11 mb-2 lg:mb-3">
+            {title}
+          </p>
+          <p className="text-gray-3 text-lg lg:text-2xl font-bold mb-4 lg:mb-9">
+            {content}
+          </p>
         </div>
-        <div className="flex flex-row mb-9">
-          <p className="text-gray-1 text-xl font-bold w-10 h-6 mr-[18px]">
+        <div className="flex flex-row mb-4 lg:mb-9">
+          <p className="text-gray-1 text-base lg:text-xl font-bold w-10 h-6 mr-3 lg:mr-[18px]">
             {author}
           </p>
-          <p className="text-gray-3 text-xl font-bold">{timeAgo}</p>
+          <p className="text-gray-3 text-base lg:text-xl font-bold">
+            {timeAgo}
+          </p>
         </div>
       </div>
 
