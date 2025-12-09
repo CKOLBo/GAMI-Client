@@ -37,8 +37,8 @@ export default function Post({
         </div>
       </div>
 
-      <div className="flex items-center row-gap-11 mr-40">
-        <div className="flex flex-row">
+      <div className="flex items-center mr-40">
+        <div className="flex flex-row gap-11">
           <button
             className="flex items-center gap-5"
             onClick={() => setIsLiked(!isLiked)}
@@ -48,7 +48,7 @@ export default function Post({
               {likeCount}
             </span>
           </button>
-          <button className="flex items-center gap-1.5">
+          <button className="flex items-center gap-5">
             <Comment />
             <span className="text-[32px] font-normal text-gray-1">
               {commentCount}
