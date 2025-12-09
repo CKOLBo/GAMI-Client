@@ -3,35 +3,58 @@ import Hart from '@/assets/svg/Hart';
 import Comment from '@/assets/svg/Comment';
 import Report from '@/assets/svg/Report';
 
-export default function Post() {
+interface PostProps {
+  title: string;
+  content: string;
+  author?: string;
+  timeAgo: string;
+  likeCount: number;
+  commentCount: number;
+}
+
+export default function Post({
+  title = '제목이 들어갈 곳',
+  content = '내용이 들어갈 곳',
+  author = '익명',
+  timeAgo = '1시간 전',
+  likeCount = 3,
+  commentCount = 0,
+}: PostProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
     <div className="flex flex-row justify-between w-375 border-t-2 border-b-2 border-gray-3">
       <div>
         <div>
-          <p className="font-bold text-[32px] mt-11 mb-3">제목이 들어갈 곳</p>
-          <p className="text-gray-3 text-2xl font-bold mb-9">
-            내용이 들어갈 곳
-          </p>
+          <p className="font-bold text-[32px] mt-11 mb-3">{title}</p>
+          <p className="text-gray-3 text-2xl font-bold mb-9">{content}</p>
         </div>
         <div className="flex flex-row mb-9">
           <p className="text-[#333D48] text-xl font-bold w-10 h-6 mr-[18px]">
-            익명
+            {author}
           </p>
-          <p className="text-gray-3 text-xl font-bold">1시간 전</p>
+          <p className="text-gray-3 text-xl font-bold">{timeAgo}</p>
         </div>
       </div>
 
-      <div className="flex flex-col justify-center">
+      <div className="flex items-center row-gap-11 mr-40">
         <div className="flex flex-row">
-          <button className="h-[28px]" onClick={() => setIsLiked(!isLiked)}>
+          <button
+            className="flex items-center gap-5"
+            onClick={() => setIsLiked(!isLiked)}
+          >
             <Hart isSelect={isLiked} />
+            <span className="text-[32px] font-normal text-[#333D48]">
+              {likeCount}
+            </span>
           </button>
-          <button className="h-[28px]">
+          <button className="flex items-center gap-1.5">
             <Comment />
+            <span className="text-[32px] font-normal text-[#333D48]">
+              {commentCount}
+            </span>
           </button>
-          <button className="h-[28px]">
+          <button>
             <Report />
           </button>
         </div>
