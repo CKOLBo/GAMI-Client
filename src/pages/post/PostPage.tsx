@@ -44,22 +44,30 @@ export default function PostPage() {
 
   return (
     <div className="w-full">
-      <div className="max-w-[75vw] mx-auto px-[0.83vw] lg:px-[1.25vw]">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center my-[0.83vw] sm:my-[1.25vw] lg:my-[3.33vw] gap-[0.83vw] lg:gap-[5.21vw]">
+      <div className="max-w-[1200px] mx-auto px-4 lg:px-6">
+        <div
+          className="flex flex-col lg:flex-row items-start lg:items-center
+                        my-4 sm:my-6 lg:my-16
+                        gap-3 lg:gap-20"
+        >
           <div className="w-full lg:w-auto shrink-0">
-            <p className="text-[1.25vw] sm:text-[1.56vw] lg:text-[2.08vw] xl:text-[2.08vw] font-bold">
+            <p className="text-xl sm:text-2xl lg:text-4xl font-bold">
               익명 게시판
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row w-full flex-wrap items-stretch sm:items-center gap-[0.63vw] sm:gap-[0.83vw] justify-between">
-            <div className="w-full sm:flex-1 max-w-[20.83vw]">
+          <div
+            className="flex flex-col sm:flex-row w-full flex-wrap
+                          items-stretch sm:items-center
+                          gap-3 sm:gap-4 justify-between"
+          >
+            <div className="w-full sm:flex-1 max-w-[400px]">
               <InputSearch />
             </div>
 
-            <div className="flex flex-wrap gap-[0.63vw] sm:gap-[0.83vw] lg:gap-[1.25vw]">
-              <Button text="글 쓰기" to="/post/write" />
-              <Button text="내가 쓴 글" to="/post/my" />
+            <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-6">
+              <Button text="글 쓰기" to="" />
+              <Button text="내가 쓴 글" to="" />
             </div>
           </div>
         </div>
