@@ -25,14 +25,14 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-[180px] h-screen bg-[#FFFFFF] border-r border-[#B7BCC8] flex flex-col">
-      <Link to="/main" className="p-[20px] flex justify-center cursor-pointer">
+    <div className="w-[220px] h-screen bg-[#FFFFFF] border-r border-[#B7BCC8] flex flex-col">
+      <Link to="/main" className="pt-[28px] flex justify-center cursor-pointer">
         <div className="w-[116px] justify-center flex">
-          <Logo size="sm" />
+          <Logo size="md" />
         </div>
       </Link>
 
-      <nav className="flex flex-col gap-[12px] px-[12px] mt-[80px]">
+      <nav className="flex flex-col gap-[16px] px-[16px] mt-[100px]">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -41,8 +41,8 @@ export default function Sidebar() {
               key={item.path}
               to={item.path}
               className={`
-                flex items-center gap-[16px] px-[8px] py-[8px] rounded-[12px]
-                text-[14px] font-[600] no-underline transition-colors
+                flex items-center gap-[22px] px-[10px] py-[10px] rounded-[12px]
+                text-[16px] font-[600] no-underline transition-colors
                 ${
                   isActive
                     ? 'bg-[#F1ECFF] text-[#BFA9FF]'
@@ -59,7 +59,7 @@ export default function Sidebar() {
         })}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-[16px] px-[8px] py-[8px] rounded-[12px] text-[14px] font-[600] text-[#333D48] hover:bg-[#F5F5F5] transition-colors bg-transparent border-0 cursor-pointer text-left w-full"
+          className="flex items-center gap-[22px] px-[10px] py-[10px] rounded-[12px] text-[16px] font-[600] text-[#333D48] hover:bg-[#F5F5F5] transition-colors bg-transparent border-0 cursor-pointer text-left w-full"
         >
           <LogoutIcon className="text-[#333D48]" />
           <span>로그아웃</span>
