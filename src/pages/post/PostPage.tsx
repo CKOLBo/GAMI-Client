@@ -44,7 +44,7 @@ export default function PostPage() {
 
   return (
     <div className="w-full">
-      <div className="max-w-[1200px] mx-auto px-4 lg:px-6">
+      <div className="max-w-[1500px] mx-auto px-4 lg:px-6">
         <div
           className="flex flex-col lg:flex-row items-start lg:items-center
                         my-4 sm:my-6 lg:my-16
