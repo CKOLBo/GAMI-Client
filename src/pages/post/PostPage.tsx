@@ -50,7 +50,7 @@ export default function PostPage() {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row w-full lg:w-auto items-stretch sm:items-center gap-4 lg:gap-114">
-          <div>
+          <div className="w-full sm:flex-1 lg:w-auto">
             <InputSearch />
           </div>
           <div className="flex gap-14">
