@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import HeartIcon from '@/assets/svg/main/HeartIcon';
 import HeartFilledIcon from '@/assets/svg/main/HeartFilledIcon';
 import CommentIcon from '@/assets/svg/main/CommentIcon';
 
 interface MainPostProps {
+  postId: number | string;
   title: string;
   content: string;
   likeCount: number;
@@ -12,6 +14,7 @@ interface MainPostProps {
 }
 
 export default function MainPost({
+  postId,
   title,
   content,
   likeCount,
@@ -21,7 +24,10 @@ export default function MainPost({
   const [liked, setLiked] = useState(isLiked);
   const [likes, setLikes] = useState(likeCount);
 
-  const handleLikeToggle = () => {
+  const handleLikeToggle = (e: React.MouseEvent) => {
+    e.preventDefault(); // Link 이동 방지
+    e.stopPropagation(); // 이벤트 전파 중단
+
     if (liked) {
       setLikes(likes - 1);
     } else {
@@ -31,7 +37,10 @@ export default function MainPost({
   };
 
   return (
-    <div className="bg-[#F9F9F9] rounded-2xl px-10 py-14 h-80">
+    <Link
+      to={`/post/${postId}`}
+      className="block bg-[#F9F9F9] rounded-2xl px-10 py-14 h-80 hover:bg-[#F0F0F0] transition-colors cursor-pointer"
+    >
       <h2 className="text-4xl font-bold text-[#333D48] mb-10 break-words">
         {title}
       </h2>
@@ -56,6 +65,6 @@ export default function MainPost({
           <span className="text-lg text-[#333D48]">{commentCount}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
