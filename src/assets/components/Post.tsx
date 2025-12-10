@@ -2,7 +2,8 @@ import { useState } from 'react';
 import Heart from '@/assets/svg/Heart';
 import Comment from '@/assets/svg/Comment';
 import Report from '@/assets/svg/Report';
-import PostModal from './PostModal';
+import PostModal from '@/assets/components/PostModal';
+import { useNavigate } from 'react-router-dom';
 
 interface PostProps {
   title: string;
@@ -12,7 +13,6 @@ interface PostProps {
   likeCount: number;
   commentCount: number;
   onLikeClick?: () => void;
-  onCommentClick?: () => void;
   onReportClick?: () => void;
   isLiked?: boolean;
 }
@@ -25,7 +25,6 @@ export default function Post({
   likeCount,
   commentCount,
   onLikeClick,
-  onCommentClick,
   onReportClick,
   isLiked: externalIsLiked,
 }: PostProps) {
@@ -34,6 +33,8 @@ export default function Post({
     externalIsLiked !== undefined ? externalIsLiked : internalIsLiked;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLikeClick = () => {
     if (onLikeClick) {
@@ -54,7 +55,10 @@ export default function Post({
   return (
     <>
       <div className="flex flex-col lg:flex-row justify-between w-full border-y-2 -mt-0.5 border-gray-2 px-4 lg:px-0">
-        <div className="flex-1 cursor-pointer lg:pl-[38px]">
+        <div
+          className="flex-1 cursor-pointer lg:pl-[38px]"
+          onClick={() => navigate('/post-content')}
+        >
           <div>
             <p className="text-gray-1 font-bold text-xl sm:text-2xl lg:text-3xl xl:text-[32px] mt-6 sm:mt-8 lg:mt-9 xl:mt-11 mb-2 lg:mb-3">
               {title}
@@ -86,7 +90,7 @@ export default function Post({
             </button>
             <button
               className="flex cursor-pointer items-center gap-2 sm:gap-3 lg:gap-4 xl:gap-5"
-              onClick={onCommentClick}
+              onClick={() => navigate('/post-content')}
             >
               <Comment />
               <span className="text-xl sm:text-2xl lg:text-3xl xl:text-[32px] font-normal text-gray-1">
