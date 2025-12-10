@@ -41,8 +41,8 @@ export default function PostModal({ onClose, onReport }: PostModalProps) {
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className={`w-94 px-6 py-4 border border-gray-2 text-left font-medium text-xl flex justify-between items-center bg-white
-    ${isDropdownOpen ? 'rounded-t-lg border-b-0' : 'rounded-lg'}
+              className={`w-94 px-6 py-4 border cursor-pointer border-gray-2 text-left font-medium text-xl flex justify-between items-center bg-white
+    ${isDropdownOpen ? 'rounded-t-lg border-b-0 pb-4.25' : 'rounded-lg'}
   `}
             >
               <span className={selectedReason ? 'text-gray-1' : 'text-gray-3'}>
@@ -80,7 +80,7 @@ export default function PostModal({ onClose, onReport }: PostModalProps) {
           <textarea
             value={additionalText}
             onChange={(e) => setAdditionalText(e.target.value)}
-            placeholder="이번 정이 문제가 되는지 구체적으로 작어 주세요. (최대 300자)"
+            placeholder="이번 정이 문제가 되는지 구체적으로 적어 주세요. (최대 300자)"
             className="w-full h-40 p-5 border placeholder:font-medium border-gray-2 rounded-lg resize-none outline-none focus:border-main-1 text-xl"
             maxLength={300}
           />
