@@ -8,13 +8,13 @@ export default function HeartIcon() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M9.00001 2.72857C7.40054 0.890058 4.7278 0.32188 2.72376 2.0054C0.719715 3.68892 0.437573 6.50366 2.01136 8.49479C3.31986 10.1502 7.27983 13.6418 8.5777 14.7719C8.72285 14.8983 8.79547 14.9615 8.88018 14.9863C8.95405 15.008 9.03494 15.008 9.1089 14.9863C9.19361 14.9615 9.26614 14.8983 9.41138 14.7719C10.7093 13.6418 14.6692 10.1502 15.9777 8.49479C17.5515 6.50366 17.3037 3.67121 15.2653 2.0054C13.2268 0.33959 10.5995 0.890058 9.00001 2.72857Z"
         stroke="#333D48"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
