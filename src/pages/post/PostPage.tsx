@@ -51,7 +51,7 @@ export default function PostPage() {
                         gap-3 lg:gap-20"
         >
           <div className="w-full lg:w-auto shrink-0">
-            <p className="text-xl sm:text-2xl lg:text-4xl font-bold">
+            <p className="text-gray-1 text-xl sm:text-2xl lg:text-4xl font-bold">
               익명 게시판
             </p>
           </div>
