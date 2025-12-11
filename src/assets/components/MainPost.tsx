@@ -46,7 +46,7 @@ export default function MainPost({
           {title}
         </h2>
 
-        <p className="text-bold text-[#6D6F79] max-h-[96px] break-words">
+        <p className="font-bold text-[#6D6F79] max-h-[96px] break-words">
           <span className="font-medium">익명 : </span>
           {content}
         </p>
