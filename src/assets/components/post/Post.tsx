@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-
+import { useState } from 'react';
+import Heart from '@/assets/svg/Heart';
 interface ActionButton {
   icon: React.ReactNode;
   onClick: () => void;
@@ -25,6 +26,8 @@ export default function Post({
   actions = [],
 }: PostProps) {
   const navigate = useNavigate();
+
+  const [heartClick, setHeartClick] = useState(false);
 
   const handlePostClick = () => {
     if (onPostClick) {
@@ -60,6 +63,13 @@ export default function Post({
 
       <div className="flex items-center lg:mr-20 xl:mr-40 mb-4 lg:mb-0">
         <div className="flex flex-row gap-4 sm:gap-6 lg:gap-9 xl:gap-11">
+          <button
+            className="flex items-center cursor-pointer gap-4"
+            onClick={() => setHeartClick(!heartClick)}
+          >
+            <Heart isSelect={heartClick} />
+            <span className="text-[32px] font-normal  text-gray-1">0</span>
+          </button>
           {actions.map((action, index) => (
             <button
               key={index}
