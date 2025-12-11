@@ -70,7 +70,7 @@ export default function MainPage() {
               content="내용내욘ㅇㄴㅇ랜용ㄴ앰랜ㅇㄹㄴ내용ㄴ앵용냉sodasdoaskdlfj;@@Kfalskjflaksjdfoijasdfdfasdfasdfasdddddddddddddddddddddddddddddddd"
               likeCount={0}
               commentCount={0}
-              postId={''}
+              postId={'1'}
             />
             <Post
               title="제목"
@@ -78,7 +78,7 @@ export default function MainPage() {
               likeCount={31}
               commentCount={0}
               isLiked={true}
-              postId={''}
+              postId={'2'}
             />
             <Post
               title="제목"
@@ -86,7 +86,7 @@ export default function MainPage() {
               likeCount={112}
               commentCount={12}
               isLiked={true}
-              postId={''}
+              postId={'3'}
             />
           </div>
         </div>
