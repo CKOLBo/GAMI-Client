@@ -65,7 +65,12 @@ export default function PostWrite() {
         </div>
 
         <div className="flex justify-end mt-13">
-          <Button text="등록하기" to="" />
+          <Button
+            text="등록하기"
+            onClick={() => {
+              /* 게시글 등록 로직 */
+            }}
+          />
         </div>
       </div>
     </div>
