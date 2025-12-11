@@ -80,7 +80,7 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
           <textarea
             value={additionalText}
             onChange={(e) => setAdditionalText(e.target.value)}
-            placeholder="이떤 점이 문제가 되는지 구체적으로 적어 주세요. (최대 300자)"
+            placeholder="어떤 점이 문제가 되는지 구체적으로 적어 주세요. (최대 300자)"
             className="w-full h-40 p-5 border placeholder:font-medium border-gray-2 rounded-lg resize-none outline-none focus:border-main-1 text-xl"
             maxLength={300}
           />
