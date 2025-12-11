@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Heart from '@/assets/svg/Heart';
-import Comment from '@/assets/svg/Comment';
-import Report from '@/assets/svg/Report';
-import PostModal from '@/assets/components/PostModal';
-import Button from '@/assets/components/Button';
+import Comment from '@/assets/svg/post/Comment';
+import Report from '@/assets/svg/post/Report';
+import PostModal from '@/assets/components/modal/ReportModal';
+import Button from '@/assets/components/Button/Button';
 
 export default function PostContent() {
   const navigate = useNavigate();

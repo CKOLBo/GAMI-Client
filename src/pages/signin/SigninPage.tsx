@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Logo from '@/assets/svg/Logo';
-import Show from '@/assets/svg/show';
-import Hide from '@/assets/svg/hide';
+import Logo from '@/assets/svg/logo/Logo';
+import Show from '@/assets/svg/password/show';
+import Hide from '@/assets/svg/password/hide';
 
 export default function SigninPage() {
   const navigate = useNavigate();
