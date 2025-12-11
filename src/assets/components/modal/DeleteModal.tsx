@@ -20,7 +20,7 @@ export default function DeleteModal({ onClose, onDelete }: DeleteModalProps) {
         <div className="flex gap-4 justify-end">
           <button
             onClick={onClose}
-            className="px-9 py-4 border cursor-pointer border-gray-2 text-2xl font-bold text-gray-1 rounded-xl hover:bg-gray-50 transition-color"
+            className="px-9 py-4 border cursor-pointer border-gray-2 text-2xl font-bold text-gray-1 rounded-xl hover:bg-gray-50 transition-colors"
           >
             취소
           </button>
