@@ -2,12 +2,12 @@ import { useState } from 'react';
 import ModalWrapper from '@/assets/shared/Modal';
 import Button from '@/assets/components/Button/Button';
 import Arrow from '../../svg/Arrow';
-interface PostModalProps {
+interface ReportModalProps {
   onClose: () => void;
   onReport: () => void;
 }
 
-export default function PostModal({ onClose, onReport }: PostModalProps) {
+export default function ReportModal({ onClose, onReport }: ReportModalProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState('');
   const [additionalText, setAdditionalText] = useState('');
