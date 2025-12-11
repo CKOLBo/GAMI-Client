@@ -26,7 +26,10 @@ export default function Sidebar() {
 
   return (
     <div className="w-45 2xl:w-55 h-screen bg-[#FFFFFF] border-r border-[#B7BCC8] flex flex-col">
-      <Link to="/main" className="pt-6 2xl:pt-7 flex justify-center cursor-pointer">
+      <Link
+        to="/main"
+        className="pt-6 2xl:pt-7 flex justify-center cursor-pointer"
+      >
         <div className="w-22 2xl:w-29 justify-center flex">
           <Logo size="md" />
         </div>

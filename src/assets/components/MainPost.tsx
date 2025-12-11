@@ -25,7 +25,7 @@ export default function MainPost({
   const [likes, setLikes] = useState(likeCount);
 
   const handleLikeToggle = (e: React.MouseEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
     e.stopPropagation();
 
     if (liked) {
