@@ -1,8 +1,17 @@
-import Button from '@/assets/components/Button';
-import Post from '@/assets/components/Post';
-import PostHead from '@/assets/components/PostHead';
+import Button from '@/assets/components/Button/Button';
+import Post from '@/assets/components/post/Post';
+import PostHead from '@/assets/components/post/PostHead';
+import { useNavigate } from 'react-router-dom';
+import Heart from '@/assets/svg/Heart';
+import Comment from '@/assets/svg/post/Comment';
+import PostModal from '@/assets/components/modal/ReportModal';
+import { useState } from 'react';
+import Report from '@/assets/svg/post/Report';
 
 export default function PostPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+  const navigate = useNavigate();
   const posts = [
     {
       id: 1,
@@ -42,6 +51,16 @@ export default function PostPage() {
     },
   ];
 
+  const handleReportClick = (postId: number) => {
+    setSelectedPostId(postId);
+    setIsModalOpen(true);
+  };
+
+  const handleReport = () => {
+    setIsModalOpen(false);
+    setSelectedPostId(null);
+  };
+
   return (
     <div className="w-full">
       <div className="max-w-[1500px] mx-auto px-4 lg:px-6">
@@ -60,12 +79,35 @@ export default function PostPage() {
               content={post.content}
               author={post.author}
               timeAgo={post.timeAgo}
-              likeCount={post.likeCount}
-              commentCount={post.commentCount}
+              onPostClick={() => navigate('/post-content')}
+              actions={[
+                {
+                  icon: <Heart isSelect={false} />,
+                  onClick: () => console.log('좋아요:', post.id),
+                  count: post.likeCount,
+                  showCount: true,
+                },
+                {
+                  icon: <Comment />,
+                  onClick: () => navigate('/post-content'),
+                  count: post.commentCount,
+                  showCount: true,
+                },
+                {
+                  icon: <Report />,
+                  onClick: () => handleReportClick(post.id),
+                },
+              ]}
             />
           ))}
         </div>
       </div>
+      {isModalOpen && (
+        <PostModal
+          onClose={() => setIsModalOpen(false)}
+          onReport={handleReport}
+        />
+      )}
     </div>
   );
 }
