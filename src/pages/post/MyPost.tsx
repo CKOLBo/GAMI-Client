@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@/assets/components/Button/Button';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
-import Heart from '@/assets/svg/Heart';
 import Comment from '@/assets/svg/post/Comment';
 import Delete from '@/assets/svg/post/Delete';
 import DeleteModal from '@/assets/components/modal/DeleteModal';
