@@ -83,12 +83,6 @@ export default function MyPost() {
                 onPostClick={() => navigate('/post-content')}
                 actions={[
                   {
-                    icon: <Heart isSelect={false} />,
-                    onClick: () => console.log('좋아요:', post.id),
-                    count: post.likeCount,
-                    showCount: true,
-                  },
-                  {
                     icon: <Comment />,
                     onClick: () => navigate('/post-content'),
                     count: post.commentCount,
