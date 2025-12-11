@@ -59,9 +59,9 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
 
             {isDropdownOpen && (
               <div className="absolute z-10 w-94 mt-0 bg-white border border-gray-2 border-t-0 rounded-b-lg max-h-80  ">
-                {reportReasons.map((reason, index) => (
+                {reportReasons.map((reason) => (
                   <button
-                    key={index}
+                    key={reason}
                     onClick={() => handleReasonSelect(reason)}
                     className="w-full px-6 py-3 text-left text-base hover:bg-gray-100 transition-colors"
                   >
