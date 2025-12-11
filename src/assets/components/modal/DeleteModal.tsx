@@ -1,4 +1,5 @@
 import ModalWrapper from '@/assets/shared/Modal';
+import Button from '../Button/Button';
 
 interface DeleteModalProps {
   onClose: () => void;
@@ -24,12 +25,7 @@ export default function DeleteModal({ onClose, onDelete }: DeleteModalProps) {
           >
             취소
           </button>
-          <button
-            onClick={onDelete}
-            className="rounded-[10px] bg-main-1 w-38 h-16 cursor-pointer text-white font-bold text-2xl"
-          >
-            삭제하기
-          </button>
+          <Button text="삭제하기" onClick={onDelete} />
         </div>
       </div>
     </ModalWrapper>
