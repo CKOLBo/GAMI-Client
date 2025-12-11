@@ -24,7 +24,7 @@ export default function PostWrite() {
             placeholder="제목을 입력해주세요."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-5 placeholder:text-gray-2 text-xl font-normal placeholder:font-normal rounded-lg outline-none border border-gray-2"
+            className="w-full p-5 placeholder:text-gray-3 text-xl font-normal placeholder:font-bold rounded-lg outline-none border border-gray-2"
           />
         </div>
 
@@ -59,7 +59,7 @@ export default function PostWrite() {
             placeholder="내용을 자유롭게 작성해주세요."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full p-6 placeholder:text-gray-3 text-xl placeholder:text-xl outline-none resize-none"
+            className="w-full p-6 placeholder:text-gray-3 placeholder:font-bold text-xl placeholder:text-xl outline-none resize-none"
             style={{ fontSize: `${fontSize}px` }}
           />
         </div>
