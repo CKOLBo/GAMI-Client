@@ -31,10 +31,10 @@ export default function PostContent() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-11 mb-10 pb-14 border-b-2 border-gray-2">
+          <div className="flex justify-between gap-11 mb-10 pb-14 border-b-2 border-gray-2">
             <div className="flex items-center gap-3 mb-6">
               <Comment />
-              <h2 className="text-2xl font-bold text-gray-1">댓글 0개</h2>
+              <h2 className="text-[32px]  font-bold text-gray-1">댓글 0개</h2>
             </div>
             <div className="flex flex-row gap-18">
               <button
@@ -53,14 +53,13 @@ export default function PostContent() {
             </div>
           </div>
 
-          <div>
-            <div className="flex flex-row mb-4 sm:mb-6 lg:mb-7 xl:mb-9">
-              <p className="text-gray-1 text-sm sm:text-base lg:text-lg xl:text-xl font-bold w-8 sm:w-9 lg:w-10 h-5 sm:h-5.5 lg:h-6 mr-3 sm:mr-4 lg:mr-5 xl:mr-[18px]">
-                익명
-              </p>
-              <p className="text-gray-3 text-sm sm:text-base lg:text-lg xl:text-xl font-bold">
-                1시간 전
-              </p>
+          <div className="mb-10">
+            <div className="flex items-center gap-4 mb-4 ml-9">
+              <span className="text-gray-1 text-xl font-bold">익명</span>
+              <span className="text-gray-3 text-xl font-bold">1시간 전</span>
+            </div>
+            <div className="ml-9">
+              <p className="text-gray-3 font-bold text-xl">하윙</p>
             </div>
           </div>
 
@@ -68,7 +67,7 @@ export default function PostContent() {
             <div className="relative">
               <textarea
                 placeholder="댓글 입력하기"
-                className="w-full h-32 p-7 border border-gray-2 rounded-lg resize-none outline-none  text-xl"
+                className="w-full h-32 p-7 border-2 placeholder:text-xl placeholder:font-bold border-gray-2 rounded-lg resize-none outline-none  text-xl"
               />
             </div>
             <div className="flex justify-end mt-12">
