@@ -70,7 +70,12 @@ export default function PostContent() {
               />
             </div>
             <div className="flex justify-end mt-12">
-              <Button text="등록하기" to="" />
+              <Button
+                text="등록하기"
+                onClick={() => {
+                  /* 댓글 등록 로직 */
+                }}
+              />
             </div>
           </div>
         </div>
