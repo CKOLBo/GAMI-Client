@@ -39,15 +39,15 @@ export default function MainPost({
   return (
     <Link
       to={`/post/${postId}`}
-      className="flex flex-col justify-between bg-[#F9F9F9] rounded-2xl px-10 py-14 h-80 hover:bg-[#F0F0F0] transition-colors cursor-pointer"
+      className="flex flex-col justify-between bg-[#F9F9F9] rounded-2xl px-6 py-7 2xl:px-10 2xl:py-14 h-60 2xl:h-80 hover:bg-[#F0F0F0] transition-colors cursor-pointer"
     >
       <div>
-        <h2 className="text-4xl font-bold text-[#333D48] mb-10 break-words">
+        <h2 className="text-2xl 2xl:text-4xl font-bold text-[#333D48] mb-5 2xl:mb-10 break-words">
           {title}
         </h2>
 
-        <p className="font-bold text-[#6D6F79] max-h-[96px] break-words">
-          <span className="font-medium">익명 : </span>
+        <p className="font-bold text-[#6D6F79] line-clamp-3 break-all">
+          <span className="font-bold text-[#333D48]">익명 : </span>
           {content}
         </p>
       </div>
