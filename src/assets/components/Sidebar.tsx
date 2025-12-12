@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Logo from '@/assets/svg/Logo/Logo';
+import Logo from '@/assets/svg/logo/Logo';
 import HomeIcon from '@/assets/svg/sidebar/HomeIcon';
 import MentoringIcon from '@/assets/svg/sidebar/MentoringIcon';
 import ChatIcon from '@/assets/svg/sidebar/ChatIcon';
