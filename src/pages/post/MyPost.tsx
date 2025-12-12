@@ -1,54 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/assets/components/Button/Button';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
-import Comment from '@/assets/svg/post/Comment';
 import Delete from '@/assets/svg/post/Delete';
 import DeleteModal from '@/assets/components/modal/DeleteModal';
+import axios from 'axios';
+
+interface MyPostType {
+  id: number;
+  title: string;
+  content: string;
+  author: string;
+  timeAgo: string;
+  likeCount: number;
+  commentCount: number;
+}
 
 export default function MyPost() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [myPostData, setMyPostData] = useState<MyPostType[]>([]);
 
-  const posts = [
-    {
-      id: 1,
-      title: '제목이 들어갈 곳',
-      content: '내용이 들어갈 곳',
-      author: '익명',
-      timeAgo: '1시간 전',
-      likeCount: 3,
-      commentCount: 0,
-    },
-    {
-      id: 2,
-      title: '제목이 들어갈 곳',
-      content: '내용이 들어갈 곳',
-      author: '익명',
-      timeAgo: '14건 전',
-      likeCount: 3,
-      commentCount: 0,
-    },
-    {
-      id: 3,
-      title: '제목이 들어갈 곳',
-      content: '내용이 들어갈 곳',
-      author: '익명',
-      timeAgo: '1시간 전',
-      likeCount: 3,
-      commentCount: 0,
-    },
-    {
-      id: 4,
-      title: '제목이 들어갈 곳',
-      content: '내용이 들어갈 곳',
-      author: '익명',
-      timeAgo: '1시간 전',
-      likeCount: 3,
-      commentCount: 0,
-    },
-  ];
+  useEffect(() => {
+    axios
+      .get('/data/MyPostData.json')
+      .then((res) => {
+        setMyPostData(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 로드 실패:', error);
+      });
+  }, []);
 
   const handleDeleteClick = () => {
     setIsModalOpen(true);
@@ -69,23 +52,17 @@ export default function MyPost() {
             </div>
           </PostHead>
           <div className="border-t-2 border-gray-2">
-            {posts.map((post) => (
+            {myPostData.map((post) => (
               <Post
                 key={post.id}
                 title={post.title}
                 content={post.content}
                 author={post.author}
+                likeCount={post.likeCount}
+                commentCount={post.commentCount}
                 timeAgo={post.timeAgo}
                 onPostClick={() => navigate('/post-content')}
                 actions={[
-                  {
-                    icon: (
-                      <Comment width="28px" height="28px" color="#333D48" />
-                    ),
-                    onClick: () => navigate('/post-content'),
-                    count: post.commentCount,
-                    showCount: true,
-                  },
                   {
                     icon: <Delete />,
                     onClick: handleDeleteClick,
