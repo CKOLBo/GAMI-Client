@@ -2,7 +2,6 @@ import Button from '@/assets/components/Button/Button';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
 import { useNavigate } from 'react-router-dom';
-import Comment from '@/assets/svg/post/Comment';
 import PostModal from '@/assets/components/modal/ReportModal';
 import { useState, useEffect } from 'react';
 import Report from '@/assets/svg/post/Report';
