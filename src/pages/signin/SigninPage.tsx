@@ -85,7 +85,7 @@ export default function SigninPage() {
           </div>
           <button
             type="submit"
-            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-[#AA8EFF] border-0 cursor-pointer"
+            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-2-hover border-0 cursor-pointer"
           >
             로그인
           </button>
