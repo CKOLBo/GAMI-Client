@@ -28,15 +28,15 @@ export default function MainPost({
   return (
     <Link
       to={`/post/${postId}`}
-      className="flex flex-col justify-between bg-[#F9F9F9] rounded-2xl px-6 py-6 2xl:px-10 2xl:py-14 h-60 2xl:h-80 hover:bg-[#F0F0F0] transition-colors cursor-pointer"
+      className="flex flex-col justify-between bg-white-1 rounded-2xl px-6 py-6 2xl:px-10 2xl:py-14 h-60 2xl:h-80 hover:bg-[#F0F0F0] transition-colors cursor-pointer"
     >
       <div>
-        <h2 className="text-2xl 2xl:text-4xl font-bold text-[#333D48] mb-8 2xl:mb-10 break-words">
+        <h2 className="text-2xl 2xl:text-4xl font-bold text-gray-1 mb-8 2xl:mb-10 break-words">
           {title}
         </h2>
 
-        <p className="font-bold text-[#6D6F79] line-clamp-3 break-all">
-          <span className="font-bold text-[#333D48]">익명 : </span>
+        <p className="font-bold text-gray-2 line-clamp-3 break-all">
+          <span className="font-bold text-gray-1">익명 : </span>
           {content}
         </p>
       </div>
@@ -48,12 +48,12 @@ export default function MainPost({
           aria-label="좋아요"
         >
           {isLiked ? <HeartFilledIcon /> : <HeartIcon />}
-          <span className="text-lg text-[#333D48]">{likeCount}</span>
+          <span className="text-lg text-gray-1">{likeCount}</span>
         </button>
 
         <div className="flex items-center gap-2">
           <CommentIcon />
-          <span className="text-lg text-[#333D48]">{commentCount}</span>
+          <span className="text-lg text-gray-1">{commentCount}</span>
         </div>
       </div>
     </Link>
