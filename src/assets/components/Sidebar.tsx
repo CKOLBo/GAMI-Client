@@ -25,7 +25,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-45 2xl:w-55 h-screen bg-[#FFFFFF] border-r border-[#B7BCC8] flex flex-col">
+    <div className="w-45 2xl:w-55 h-screen bg-white border-r border-gray-2 flex flex-col">
       <Link
         to="/main"
         className="pt-6 2xl:pt-7 flex justify-center cursor-pointer"
@@ -48,13 +48,13 @@ export default function Sidebar() {
                 text-base font-semibold no-underline transition-colors
                 ${
                   isActive
-                    ? 'bg-[#F1ECFF] text-[#BFA9FF]'
-                    : 'text-[#333D48] hover:bg-[#F5F5F5]'
+                    ? 'bg-[#F1ECFF] text-main-2'
+                    : 'text-gray-1 hover:bg-[#F5F5F5]'
                 }
               `}
             >
               <Icon
-                className={isActive ? 'text-[#BFA9FF]' : 'text-[#333D48]'}
+                className={isActive ? 'text-main-2' : 'text-gray-1'}
               />
               <span>{item.label}</span>
             </Link>
@@ -62,9 +62,9 @@ export default function Sidebar() {
         })}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-5.5 px-2.5 py-2.5 rounded-xl text-base font-semibold text-[#333D48] hover:bg-[#F5F5F5] transition-colors bg-transparent border-0 cursor-pointer text-left w-full"
+          className="flex items-center gap-5.5 px-2.5 py-2.5 rounded-xl text-base font-semibold text-gray-1 hover:bg-[#F5F5F5] transition-colors bg-transparent border-0 cursor-pointer text-left w-full"
         >
-          <LogoutIcon className="text-[#333D48]" />
+          <LogoutIcon className="text-gray-1" />
           <span>로그아웃</span>
         </button>
       </nav>
