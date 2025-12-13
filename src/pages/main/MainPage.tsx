@@ -34,13 +34,13 @@ export default function MainPage() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 p-12 2xl:p-25">
-        <h1 className="text-3xl 2xl:text-4xl font-bold text-[#333D48] mb-8 2xl:mb-16">
+        <h1 className="text-3xl 2xl:text-4xl font-bold text-gray-1 mb-8 2xl:mb-16">
           홈
         </h1>
 
         <div className="grid grid-cols-3 gap-8 2xl:gap-12 mb-6 2xl:mb-8">
-          <div className="col-span-2 bg-gradient-to-r from-[#BFA9FF] to-[#73A9FF] rounded-2xl 2xl:py-15 px-12 2xl:px-20 flex items-center justify-between">
-            <div className="text-[#ffffff]">
+          <div className="col-span-2 bg-gradient-to-r from-main-2 to-main-1 rounded-2xl 2xl:py-15 px-12 2xl:px-20 flex items-center justify-between">
+            <div className="text-white">
               <h2 className="text-3xl 2xl:text-4xl font-bold mb-3 2xl:mb-6 h-8 2xl:h-12 flex items-center">
                 GAMI에 오신 걸 환영합니다! 양은준님
               </h2>
@@ -56,14 +56,14 @@ export default function MainPage() {
               />
             </div>
           </div>
-          <div className="bg-[#F9F9F9] rounded-2xl p-6 2xl:p-7">
+          <div className="bg-white-1 rounded-2xl p-6 2xl:p-7">
             <div className="flex justify-between items-center mb-2 2xl:mb-5.5">
-              <h2 className="text-xl 2xl:text-2xl font-bold text-[#333D48]">
+              <h2 className="text-xl 2xl:text-2xl font-bold text-gray-1">
                 멘토 찾기
               </h2>
               <Link
                 to="/mentoring"
-                className="text-lg 2xl:text-2xl  text-[#6D6F79] flex items-center gap-2"
+                className="text-lg 2xl:text-2xl  text-gray-3 flex items-center gap-2"
               >
                 전체보기
                 <RightIcon />
@@ -77,9 +77,9 @@ export default function MainPage() {
                   className="h-full object-contain"
                 />
               </div>
-              <p className="text-lg 2xl:text-2xl text-[#333D48] mb-1 2xl:mb-9 font-bold">
+              <p className="text-lg 2xl:text-2xl text-gray-1 mb-1 2xl:mb-9 font-bold">
                 나에게 어울리는{' '}
-                <span className="text-[#73A9FF] font-bold">멘토</span>를
+                <span className="text-main-1 font-bold">멘토</span>를
                 찾아볼까요?
               </p>
             </div>
@@ -87,7 +87,7 @@ export default function MainPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl 2xl:text-4xl font-bold text-[#333D48] mb-4">
+          <h2 className="text-2xl 2xl:text-4xl font-bold text-gray-1 mb-4">
             게시글
           </h2>
           <div className="grid grid-cols-3 gap-8 2xl:gap-12">
