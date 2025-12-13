@@ -41,14 +41,14 @@ export default function SigninPage() {
   };
 
   return (
-    <div className="bg-[#ffffff] h-screen flex justify-center items-center p-5 overflow-hidden">
+    <div className="bg-white h-screen flex justify-center items-center p-5 overflow-hidden">
       <div className="text-center max-w-xs w-full">
         <div className="w-25 mb-7.5 mx-auto">
           <Logo />
         </div>
-        <p className="text-sm text-[#3D3D48] mb-10">
+        <p className="text-sm text-gray-1 mb-10">
           <span className="font-medium">GAMI가 처음이라면?</span>{' '}
-          <Link to="/signup" className="text-[#73A9FF] font-bold no-underline">
+          <Link to="/signup" className="text-main-1 font-bold no-underline">
             회원가입하기
           </Link>
         </p>
@@ -58,14 +58,14 @@ export default function SigninPage() {
             type="text"
             name="email"
             placeholder="이메일"
-            className="w-full h-13 px-5 border border-[#B7BCC8] rounded-lg text-sm text-[#3D3D48] placeholder:text-[#6D6F79] placeholder:font-medium focus:outline-none focus:border-[#73A9FF] mb-3.5"
+            className="w-full h-13 px-5 border border-gray-2 rounded-lg text-sm text-gray-1 placeholder:text-gray-3 placeholder:font-medium focus:outline-none focus:border-main-1 mb-3.5"
           />
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="비밀번호"
-              className="w-full h-13 px-5 pr-14 border border-[#B7BCC8] rounded-lg text-sm text-[#3D3D48] placeholder:text-[#6D6F79] placeholder:font-medium focus:outline-none focus:border-[#73A9FF]"
+              className="w-full h-13 px-5 pr-14 border border-gray-2 rounded-lg text-sm text-gray-1 placeholder:text-gray-3 placeholder:font-medium focus:outline-none focus:border-main-1"
             />
             <button
               type="button"
@@ -84,7 +84,7 @@ export default function SigninPage() {
           </div>
           <button
             type="submit"
-            className="w-full h-13 bg-[#BFA9FF] text-[#FFFFFF] text-base rounded-lg transition-all duration-300 font-bold hover:bg-[#AA8EFF] border-0 cursor-pointer"
+            className="w-full h-13 bg-main-2 text-white text-base rounded-lg transition-all duration-300 font-bold hover:bg-[#AA8EFF] border-0 cursor-pointer"
           >
             로그인
           </button>
@@ -93,7 +93,7 @@ export default function SigninPage() {
         <div className="mt-2 text-right">
           <Link
             to="/signin"
-            className="font-medium text-sm text-[#3D3D48] no-underline"
+            className="font-medium text-sm text-gray-1 no-underline"
           >
             비밀번호 찾기
           </Link>
