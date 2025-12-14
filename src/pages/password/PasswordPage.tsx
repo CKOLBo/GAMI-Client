@@ -4,6 +4,7 @@ import Logo from '@/assets/svg/logo/Logo';
 import InputPassword from '@/assets/components/Input/InputPassword';
 
 export default function PasswordPage() {
+  const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPw) {
@@ -12,8 +13,6 @@ export default function PasswordPage() {
     }
     navigate('/signin');
   };
-
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
