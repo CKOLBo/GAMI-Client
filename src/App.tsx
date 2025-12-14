@@ -6,7 +6,7 @@ import Post from '@/pages/post/PostPage';
 import PostContent from './pages/post/PostContent';
 import PostWrite from './pages/post/PostWrite';
 import MyPost from './pages/post/MyPost';
-import Password from './pages/password/PasswordPage';
+import Password from '@/pages/password/PasswordPage';
 
 function App() {
   return (
