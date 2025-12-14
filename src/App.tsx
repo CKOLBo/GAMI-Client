@@ -7,6 +7,7 @@ import PostContent from './pages/post/PostContent';
 import PostWrite from './pages/post/PostWrite';
 import MyPost from './pages/post/MyPost';
 import Password from '@/pages/password/PasswordPage';
+import Mentoring from '@/pages/mentoring/MentoringPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/post-write" element={<PostWrite />} />
         <Route path="/my-post" element={<MyPost />} />
         <Route path="/password" element={<Password />} />
+        <Route path="/mentoring" element={<Mentoring />} />
       </Routes>
     </BrowserRouter>
   );
