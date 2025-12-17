@@ -201,7 +201,7 @@ export default function SignupPage() {
             />
             <button
               type="button"
-              className="p-4 bg-main-1 text-white text-sm border-none rounded-lg cursor-pointer transition-all duration-300 font-semibold whitespace-nowrap min-w-[90px] hover:bg-main-1-hover outline-none"
+              className="p-4 bg-main-1 text-white text-sm border-none rounded-lg cursor-pointer transition-all duration-300 font-semibold whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
             >
               번호 발송
             </button>
@@ -218,7 +218,7 @@ export default function SignupPage() {
             />
             <button
               type="button"
-              className="p-4 bg-main-1 text-white text-sm border-none rounded-lg cursor-pointer transition-all duration-300 font-semibold whitespace-nowrap min-w-[90px] hover:bg-main-1-hover outline-none"
+              className="p-4 bg-main-1 text-white text-sm border-none rounded-lg cursor-pointer transition-all duration-300 font-semibold whitespace-nowrap min-w-[90px] hover:bg-[#7a9fe6] outline-none"
             >
               인증하기
             </button>
