@@ -40,5 +40,12 @@
     "gender": "FEMALE",
     "generation": 9,
     "major": "BE"
+  },
+  {
+    "id": 7,
+    "name": "박하민",
+    "gender": "FEMALE",
+    "generation": 9,
+    "major": "BE"
   }
 ]
