@@ -8,6 +8,7 @@ import PostWrite from './pages/post/PostWrite';
 import MyPost from './pages/post/MyPost';
 import Password from '@/pages/password/PasswordPage';
 import Mentoring from '@/pages/mentoring/MentoringPage';
+import RandomMentoring from '@/pages/mentoring/RandomMentoring';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/my-post" element={<MyPost />} />
         <Route path="/password" element={<Password />} />
         <Route path="/mentoring" element={<Mentoring />} />
+        <Route path="/mentoring-random" element={<RandomMentoring />} />
       </Routes>
     </BrowserRouter>
   );
