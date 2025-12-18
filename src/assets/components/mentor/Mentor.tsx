@@ -38,7 +38,7 @@ export default function Mentor({
 
       <button
         onClick={onApply}
-        className="absolute bottom-6 right-6 rounded-[10px] bg-white-1 px-8 py-4 text-[24px] text-gray-1 font-bold transition-colors"
+        className="absolute bottom-4 right-4 rounded-[10px] bg-white-1 px-8 py-4 text-[24px] text-gray-1 font-bold transition-colors"
       >
         멘토 신청
       </button>
