@@ -11,8 +11,10 @@ export default function MyPage() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditingCategory, setIsEditingCategory] = useState(false);
   const initialInterest = 'FE';
-  const [selectedInterest, setSelectedInterest] = useState<string>(initialInterest);
-  const [tempSelectedInterest, setTempSelectedInterest] = useState<string>(initialInterest);
+  const [selectedInterest, setSelectedInterest] =
+    useState<string>(initialInterest);
+  const [tempSelectedInterest, setTempSelectedInterest] =
+    useState<string>(initialInterest);
 
   const userInfo = {
     generation: '9기',
