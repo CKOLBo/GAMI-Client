@@ -3,7 +3,10 @@ interface ProfileInfoItemProps {
   value: string;
 }
 
-export default function ProfileInfoItem({ label, value }: ProfileInfoItemProps) {
+export default function ProfileInfoItem({
+  label,
+  value,
+}: ProfileInfoItemProps) {
   return (
     <div className="w-full max-w-[492px] max-h-[60px] bg-white rounded-lg border border-gray-2 px-6 2xl:px-7 py-4 2xl:py-5 flex items-center justify-between">
       <span className="text-sm 2xl:text-base font-medium text-gray-3">
@@ -15,4 +18,3 @@ export default function ProfileInfoItem({ label, value }: ProfileInfoItemProps) 
     </div>
   );
 }
-

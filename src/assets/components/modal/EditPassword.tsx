@@ -36,7 +36,7 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
   };
 
   return (
-    <ModalWrapper className='px-10 py-10'>
+    <ModalWrapper className="px-10 py-10">
       <div className="w-[376px] relative">
         <button
           type="button"
@@ -93,9 +93,7 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
           </div>
 
           <div className="h-6 mb-[18px]">
-            {error && (
-              <p className="text-sm text-main-3 text-left">{error}</p>
-            )}
+            {error && <p className="text-sm text-main-3 text-left">{error}</p>}
           </div>
 
           <button
