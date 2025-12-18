@@ -14,10 +14,10 @@ export default function GenderButton({
     <button
       type="button"
       onClick={onClick}
-      className={`border rounded-md text-sm font-medium p-4 w-[49%] cursor-pointer transition-all duration-300 outline-none ${
+      className={`border rounded-xl text-sm font-medium p-4 w-[49%] cursor-pointer transition-all duration-300 outline-none ${
         isSelected
-          ? 'bg-[#BFA9FF] text-white border-[#BFA9FF]'
-          : 'bg-white border-[#B7BCC8] text-[#6D6F79] hover:border-[#BFA9FF] hover:text-[#BFA9FF]'
+          ? 'bg-main-2 text-white border-main-2'
+          : 'bg-white border-gray-2 text-gray-3 hover:border-main-2 hover:text-main-2'
       }`}
     >
       {label}
