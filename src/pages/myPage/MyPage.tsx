@@ -45,7 +45,7 @@ export default function MyPage() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 flex flex-col items-center mt-10">
+      <div className="flex-1 flex flex-col justify-center items-center">
         <div className="flex flex-col items-center mb-8 w-full max-w-2xl">
           <div className="mb-6 2xl:mb-8">
             <ProfileIcon />
@@ -72,7 +72,6 @@ export default function MyPage() {
         <div className="flex flex-row justify-center w-full max-w-2xl">
           <div className="flex flex-col w-[492px] gap-4 2xl:gap-5">
             <ProfileInfoItem label="기수" value={userInfo.generation} />
-            <ProfileInfoItem label="학번" value={userInfo.studentId} />
             <ProfileInfoItem label="이름" value={userInfo.name} />
             <ProfileInfoItem label="성별" value={userInfo.gender} />
           </div>
