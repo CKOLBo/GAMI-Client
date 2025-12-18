@@ -13,21 +13,24 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
+  const validate = () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return '모든 필드를 입력해주세요.';
+    }
+    if (newPassword !== confirmPassword) {
+      return '비밀번호가 일치하지 않아요.';
+    }
+    if (newPassword.length < 8) {
+      return '비밀번호는 8자 이상이어야 합니다.';
+    }
+    return '';
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setError('모든 필드를 입력해주세요.');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError('비밀번호가 일치하지 않아요.');
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      setError('비밀번호는 8자 이상이어야 합니다.');
+    const errorMessage = validate();
+    if (errorMessage) {
+      setError(errorMessage);
       return;
     }
 
