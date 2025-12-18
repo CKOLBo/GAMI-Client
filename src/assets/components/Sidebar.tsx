@@ -26,7 +26,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-45 2xl:w-55 h-screen bg-white border-r border-gray-2 flex flex-col">
+    <div className="fixed left-0 top-0 w-45 2xl:w-55 h-screen bg-white border-r border-gray-2 flex flex-col z-50">
       <Link
         to="/main"
         className="pt-6 2xl:pt-7 flex justify-center cursor-pointer"
