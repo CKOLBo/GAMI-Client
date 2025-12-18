@@ -1,11 +1,22 @@
-export default function Profile() {
+interface ProfileProps {
+  width?: number | string;
+  height?: number | string;
+  className?: string;
+}
+
+export default function Profile({
+  width = 100,
+  height = 100,
+  className,
+}: ProfileProps) {
   return (
     <svg
-      width="160"
-      height="160"
+      width={width}
+      height={height}
       viewBox="0 0 160 160"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <path
         fillRule="evenodd"
