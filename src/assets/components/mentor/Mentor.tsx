@@ -14,18 +14,18 @@ export default function Mentor({
   onApply,
 }: MentorProps) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-gray-50 p-6">
-      <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between rounded-xl bg-white-1 p-3">
+      <div className="flex items-center gap-5 h-[228px]">
         <Profile />
 
         <div>
-          <p className="font-semibold text-gray-900">{name}</p>
+          <p className="font-semibold text-gray-1">{name}</p>
 
-          <div className="mt-1 flex gap-2">
-            <span className="rounded bg-indigo-100 px-2 py-0.5 text-xs text-indigo-600">
+          <div className="mt-3 flex gap-2">
+            <span className="rounded bg-main-1 px-2 py-0.5 text-white text-bold">
               {generation}기
             </span>
-            <span className="rounded bg-indigo-200 px-2 py-0.5 text-xs text-indigo-700">
+            <span className="rounded bg-main-2 px-2 py-0.5 text-white text-bold">
               {major}
             </span>
           </div>
@@ -34,7 +34,7 @@ export default function Mentor({
 
       <button
         onClick={onApply}
-        className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm hover:bg-gray-100 transition"
+        className="rounded-3xl border border-none bg-white px-4 py-2 text-sm hover:bg-gray-100 transition"
       >
         멘토 신청
       </button>
