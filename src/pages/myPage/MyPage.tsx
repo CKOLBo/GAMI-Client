@@ -4,7 +4,6 @@ import CategoryButton from '@/assets/components/Button/CategoryButton';
 import EditPassword from '@/assets/components/modal/EditPassword';
 import ProfileIcon from '@/assets/svg/profile/Profile';
 import ProfileInfoItem from '@/assets/components/Profile/ProfileInfoItem';
-import Line from '@/assets/svg/profile/Line';
 import { interestList } from '@/assets/shared/ListData';
 
 export default function MyPage() {
@@ -51,13 +50,6 @@ export default function MyPage() {
           </div>
 
           <div className="flex items-center gap-[10px]">
-            <button
-              type="button"
-              className="text-lg font-medium text-main-1 cursor-pointer border-0 bg-transparent"
-            >
-              프로필 변경
-            </button>
-            <Line />
             <button
               type="button"
               onClick={() => setIsPasswordModalOpen(true)}
