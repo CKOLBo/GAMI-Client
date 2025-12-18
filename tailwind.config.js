@@ -8,6 +8,7 @@ export default {
       },
       boxShadow: {
         'GAMI': '4px 4px 20px -5px rgba(0, 0, 0, 0.25)',
+        'gami': '4px 4px 20px -5px rgba(0, 0, 0, 0.25)',
       },
     },
   },
