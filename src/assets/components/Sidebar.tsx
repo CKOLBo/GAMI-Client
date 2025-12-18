@@ -7,6 +7,13 @@ import PostIcon from '@/assets/svg/sidebar/PostIcon';
 import ProfileIcon from '@/assets/svg/sidebar/ProfileIcon';
 import LogoutIcon from '@/assets/svg/sidebar/LogoutIcon';
 
+interface MenuItem {
+  path: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  subPaths?: string[];
+}
+
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,13 +23,32 @@ export default function Sidebar() {
     navigate('/signin');
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { path: '/main', label: '홈', icon: HomeIcon },
-    { path: '/mentoring', label: '멘토링', icon: MentoringIcon },
+    {
+      path: '/mentoring',
+      label: '멘토링',
+      icon: MentoringIcon,
+      subPaths: ['/mentoring', '/mentoring-random'],
+    },
     { path: '/chat', label: '채팅', icon: ChatIcon },
-    { path: '/post', label: '익명 게시판', icon: PostIcon },
+    {
+      path: '/post',
+      label: '익명 게시판',
+      icon: PostIcon,
+      subPaths: ['/post', '/post-write'],
+    },
     { path: '/my-page', label: '마이페이지', icon: ProfileIcon },
   ];
+
+  const isMenuActive = (item: MenuItem): boolean => {
+    if (item.subPaths) {
+      return item.subPaths.some((subPath) =>
+        location.pathname.startsWith(subPath)
+      );
+    }
+    return location.pathname === item.path;
+  };
 
   return (
     <div className="fixed left-0 top-0 w-45 2xl:w-55 h-screen bg-white border-r border-gray-2 flex flex-col z-50">
@@ -38,11 +64,7 @@ export default function Sidebar() {
       <nav className="flex flex-col gap-3 2xl:gap-4 px-3 2xl:px-4 mt-20 2xl:mt-25">
         {menuItems.map((item) => {
           const Icon = item.icon;
-
-          const isActive =
-            item.path === '/mentoring'
-              ? location.pathname.startsWith('/mentoring')
-              : location.pathname === item.path;
+          const isActive = isMenuActive(item);
 
           return (
             <Link
