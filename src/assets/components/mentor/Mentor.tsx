@@ -14,18 +14,22 @@ export default function Mentor({
   onApply,
 }: MentorProps) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-white-1 p-3">
-      <div className="flex items-center gap-5 h-[228px]">
-        <Profile />
+    <div
+      className="relative w-[468px] h-[228px] rounded-[18px] bg-white p-3 shadow-[4px_4px_20px_-5px_rgba(0,0,0,0.25)]"
+    >
+      <div className="flex items-start gap-5 h-full">
+        <div className="flex-shrink-0 mt-4 ml-4">
+          <Profile />
+        </div>
 
-        <div>
-          <p className="font-semibold text-gray-1">{name}</p>
+        <div className="flex flex-col justify-start pt-8">
+          <p className="font-bold text-gray-1 text-[24px] mb-3">{name}</p>
 
-          <div className="mt-3 flex gap-2">
-            <span className="rounded bg-main-1 px-2 py-0.5 text-white text-bold">
+          <div className="flex gap-2">
+            <span className="rounded-md px-3 py-0.3 text-white text-[20px] font-semibold bg-main-1">
               {generation}기
             </span>
-            <span className="rounded bg-main-2 px-2 py-0.5 text-white text-bold">
+            <span className="rounded-md px-3 py-0.3 text-white text-[20px] font-semibold bg-main-2">
               {major}
             </span>
           </div>
@@ -34,7 +38,7 @@ export default function Mentor({
 
       <button
         onClick={onApply}
-        className="rounded-3xl border border-none bg-white px-4 py-2 text-sm hover:bg-gray-100 transition"
+        className="absolute bottom-6 right-6 rounded-[10px] bg-white-1 px-8 py-4 text-[24px] text-gray-1 font-bold transition-colors"
       >
         멘토 신청
       </button>
