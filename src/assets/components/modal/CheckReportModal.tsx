@@ -20,52 +20,40 @@ export default function CheckReportModal({
 }: ReportModalProps) {
   return (
     <ModalWrapper className="px-10 py-10">
-      <div className="w-[1350px]">
-        <h2 className="text-[32px] text-gray-1 font-bold mb-6">게시글 신고</h2>
-        <p className="mb-10 text-gray-1 text-2xl font-semibold">
+      <div className="w-[1350px] max-h-200">
+        <h2 className="text-[32px] text-gray-1 font-bold mb-13">게시글 신고</h2>
+        <p className="mb-7 text-gray-1 text-2xl font-semibold">
           문제가 되는 이유를 확인하고 처리해 주세요.
         </p>
-        <div className="mb-10">
-          <label className="block text-2xl mb-4 font-semibold text-gray-1">
-            신고 사유
-          </label>
-          <div className="w-94 px-6 py-4 border border-gray-2 rounded-lg bg-gray-50 text-xl text-gray-1">
+        <div className="mb-15">
+          <div className="w-94 px-6 py-4 border border-gray-2 rounded-lg text-xl text-gray-1">
             {mockReportDetail.reason}
           </div>
         </div>
-        <div className="mb-14">
-          <label className="block text-2xl mb-4 font-semibold text-gray-1">
+        <div className="mb-10">
+          <label className="block text-2xl mb-9 font-semibold text-gray-1">
             추가 설명
           </label>
-          <div className="w-full min-h-40 p-6 border border-gray-2 rounded-lg bg-gray-50 text-xl text-gray-1 whitespace-pre-wrap">
+          <div className="w-full h-[296px] p-6 border border-gray-2 rounded-lg text-xl text-gray-1 whitespace-pre-wrap">
             {mockReportDetail.additionalReason}
           </div>
         </div>
         <div className="flex gap-5 justify-end">
           <button
             onClick={onClose}
-            className="px-9 py-4 border border-gray-2 text-2xl font-bold text-gray-1 rounded-xl"
+            className="px-9 py-4 border border-gray-2 cursor-pointer text-2xl font-bold text-gray-1 rounded-xl"
           >
             취소
           </button>
-          <button
-            onClick={() => onAction('BLOCK')}
-            className="px-9 py-4 bg-red-400 text-white text-2xl font-bold rounded-xl"
-          >
-            제재
-          </button>
-          <button
-            onClick={() => onAction('REJECT')}
-            className="px-9 py-4 bg-green-400 text-white text-2xl font-bold rounded-xl"
-          >
-            기각
-          </button>
-          <button
-            onClick={() => onAction('HOLD')}
-            className="px-9 py-4 bg-yellow-400 text-white text-2xl font-bold rounded-xl"
-          >
-            보류
-          </button>
+          <div onClick={() => onAction('BLOCK')}>
+            <Button width="w-[114px]" text="제재" color="bg-[#FFAC0B]" />
+          </div>
+          <div onClick={() => onAction('REJECT')}>
+            <Button width="w-[114px]" text="기각" color="bg-main-3" />
+          </div>
+          <div onClick={() => onAction('HOLD')}>
+            <Button width="w-[114px]" text="보류" color="bg-[#34C759]" />
+          </div>
         </div>
       </div>
     </ModalWrapper>
