@@ -101,7 +101,7 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
 
           <button
             type="submit"
-            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-xl rounded-[10px] font-bold hover:bg-main-2-hover transition-all"
+            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-xl rounded-xl cursor-pointer font-bold"
           >
             비밀번호 변경
           </button>
