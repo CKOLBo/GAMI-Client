@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ReportModal from '@/assets/components/modal/ReportModal';
+import CheckReportModal from '@/assets/components/modal/CheckReportModal';
 import { useNavigate } from 'react-router-dom';
 
 const Search = ({ className }: { className?: string }) => (
@@ -61,7 +61,8 @@ export default function AdminReport() {
     setIsModalOpen(true);
   };
 
-  const handleReport = () => {
+  const handleReportAction = (action: 'BLOCK' | 'REJECT' | 'HOLD') => {
+    console.log(action);
     setIsModalOpen(false);
   };
 
@@ -117,9 +118,9 @@ export default function AdminReport() {
         ))}
       </div>
       {isModalOpen && (
-        <ReportModal
+        <CheckReportModal
           onClose={() => setIsModalOpen(false)}
-          onReport={handleReport}
+          onAction={handleReportAction}
         />
       )}
     </div>
