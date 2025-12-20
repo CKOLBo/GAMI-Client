@@ -4,7 +4,10 @@ interface ButtonProps {
   text: string;
   to?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+
   color?: string;
+  width?: string;
+  height?: string;
 }
 
 export default function Button({
@@ -12,11 +15,13 @@ export default function Button({
   to,
   onClick,
   color = 'bg-main-1',
+  width = 'w-38',
+  height = 'h-16',
 }: ButtonProps) {
   const navigate = useNavigate();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (onClick) onClick(e);
+    onClick?.(e);
     if (to) navigate(to);
   };
 
@@ -26,13 +31,16 @@ export default function Button({
       onClick={handleClick}
       className={`
         ${color}
+        ${width}
+        ${height}
         rounded-lg
-        w-38
-        h-16
         cursor-pointer
         text-white
         font-bold
         text-2xl
+        flex
+        items-center
+        justify-center
       `}
     >
       {text}
