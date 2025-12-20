@@ -4,9 +4,15 @@ interface ButtonProps {
   text: string;
   to?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  color?: string;
 }
 
-export default function Button({ text, to, onClick }: ButtonProps) {
+export default function Button({
+  text,
+  to,
+  onClick,
+  color = 'bg-main-1',
+}: ButtonProps) {
   const navigate = useNavigate();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -16,9 +22,18 @@ export default function Button({ text, to, onClick }: ButtonProps) {
 
   return (
     <button
-      onClick={handleClick}
       type="button"
-      className="rounded-lg bg-main-1 w-38 h-16 cursor-pointer text-white font-bold text-2xl"
+      onClick={handleClick}
+      className={`
+        ${color}
+        rounded-lg
+        w-38
+        h-16
+        cursor-pointer
+        text-white
+        font-bold
+        text-2xl
+      `}
     >
       {text}
     </button>
