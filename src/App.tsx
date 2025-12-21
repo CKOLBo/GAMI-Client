@@ -10,6 +10,7 @@ import Password from '@/pages/password/PasswordPage';
 import Mentoring from '@/pages/mentoring/MentoringPage';
 import RandomMentoring from '@/pages/mentoring/RandomMentoring';
 import MyPage from '@/pages/myPage/MyPage';
+import Admin from './pages/admin/AdminPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/mentoring" element={<Mentoring />} />
         <Route path="/mentoring-random" element={<RandomMentoring />} />
         <Route path="/my-page" element={<MyPage />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
