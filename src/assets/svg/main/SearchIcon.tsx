@@ -5,7 +5,7 @@ interface SearchIconProps {
 
 export default function SearchIcon({
   className,
-  color = 'gray-1',
+  color = '#333D48',
 }: SearchIconProps) {
   return (
     <svg
