@@ -103,6 +103,7 @@ export default function ChatPage() {
     return date.toLocaleDateString('ko-KR');
   };
 
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
