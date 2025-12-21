@@ -4,15 +4,104 @@ import Profile from '@/assets/svg/profile/Profile';
 import BellIcon from '@/assets/svg/common/BellIcon';
 import SearchIcon from '@/assets/svg/main/SearchIcon';
 import Divider from '@/assets/svg/Divider';
+import { useState } from 'react';
+import axios from 'axios';
 
 interface ChatItem {
-  id: string;
+  id: number;
   name: string;
   lastMessage: string;
+  major: string;
+  generation: number;
+}
+
+interface ChatRoomDetail {
+  roomId: number;
+  name: string;
+  major: string;
+  generation: number;
+}
+
+interface ChatMessage {
+  messageId: number;
+  message: string;
+  createdAt: string;
+  senderId: number;
+  senderName: string;
+}
+
+interface ChatMessagesResponse {
+  roomId: number;
+  messages: ChatMessage[];
+  nextCursor: number;
+  hasMore: boolean;
+  roomStatus: string;
+  currentMemberLeft: boolean;
 }
 
 export default function ChatPage() {
-  const chatList: ChatItem[] = [];
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const [roomDetail, setRoomDetail] = useState<ChatRoomDetail | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const chatList: ChatItem[] = [
+    {
+      id: 1,
+      name: '한국',
+      lastMessage: '안녕하세요! 멘토링 관련해서 질문이 있습니다.',
+      major: 'FRONTEND',
+      generation: 9,
+    },
+    {
+      id: 2,
+      name: '문강현',
+      lastMessage: 'React 컴포넌트 설계에 대해 조언을 구하고 싶어요.',
+      major: 'FRONTEND',
+      generation: 8,
+    },
+    {
+      id: 3,
+      name: '양은ㄴㄴ준',
+      lastMessage: 'Next.js 프로젝트 구조에 대한 멘토링이 필요합니다.',
+      major: 'FRONTEND',
+      generation: 9,
+    },
+  ];
+
+  const handleChatClick = async (roomId: number) => {
+    setSelectedRoomId(roomId);
+    setLoading(true);
+
+    try {
+      const [roomResponse, messagesResponse] = await Promise.all([
+        axios.get<ChatRoomDetail>(`/api/chat/${roomId}`),
+        axios.get<ChatMessagesResponse>(`/api/chat/${roomId}/messages`),
+      ]);
+
+      setRoomDetail(roomResponse.data);
+      setMessages(messagesResponse.data.messages);
+    } catch (error) {
+      console.error('채팅방 정보 로드 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return '방금 전';
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    if (days < 7) return `${days}일 전`;
+    return date.toLocaleDateString('ko-KR');
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -49,11 +138,14 @@ export default function ChatPage() {
               chatList.map((chat) => (
                 <div
                   key={chat.id}
-                  className="px-6 2xl:px-8 py-4 2xl:py-5 border-b border-gray-2 hover:bg-[#F9F9F9] cursor-pointer transition-colors"
+                  onClick={() => handleChatClick(chat.id)}
+                  className={`mx-2 px-4 2xl:px-6 py-4 2xl:py-5 rounded-lg hover:bg-white-1 cursor-pointer transition-colors ${
+                    selectedRoomId === chat.id ? 'bg-white-1' : ''
+                  }`}
                 >
                   <div className="flex items-center gap-4 2xl:gap-5">
                     <div className="flex-shrink-0">
-                      <div className="w-12 2xl:w-14 h-12 2xl:h-14 rounded-full bg-gray-2 flex items-center justify-center">
+                      <div className="w-12 2xl:w-14 h-12 2xl:h-14 rounded-full flex items-center justify-center">
                         <Profile width={40} height={40} />
                       </div>
                     </div>
@@ -78,19 +170,74 @@ export default function ChatPage() {
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center bg-white">
-          <div className="text-center">
-            <div className="mb-8 2xl:mb-12 flex justify-center">
-              <Logo size="lg" />
+        {selectedRoomId && roomDetail ? (
+          <div className="flex-1 flex flex-col bg-white">
+            <div className="px-6 2xl:px-8 py-4 2xl:py-6 border-b border-gray-2">
+              <div className="flex items-center gap-4 2xl:gap-5">
+                <div className="flex-shrink-0">
+                  <div className="w-12 2xl:w-14 h-12 2xl:h-14 rounded-full flex items-center justify-center">
+                    <Profile width={40} height={40} />
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-lg 2xl:text-xl font-bold text-gray-1">
+                    {roomDetail.name}
+                  </h2>
+                  <p className="text-sm 2xl:text-base text-gray-3">
+                    {roomDetail.generation}기 · {roomDetail.major}
+                  </p>
+                </div>
+              </div>
             </div>
-            <p className="text-2xl 2xl:text-3xl font-bold text-gray-3">
-              <span className="text-main-2">멘토</span>와{' '}
-              <span className="text-main-1">멘티</span>를 바로 연결하는
-              <br />
-                맞춤형 멘토링 서비스
-            </p>
+
+            <div className="flex-1 overflow-y-auto px-6 2xl:px-8 py-4 2xl:py-6">
+              {loading ? (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-base 2xl:text-lg text-gray-3">로딩 중...</p>
+                </div>
+              ) : messages.length > 0 ? (
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <div
+                      key={message.messageId}
+                      className="flex flex-col gap-1"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-gray-1">
+                          {message.senderName}
+                        </span>
+                        <span className="text-xs text-gray-3">
+                          {formatDate(message.createdAt)}
+                        </span>
+                      </div>
+                      <p className="text-base text-gray-1">{message.message}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-base 2xl:text-lg text-gray-3">
+                    메시지가 없습니다
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center bg-white">
+            <div className="text-center">
+              <div className="mb-8 2xl:mb-12 flex justify-center">
+                <Logo size="lg" />
+              </div>
+              <p className="text-2xl 2xl:text-3xl font-bold text-gray-3">
+                <span className="text-main-2">멘토</span>와{' '}
+                <span className="text-main-1">멘티</span>를 바로 연결하는
+                <br />
+                  맞춤형 멘토링 서비스
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
