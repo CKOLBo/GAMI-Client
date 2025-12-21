@@ -11,6 +11,7 @@ import Mentoring from '@/pages/mentoring/MentoringPage';
 import RandomMentoring from '@/pages/mentoring/RandomMentoring';
 import MyPage from '@/pages/myPage/MyPage';
 import ChatPage from '@/pages/chat/ChatPage';
+import ChatApplyPage from '@/pages/chat/ChatApplyPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/mentoring-random" element={<RandomMentoring />} />
         <Route path="/my-page" element={<MyPage />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/chat-apply" element={<ChatApplyPage />} />
       </Routes>
     </BrowserRouter>
   );
