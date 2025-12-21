@@ -4,6 +4,7 @@ import BellIcon from '@/assets/svg/common/BellIcon';
 import SearchIcon from '@/assets/svg/main/SearchIcon';
 import Divider from '@/assets/svg/Divider';
 import RequestItem from '@/assets/components/chat/RequestItem';
+import MentorRequestModal from '@/assets/components/modal/MentorRequestModal';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -19,6 +20,16 @@ interface ApplyRequest {
 export default function ChatApplyPage() {
   const [sentRequests, setSentRequests] = useState<ApplyRequest[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isMentorRequestModalOpen, setIsMentorRequestModalOpen] = useState(false);
+
+  const mentorRequests = [
+    { id: 1, name: '양은준' },
+    { id: 2, name: '한국' },
+    { id: 3, name: '양은준' },
+    { id: 4, name: '한국' },
+    { id: 5, name: '양은준' },
+    { id: 6, name: '한국' },
+  ];
 
   useEffect(() => {
     const mockData: ApplyRequest[] = [
@@ -96,6 +107,14 @@ export default function ChatApplyPage() {
     }
   };
 
+  const handleBellClick = () => {
+    setIsMentorRequestModalOpen(true);
+  };
+
+  const handleAcceptMentor = (id: number) => {
+    console.log(`멘토 신청 수락: ${id}`);
+  };
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -113,7 +132,13 @@ export default function ChatApplyPage() {
                 <Divider className="flex-shrink-0" />
                 <span className="text-[40px] text-gray-1 font-bold">요청</span>
               </h1>
-              <BellIcon className="text-gray-3" />
+              <button
+                onClick={handleBellClick}
+                className="relative p-1 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent"
+                type="button"
+              >
+                <BellIcon className="text-gray-3 pointer-events-none" />
+              </button>
             </div>
             <div className="relative">
               <div className="absolute left-5 top-1/2 -translate-y-1/2 z-10">
@@ -164,6 +189,13 @@ export default function ChatApplyPage() {
           </div>
         </div>
       </div>
+      {isMentorRequestModalOpen && (
+        <MentorRequestModal
+          onClose={() => setIsMentorRequestModalOpen(false)}
+          onAccept={handleAcceptMentor}
+          requests={mentorRequests}
+        />
+      )}
     </div>
   );
 }
