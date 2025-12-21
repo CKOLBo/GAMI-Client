@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Logo from '@/assets/svg/logo/Logo';
 import HomeIcon from '@/assets/svg/sidebar/HomeIcon';
 import MentoringIcon from '@/assets/svg/sidebar/MentoringIcon';
@@ -25,9 +26,23 @@ export default function Sidebar() {
     setIsLogoutModalOpen(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/signin');
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        await axios.delete('/api/auth/signout', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      localStorage.removeItem('token');
+      navigate('/signin');
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      localStorage.removeItem('token');
+      navigate('/signin');
+    }
   };
 
   const menuItems: MenuItem[] = [
