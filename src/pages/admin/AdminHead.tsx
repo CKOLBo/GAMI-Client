@@ -1,4 +1,4 @@
-import Line from '@/assets/components/Line';
+import Line from '@/assets/svg/Line';
 
 export default function AdminHead() {
   return (
