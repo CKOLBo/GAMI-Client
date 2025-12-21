@@ -31,7 +31,12 @@ export default function Sidebar() {
       icon: MentoringIcon,
       subPaths: ['/mentoring', '/mentoring-random'],
     },
-    { path: '/chat', label: '채팅', icon: ChatIcon },
+    {
+      path: '/chat',
+      label: '채팅',
+      icon: ChatIcon,
+      subPaths: ['/chat', '/chat-apply'],
+    },
     {
       path: '/post',
       label: '익명 게시판',
