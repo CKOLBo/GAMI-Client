@@ -45,15 +45,24 @@ export default function CheckReportModal({
           >
             취소
           </button>
-          <div onClick={() => onAction('BLOCK')}>
-            <Button width="w-[114px]" text="제재" color="bg-[#FFAC0B]" />
-          </div>
-          <div onClick={() => onAction('REJECT')}>
-            <Button width="w-[114px]" text="기각" color="bg-main-3" />
-          </div>
-          <div onClick={() => onAction('HOLD')}>
-            <Button width="w-[114px]" text="보류" color="bg-[#34C759]" />
-          </div>
+          <Button
+            width="w-[114px]"
+            text="제재"
+            color="bg-[#FFAC0B]"
+            onClick={() => onAction('BLOCK')}
+          />
+          <Button
+            width="w-[114px]"
+            text="기각"
+            color="bg-main-3"
+            onClick={() => onAction('REJECT')}
+          />
+          <Button
+            width="w-[114px]"
+            text="보류"
+            color="bg-[#34C759]"
+            onClick={() => onAction('HOLD')}
+          />
         </div>
       </div>
     </ModalWrapper>
