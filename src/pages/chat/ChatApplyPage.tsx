@@ -1,11 +1,12 @@
 import Sidebar from '@/assets/components/Sidebar';
 import Logo from '@/assets/svg/logo/Logo';
-import Profile from '@/assets/svg/profile/Profile';
 import BellIcon from '@/assets/svg/common/BellIcon';
 import SearchIcon from '@/assets/svg/main/SearchIcon';
 import Divider from '@/assets/svg/Divider';
+import RequestItem from '@/assets/components/chat/RequestItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface ApplyRequest {
   applyId: number;
@@ -20,57 +21,62 @@ export default function ChatApplyPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const mockData: ApplyRequest[] = [
+      {
+        applyId: 1,
+        mentorId: 1,
+        name: '양은준',
+        applyStatus: 'PENDING',
+        createdAt: '2025-12-21T08:45:28.541Z',
+      },
+      {
+        applyId: 2,
+        mentorId: 2,
+        name: '한국',
+        applyStatus: 'PENDING',
+        createdAt: '2025-12-21T07:30:15.123Z',
+      },
+      {
+        applyId: 3,
+        mentorId: 3,
+        name: '문강현',
+        applyStatus: 'PENDING',
+        createdAt: '2025-12-20T15:20:45.789Z',
+      },
+      {
+        applyId: 4,
+        mentorId: 4,
+        name: '박하민',
+        applyStatus: 'PENDING',
+        createdAt: '2025-12-20T14:10:30.456Z',
+      },
+      {
+        applyId: 5,
+        mentorId: 5,
+        name: '한의준',
+        applyStatus: 'PENDING',
+        createdAt: '2025-12-19T12:05:20.123Z',
+      },
+      {
+        applyId: 6,
+        mentorId: 6,
+        name: '김준표',
+        applyStatus: 'PENDING',
+        createdAt: '2025-12-19T10:30:15.789Z',
+      },
+    ];
+
     const fetchSentRequests = async () => {
       setLoading(true);
       try {
         const response = await axios.get<ApplyRequest[]>('/api/apply/sent');
-        setSentRequests(response.data);
+        if (Array.isArray(response.data)) {
+          setSentRequests(response.data);
+        } else {
+          setSentRequests(mockData);
+        }
       } catch (error) {
         console.error('보낸 요청 목록 로드 실패:', error);
-        const mockData: ApplyRequest[] = [
-          {
-            applyId: 1,
-            mentorId: 1,
-            name: '양은준',
-            applyStatus: 'PENDING',
-            createdAt: '2025-12-21T08:45:28.541Z',
-          },
-          {
-            applyId: 2,
-            mentorId: 2,
-            name: '한국',
-            applyStatus: 'PENDING',
-            createdAt: '2025-12-21T07:30:15.123Z',
-          },
-          {
-            applyId: 3,
-            mentorId: 3,
-            name: '문강현',
-            applyStatus: 'PENDING',
-            createdAt: '2025-12-20T15:20:45.789Z',
-          },
-          {
-            applyId: 4,
-            mentorId: 4,
-            name: '박하민',
-            applyStatus: 'PENDING',
-            createdAt: '2025-12-20T14:10:30.456Z',
-          },
-          {
-            applyId: 5,
-            mentorId: 5,
-            name: '한의준',
-            applyStatus: 'PENDING',
-            createdAt: '2025-12-19T12:05:20.123Z',
-          },
-          {
-            applyId: 6,
-            mentorId: 6,
-            name: '김준표',
-            applyStatus: 'PENDING',
-            createdAt: '2025-12-19T10:30:15.789Z',
-          },
-        ];
         setSentRequests(mockData);
       } finally {
         setLoading(false);
@@ -86,6 +92,7 @@ export default function ChatApplyPage() {
       setSentRequests((prev) => prev.filter((req) => req.applyId !== applyId));
     } catch (error) {
       console.error('요청 취소 실패:', error);
+      alert('요청 취소에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -97,7 +104,12 @@ export default function ChatApplyPage() {
           <div className="px-6 2xl:px-8 pt-6 2xl:pt-8 pb-4 2xl:pb-5">
             <div className="flex items-center justify-between mb-4 2xl:mb-5">
               <h1 className="flex items-center gap-4 text-[40px] font-bold">
-                <span className="text-[32px] text-gray-2 font-bold">채팅</span>
+                <Link
+                  to="/chat"
+                  className="text-[32px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+                >
+                  채팅
+                </Link>
                 <Divider className="flex-shrink-0" />
                 <span className="text-[40px] text-gray-1 font-bold">요청</span>
               </h1>
@@ -120,34 +132,13 @@ export default function ChatApplyPage() {
               <div className="flex items-center justify-center h-full">
                 <p className="text-base 2xl:text-lg text-gray-3">로딩 중...</p>
               </div>
-            ) : sentRequests.length > 0 ? (
+            ) : Array.isArray(sentRequests) && sentRequests.length > 0 ? (
               sentRequests.map((request) => (
-                <div
+                <RequestItem
                   key={request.applyId}
-                  className="mx-2 px-4 2xl:px-6 py-4 2xl:py-5 rounded-lg"
-                >
-                  <div className="flex items-center gap-4 2xl:gap-5">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 2xl:w-14 h-12 2xl:h-14 rounded-full flex items-center justify-center">
-                        <Profile width={40} height={40} />
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-base 2xl:text-lg text-gray-1">
-                        {request.name}님한테 요청을 보냈어요.
-                      </p>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCancelRequest(request.applyId);
-                      }}
-                      className="px-4 2xl:px-5 py-2 2xl:py-2.5 rounded-lg bg-white-1 text-gray-1 text-sm 2xl:text-base font-semibold hover:bg-gray-4 transition-colors whitespace-nowrap"
-                    >
-                      취소
-                    </button>
-                  </div>
-                </div>
+                  name={request.name}
+                  onCancel={() => handleCancelRequest(request.applyId)}
+                />
               ))
             ) : (
               <div className="flex items-center justify-center h-full">
