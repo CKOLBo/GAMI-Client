@@ -1,17 +1,21 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAuth } from '@/contexts/AuthContext';
 import Logo from '@/assets/svg/logo/Logo';
 import Show from '@/assets/svg/password/show';
 import Hide from '@/assets/svg/password/hide';
+import { instance } from '@/assets/shared/lib/axios';
+import { setCookie } from '@/assets/shared/lib/cookie';
 
 export default function SigninPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: '', password: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
@@ -21,8 +25,6 @@ export default function SigninPage() {
 
     if (!email) {
       newErrors.email = '이메일을 입력해주세요.';
-    } else if (!email.endsWith('@gsm.hs.kr')) {
-      newErrors.email = '학교 계정만 가능합니다.';
     }
     if (!password) {
       newErrors.password = '비밀번호를 입력해주세요.';
@@ -31,21 +33,46 @@ export default function SigninPage() {
     setErrors(newErrors);
 
     if (!newErrors.email && !newErrors.password) {
-      if (email === 'test@gsm.hs.kr' && password === '1234') {
+      setIsLoading(true);
+      try {
+        const response = await instance.post<{
+          accessToken: string;
+          refreshToken: string;
+          accessTokenExpiresIn: string;
+          refreshTokenExpiresIn: string;
+        }>(
+          '/api/auth/signin',
+          {
+            email,
+            password,
+          },
+          {
+            validateStatus: (status) => status === 200 || status === 401,
+          }
+        );
+
+        if (response.status === 401) {
+          toast.error('이메일 또는 비밀번호가 일치하지 않습니다.');
+          return;
+        }
+
+        const { accessToken, refreshToken } = response.data;
+
+        setCookie('accessToken', accessToken);
+        setCookie('refreshToken', refreshToken);
+
         login(
           {
-            id: 1,
+            id: 0,
             email: email,
-            name: '테스트 사용자',
           },
-          'mock-token'
+          accessToken
         );
         navigate('/main');
-      } else {
-        setErrors({
-          email: '',
-          password: '이메일 또는 비밀번호가 일치하지 않습니다.',
-        });
+      } catch (error: any) {
+        toast.error('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -94,9 +121,10 @@ export default function SigninPage() {
           </div>
           <button
             type="submit"
-            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-2-hover border-0 cursor-pointer"
+            disabled={isLoading}
+            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-2-hover border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            로그인
+            {isLoading ? '로그인' : '로그인'}
           </button>
         </form>
 
