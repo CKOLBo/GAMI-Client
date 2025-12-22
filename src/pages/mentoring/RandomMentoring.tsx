@@ -14,7 +14,7 @@ export default function RandomMentoring() {
 
       <main className="flex-1 ml-45 2xl:ml-55">
         <div className="fixed top-0 left-45 2xl:left-55 right-0 z-40">
-          <div className="px-7 2xl:px-12 pt-7 2xl:pt-12 bg-white">
+          <div className="px-7 2xl:px-15 pt-7 2xl:pt-15 bg-white">
             <div className="flex items-center">
               <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
                 <Link
