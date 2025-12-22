@@ -41,6 +41,7 @@ export default function Sidebar() {
     } catch (error) {
       console.error('로그아웃 실패:', error);
     } finally {
+      localStorage.removeItem('token');
       logout();
       navigate('/signin');
     }
