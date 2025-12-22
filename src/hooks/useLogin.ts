@@ -65,7 +65,7 @@ export function useLogin(): UseLoginReturn {
         try {
           const userResponse = await instance.get<UserInfo>('/api/user/me');
           userInfo = userResponse.data;
-        } catch (userError) {
+        } catch {
           throw new Error('사용자 정보를 가져오는데 실패했습니다.');
         }
       }
