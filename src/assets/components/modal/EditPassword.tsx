@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { instance } from '@/assets/shared/lib/axios';
 import ModalWrapper from '@/assets/shared/Modal';
 import X from '@/assets/svg/X';
 import InputPassword from '../Input/InputPassword';
@@ -12,6 +14,7 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -26,7 +29,7 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
     return '';
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errorMessage = validate();
     if (errorMessage) {
@@ -34,8 +37,30 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
       return;
     }
 
-    setError('');
-    onClose();
+    try {
+      setIsLoading(true);
+      setError('');
+
+      await instance.patch('/api/member/password', {
+        password: currentPassword,
+        newPassword: newPassword,
+      });
+
+      toast.success('비밀번호가 변경되었습니다.');
+      onClose();
+    } catch (err: any) {
+      console.error('Password change error:', err);
+
+      if (err.response?.status === 401) {
+        setError('현재 비밀번호가 올바르지 않습니다.');
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        toast.error('비밀번호 변경에 실패했습니다.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -101,9 +126,10 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
 
           <button
             type="submit"
-            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-xl rounded-xl cursor-pointer font-bold"
+            disabled={isLoading}
+            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-xl rounded-xl cursor-pointer font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            비밀번호 변경
+            {isLoading ? '변경 중...' : '비밀번호 변경'}
           </button>
         </form>
       </div>
