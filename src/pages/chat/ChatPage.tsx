@@ -68,7 +68,7 @@ const chatList: ChatItem[] = [
   },
   {
     id: 3,
-    name: '양은ㄴㄴ준',
+    name: '양은준',
     lastMessage: 'Next.js 프로젝트 구조에 대한 멘토링이 필요합니다.',
     major: 'FRONTEND',
     generation: 9,
