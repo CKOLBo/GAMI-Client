@@ -14,7 +14,7 @@ export default function RandomMentoring() {
 
       <main className="flex-1 ml-45 2xl:ml-55">
         <div className="fixed top-0 left-45 2xl:left-55 right-0 z-40">
-          <div className="px-25 pt-25 bg-white">
+          <div className="px-12 pt-12 bg-white">
             <div className="flex items-center">
               <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
                 <Link
@@ -33,7 +33,7 @@ export default function RandomMentoring() {
           <div className="h-16 bg-[linear-gradient(180deg,#FFF_0%,rgba(255,255,255,0)_100%)]"></div>
         </div>
 
-        <div className="pt-[220px] pb-25">
+        <div className="pt-[220px] pb-12">
           <div className="flex flex-col items-center justify-center min-h-[60vh] mt-[20px]">
             <div className="mb-12 flex items-center justify-center">
               <div className="w-64 h-64 2xl:w-80 2xl:h-80 flex items-center justify-center overflow-hidden">
