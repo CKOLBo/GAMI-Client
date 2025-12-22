@@ -15,7 +15,7 @@ export const baseURL = import.meta.env.DEV
 
 export const instance = axios.create({
   baseURL,
-  timeout: 30000,
+  timeout: 8000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -42,6 +42,15 @@ instance.interceptors.response.use(
     };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const isAuthEndpoint =
+        originalRequest.url?.includes('/auth/signin') ||
+        originalRequest.url?.includes('/auth/signup');
+
+      if (isAuthEndpoint) {
+        (error as any).silent = true;
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       try {
