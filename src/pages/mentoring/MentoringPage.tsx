@@ -66,7 +66,7 @@ export default function MentoringPage() {
 
               <div className="ml-10 2xl:ml-25 relative w-100 2xl:w-150">
                 <div className="absolute left-3 2xl:left-5 top-1/2 -translate-y-1/2 z-10">
-                  <SearchIcon className="w-5 h-4 2xl:w-6 2xl:h-6" />
+                  <SearchIcon className="w-5 h-5 2xl:w-6 2xl:h-6" />
                 </div>
                 <input
                   type="text"
