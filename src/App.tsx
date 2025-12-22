@@ -17,6 +17,7 @@ import ChatPage from '@/pages/chat/ChatPage';
 import ChatApplyPage from '@/pages/chat/ChatApplyPage';
 import Admin from './pages/admin/AdminPage';
 import NotFound from './pages/404/NotFoundPage';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 function App() {
   return (
@@ -26,18 +27,102 @@ function App() {
           <Route path="/" element={<Signin />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/main" element={<Main />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/post-content" element={<PostContent />} />
-          <Route path="/post-write" element={<PostWrite />} />
-          <Route path="/my-post" element={<MyPost />} />
-          <Route path="/password" element={<Password />} />
-          <Route path="/mentoring" element={<Mentoring />} />
-          <Route path="/mentoring-random" element={<RandomMentoring />} />
-          <Route path="/my-page" element={<MyPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/chat-apply" element={<ChatApplyPage />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route
+            path="/main"
+            element={
+              <ProtectedRoute>
+                <Main />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/post"
+            element={
+              <ProtectedRoute>
+                <Post />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/post-content"
+            element={
+              <ProtectedRoute>
+                <PostContent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/post-write"
+            element={
+              <ProtectedRoute>
+                <PostWrite />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-post"
+            element={
+              <ProtectedRoute>
+                <MyPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/password"
+            element={
+              <ProtectedRoute>
+                <Password />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mentoring"
+            element={
+              <ProtectedRoute>
+                <Mentoring />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mentoring-random"
+            element={
+              <ProtectedRoute>
+                <RandomMentoring />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-page"
+            element={
+              <ProtectedRoute>
+                <MyPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat-apply"
+            element={
+              <ProtectedRoute>
+                <ChatApplyPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
