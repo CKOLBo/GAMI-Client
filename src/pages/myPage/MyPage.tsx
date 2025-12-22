@@ -81,13 +81,13 @@ export default function MyPage() {
       );
 
       if (majorKey) {
-        await instance.patch('/api/member', { major: majorKey });
+        await instance.patch('/api/member/major', { major: majorKey });
         setSelectedInterest(tempSelectedInterest);
-        toast.success('관심 분야가 수정되었습니다.');
+        toast.success('전공이 수정되었습니다.');
       }
     } catch (err) {
       console.error('Update failed:', err);
-      toast.error('수정에 실패했습니다.');
+      toast.error('전공 수정에 실패했습니다.');
     } finally {
       setIsEditingCategory(false);
     }
