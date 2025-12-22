@@ -17,66 +17,67 @@ interface ApplyRequest {
   createdAt: string;
 }
 
+const mentorRequests = [
+  { id: 1, name: '양은준' },
+  { id: 2, name: '한국' },
+  { id: 3, name: '양은준' },
+  { id: 4, name: '한국' },
+  { id: 5, name: '양은준' },
+  { id: 6, name: '한국' },
+];
+
+const mockData: ApplyRequest[] = [
+  {
+    applyId: 1,
+    mentorId: 1,
+    name: '양은준',
+    applyStatus: 'PENDING',
+    createdAt: '2025-12-21T08:45:28.541Z',
+  },
+  {
+    applyId: 2,
+    mentorId: 2,
+    name: '한국',
+    applyStatus: 'PENDING',
+    createdAt: '2025-12-21T07:30:15.123Z',
+  },
+  {
+    applyId: 3,
+    mentorId: 3,
+    name: '문강현',
+    applyStatus: 'PENDING',
+    createdAt: '2025-12-20T15:20:45.789Z',
+  },
+  {
+    applyId: 4,
+    mentorId: 4,
+    name: '박하민',
+    applyStatus: 'PENDING',
+    createdAt: '2025-12-20T14:10:30.456Z',
+  },
+  {
+    applyId: 5,
+    mentorId: 5,
+    name: '한의준',
+    applyStatus: 'PENDING',
+    createdAt: '2025-12-19T12:05:20.123Z',
+  },
+  {
+    applyId: 6,
+    mentorId: 6,
+    name: '김준표',
+    applyStatus: 'PENDING',
+    createdAt: '2025-12-19T10:30:15.789Z',
+  },
+];
+
 export default function ChatApplyPage() {
   const [sentRequests, setSentRequests] = useState<ApplyRequest[]>([]);
   const [loading, setLoading] = useState(false);
   const [isMentorRequestModalOpen, setIsMentorRequestModalOpen] =
     useState(false);
 
-  const mentorRequests = [
-    { id: 1, name: '양은준' },
-    { id: 2, name: '한국' },
-    { id: 3, name: '양은준' },
-    { id: 4, name: '한국' },
-    { id: 5, name: '양은준' },
-    { id: 6, name: '한국' },
-  ];
-
   useEffect(() => {
-    const mockData: ApplyRequest[] = [
-      {
-        applyId: 1,
-        mentorId: 1,
-        name: '양은준',
-        applyStatus: 'PENDING',
-        createdAt: '2025-12-21T08:45:28.541Z',
-      },
-      {
-        applyId: 2,
-        mentorId: 2,
-        name: '한국',
-        applyStatus: 'PENDING',
-        createdAt: '2025-12-21T07:30:15.123Z',
-      },
-      {
-        applyId: 3,
-        mentorId: 3,
-        name: '문강현',
-        applyStatus: 'PENDING',
-        createdAt: '2025-12-20T15:20:45.789Z',
-      },
-      {
-        applyId: 4,
-        mentorId: 4,
-        name: '박하민',
-        applyStatus: 'PENDING',
-        createdAt: '2025-12-20T14:10:30.456Z',
-      },
-      {
-        applyId: 5,
-        mentorId: 5,
-        name: '한의준',
-        applyStatus: 'PENDING',
-        createdAt: '2025-12-19T12:05:20.123Z',
-      },
-      {
-        applyId: 6,
-        mentorId: 6,
-        name: '김준표',
-        applyStatus: 'PENDING',
-        createdAt: '2025-12-19T10:30:15.789Z',
-      },
-    ];
 
     const fetchSentRequests = async () => {
       setLoading(true);
