@@ -42,6 +42,39 @@ interface ChatMessagesResponse {
   currentMemberLeft: boolean;
 }
 
+const mentorRequests = [
+  { id: 1, name: '양은준' },
+  { id: 2, name: '한국' },
+  { id: 3, name: '양은준' },
+  { id: 4, name: '한국' },
+  { id: 5, name: '양은준' },
+  { id: 6, name: '한국' },
+];
+
+const chatList: ChatItem[] = [
+  {
+    id: 1,
+    name: '한국',
+    lastMessage: '안녕하세요! 멘토링 관련해서 질문이 있습니다.',
+    major: 'FRONTEND',
+    generation: 9,
+  },
+  {
+    id: 2,
+    name: '문강현',
+    lastMessage: 'React 컴포넌트 설계에 대해 조언을 구하고 싶어요.',
+    major: 'FRONTEND',
+    generation: 8,
+  },
+  {
+    id: 3,
+    name: '양은ㄴㄴ준',
+    lastMessage: 'Next.js 프로젝트 구조에 대한 멘토링이 필요합니다.',
+    major: 'FRONTEND',
+    generation: 9,
+  },
+];
+
 export default function ChatPage() {
   const { user } = useAuth();
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
@@ -52,39 +85,6 @@ export default function ChatPage() {
   const [isMentorRequestModalOpen, setIsMentorRequestModalOpen] =
     useState(false);
   const currentUserId = user?.id ?? null;
-
-  const mentorRequests = [
-    { id: 1, name: '양은준' },
-    { id: 2, name: '한국' },
-    { id: 3, name: '양은준' },
-    { id: 4, name: '한국' },
-    { id: 5, name: '양은준' },
-    { id: 6, name: '한국' },
-  ];
-
-  const chatList: ChatItem[] = [
-    {
-      id: 1,
-      name: '한국',
-      lastMessage: '안녕하세요! 멘토링 관련해서 질문이 있습니다.',
-      major: 'FRONTEND',
-      generation: 9,
-    },
-    {
-      id: 2,
-      name: '문강현',
-      lastMessage: 'React 컴포넌트 설계에 대해 조언을 구하고 싶어요.',
-      major: 'FRONTEND',
-      generation: 8,
-    },
-    {
-      id: 3,
-      name: '양은ㄴㄴ준',
-      lastMessage: 'Next.js 프로젝트 구조에 대한 멘토링이 필요합니다.',
-      major: 'FRONTEND',
-      generation: 9,
-    },
-  ];
 
   const handleChatClick = async (roomId: number) => {
     setSelectedRoomId(roomId);
