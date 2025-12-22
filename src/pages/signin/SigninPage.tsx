@@ -7,7 +7,7 @@ import Show from '@/assets/svg/password/show';
 import Hide from '@/assets/svg/password/hide';
 import { baseURL } from '@/assets/shared/lib/axios';
 import { setCookie } from '@/assets/shared/lib/cookie';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export default function SigninPage() {
   const navigate = useNavigate();
@@ -74,8 +74,8 @@ export default function SigninPage() {
         accessToken
       );
       navigate('/main');
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 401) {
         toast.error('이메일 또는 비밀번호가 일치하지 않습니다.');
       } else {
         toast.error('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
