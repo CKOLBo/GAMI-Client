@@ -2,6 +2,13 @@ import axios from 'axios';
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { deleteCookie, getCookie, setCookie } from '@/assets/shared/lib/cookie';
 
+export class TokenRefreshError extends Error {
+  constructor(message = 'Token refresh failed') {
+    super(message);
+    this.name = 'TokenRefreshError';
+  }
+}
+
 export const baseURL = import.meta.env.DEV
   ? ''
   : 'https://port-0-gami-server-mj0rdvda8d11523e.sel3.cloudtype.app';
@@ -64,10 +71,9 @@ instance.interceptors.response.use(
       } catch (e) {
         deleteCookie('accessToken');
         deleteCookie('refreshToken');
-        if (typeof window !== 'undefined') {
-          window.location.href = '/signin';
-        }
-        return Promise.reject(e);
+        throw new TokenRefreshError(
+          'Token refresh failed. Please login again.'
+        );
       }
     }
 
