@@ -52,13 +52,13 @@ export default function MentoringPage() {
           <div className="px-6 2xl:px-12 pt-6 2xl:pt-12 bg-white">
             <div className="flex items-center">
               <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
-                <span className="text-[40px] text-gray-1 font-bold">
+                <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">
                   멘토링
                 </span>
                 <Divider className="flex-shrink-0" />
                 <Link
                   to="/mentoring-random"
-                  className="text-[32px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+                  className="text-3xl 2xl:text-[40px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
                 >
                   랜덤 멘토링
                 </Link>
