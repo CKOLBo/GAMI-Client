@@ -14,7 +14,7 @@ export default function NotFoundPage() {
         <div className="w-60 mb-6 mx-auto flex justify-center">
           <Logo size="md" />
         </div>
-        
+
         <div className="flex items-center justify-center mb-4">
           <svg
             width="559"
@@ -45,12 +45,12 @@ export default function NotFoundPage() {
             />
           </svg>
         </div>
-        
+
         <h2 className="text-2xl font-bold text-gray-1 mb-6">
-          페이지를 찾을 수 없습니다.
-          요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
+          페이지를 찾을 수 없습니다. 요청하신 페이지가 존재하지 않거나
+          이동되었을 수 있습니다.
         </h2>
-        
+
         <div className="flex gap-4 justify-center">
           <button
             onClick={handleGoBack}
@@ -58,7 +58,7 @@ export default function NotFoundPage() {
           >
             이전 페이지
           </button>
-          
+
           <Link
             to="/signin"
             className="max-w-[152px] w-[120px] max-h-[64px] h-[48px] rounded-[10px] bg-[#73A9FF] text-white text-base transition-all duration-300 font-bold hover:bg-main-1-hover flex items-center justify-center no-underline"
@@ -70,5 +70,3 @@ export default function NotFoundPage() {
     </div>
   );
 }
-
-
