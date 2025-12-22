@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { instance, TokenRefreshError } from '@/assets/shared/lib/axios';
 import Sidebar from '@/assets/components/Sidebar';
 import CategoryButton from '@/assets/components/Button/CategoryButton';
 import EditPassword from '@/assets/components/modal/EditPassword';
@@ -6,21 +8,58 @@ import ProfileIcon from '@/assets/svg/profile/Profile';
 import ProfileInfoItem from '@/assets/components/Profile/ProfileInfoItem';
 import { interestList } from '@/assets/shared/ListData';
 
+interface MemberProfile {
+  memberId: number;
+  name: string;
+  gender: 'MALE' | 'FEMALE';
+  generation: number;
+  major: 'FRONTEND' | 'BACKEND' | 'ANDROID' | 'IOS' | 'DESIGN';
+}
+
+const majorToInterestMap: Record<string, string> = {
+  FRONTEND: 'FE',
+  BACKEND: 'BE',
+  ANDROID: 'AOS',
+  IOS: 'iOS',
+  DESIGN: 'Design',
+};
+
 export default function MyPage() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditingCategory, setIsEditingCategory] = useState(false);
-  const initialInterest = 'FE';
-  const [selectedInterest, setSelectedInterest] =
-    useState<string>(initialInterest);
-  const [tempSelectedInterest, setTempSelectedInterest] =
-    useState<string>(initialInterest);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const userInfo = {
-    generation: '9기',
-    studentId: '1206',
-    name: '문강현',
-    gender: '남성',
-  };
+  const [memberData, setMemberData] = useState<MemberProfile | null>(null);
+  const [selectedInterest, setSelectedInterest] = useState<string>('');
+  const [tempSelectedInterest, setTempSelectedInterest] = useState<string>('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsLoading(true);
+
+        const response = await instance.get<MemberProfile>('/api/member');
+        const data = response.data;
+
+        setMemberData(data);
+
+        const interestId = majorToInterestMap[data.major] || 'FE';
+        setSelectedInterest(interestId);
+        setTempSelectedInterest(interestId);
+      } catch (err) {
+        if (err instanceof TokenRefreshError) {
+          toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        } else {
+          toast.error('프로필 조회에 실패했습니다.');
+        }
+        console.error('Profile fetch error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const toggleInterest = (id: string) => {
     if (!isEditingCategory) {
@@ -35,10 +74,39 @@ export default function MyPage() {
     setIsEditingCategory(false);
   };
 
-  const handleCategorySave = () => {
-    setSelectedInterest(tempSelectedInterest);
-    setIsEditingCategory(false);
+  const handleCategorySave = async () => {
+    try {
+      const majorKey = Object.keys(majorToInterestMap).find(
+        (key) => majorToInterestMap[key] === tempSelectedInterest
+      );
+
+      if (majorKey) {
+        await instance.patch('/api/member', { major: majorKey });
+        setSelectedInterest(tempSelectedInterest);
+        toast.success('관심 분야가 수정되었습니다.');
+      }
+    } catch (err) {
+      console.error('Update failed:', err);
+      toast.error('수정에 실패했습니다.');
+    } finally {
+      setIsEditingCategory(false);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1 ml-45 xl:ml-55 min-h-screen flex items-center justify-center">
+          <div className="text-xl text-gray-400">프로필 로딩 중...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!memberData) return null;
+
+  const genderText = memberData.gender === 'MALE' ? '남성' : '여성';
 
   return (
     <div className="flex">
@@ -62,9 +130,12 @@ export default function MyPage() {
 
         <div className="flex flex-row justify-center w-full max-w-2xl">
           <div className="flex flex-col w-[492px] gap-4 2xl:gap-5">
-            <ProfileInfoItem label="기수" value={userInfo.generation} />
-            <ProfileInfoItem label="이름" value={userInfo.name} />
-            <ProfileInfoItem label="성별" value={userInfo.gender} />
+            <ProfileInfoItem
+              label="기수"
+              value={`${memberData.generation}기`}
+            />
+            <ProfileInfoItem label="이름" value={memberData.name} />
+            <ProfileInfoItem label="성별" value={genderText} />
           </div>
         </div>
 
