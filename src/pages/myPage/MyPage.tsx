@@ -93,6 +93,11 @@ export default function MyPage() {
         await instance.patch('/api/member/major', { major: majorKey });
         setSelectedInterest(tempSelectedInterest);
         toast.success('전공이 수정되었습니다.');
+      } else {
+        toast.error('선택한 전공을 저장할 수 없습니다.');
+        console.error(
+          `Could not find major key for interest: ${tempSelectedInterest}`
+        );
       }
     } catch (err) {
       console.error('Update failed:', err);
