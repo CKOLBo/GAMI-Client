@@ -14,6 +14,7 @@ import MyPage from '@/pages/myPage/MyPage';
 import ChatPage from '@/pages/chat/ChatPage';
 import ChatApplyPage from '@/pages/chat/ChatApplyPage';
 import Admin from './pages/admin/AdminPage';
+import NotFound from './pages/404/NotFoundPage';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/chat-apply" element={<ChatApplyPage />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
