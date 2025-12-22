@@ -4,31 +4,34 @@ import FindMentor from '@/assets/svg/main/FindMentor.png';
 import FireWorks from '@/assets/svg/main/FireWorks.png';
 import RightIcon from '@/assets/svg/main/RightIcon';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { instance } from '@/assets/shared/lib/axios';
+import type { Post as PostType } from '@/assets/shared/types';
 
 export default function MainPage() {
-  const posts = [
-    {
-      postId: '1',
-      title: '제목',
-      content:
-        '내용내욘ㅇㄴㅇ랜용ㄴ앰랜ㅇㄹㄴ내용ㄴ앵용냉sodasdoaskdlfj;@@Kfalskjflaksjdfoijasdfdfasdfasdfasdddddddddddddddddddddddddddddddd',
-      commentCount: 0,
-    },
-    {
-      postId: '2',
-      title: '제목',
-      content:
-        '내용내욘ㅇㄴㅇ랜용ㄴ앰랜ㅇㄹㄴ내용ㄴ앵용냉sodasdoaskdlfj;@@Kfalskjflaksjdfoijasdfdfasdfasdfasdddddddddddddddddddddddddddddddd',
-      commentCount: 0,
-    },
-    {
-      postId: '3',
-      title: '제목',
-      content:
-        '내용내욘ㅇㄴㅇ랜용ㄴ앰랜ㅇㄹㄴ내ㅝㅈ우배ㅜ애ㅑㅂ저엊뱌ㅐㅓ애ㅑㅂ저애ㅑㅂ재ㅑ엊배ㅓ애벚야ㅐ벚애ㅑㅓㅈ용ㄴ앵용냉sodasdoaskdlfj;@@Kfalskjflaksjdfoijasdfdfasdfasdfasdddddddddddddddddddddddddddddddd',
-      commentCount: 12,
-    },
-  ];
+  const { user } = useAuth();
+  const userName = user?.name || 'OOO';
+  const [posts, setPosts] = useState<PostType[]>([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await instance.get('/api/post', {
+          params: {
+            page: 0,
+            size: 3,
+            sort: 'createdAt,desc',
+          },
+        });
+        setPosts(response.data.content);
+      } catch (err) {
+        console.error('게시글 조회 실패:', err);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <div className="flex">
@@ -42,7 +45,7 @@ export default function MainPage() {
           <div className="col-span-2 bg-gradient-to-r from-main-2 to-main-1 rounded-2xl 2xl:py-15 px-12 2xl:px-20 flex items-center justify-between shadow-GAMI">
             <div className="text-white">
               <h2 className="text-3xl 2xl:text-4xl font-bold mb-3 2xl:mb-6 h-8 2xl:h-12 flex items-center">
-                GAMI에 오신 걸 환영합니다! 양은준님
+                GAMI에 오신 걸 환영합니다! {userName}님
               </h2>
               <p className="text-xl 2xl:text-2xl h-8 flex items-center">
                 멘토와 멘티를 바로 연결하는 맞춤형 멘토링 서비스에요.
@@ -91,15 +94,27 @@ export default function MainPage() {
             게시글
           </h2>
           <div className="grid grid-cols-3 gap-8 2xl:gap-12">
-            {posts.map((post) => (
-              <Post
-                key={post.postId}
-                title={post.title}
-                content={post.content}
-                commentCount={post.commentCount}
-                postId={post.postId}
-              />
-            ))}
+            {posts.length > 0
+              ? posts.map((post) => (
+                  <Post
+                    key={post.id}
+                    title={post.title}
+                    content={post.content}
+                    commentCount={post.commentCount}
+                    likeCount={post.likeCount}
+                    postId={post.id}
+                  />
+                ))
+              : Array.from({ length: 3 }).map((_, index) => (
+                  <Post
+                    key={`empty-${index}`}
+                    title=""
+                    content=""
+                    commentCount={0}
+                    likeCount={0}
+                    postId={0}
+                  />
+                ))}
           </div>
         </div>
       </div>
