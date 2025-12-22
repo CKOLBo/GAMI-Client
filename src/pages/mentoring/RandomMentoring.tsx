@@ -14,17 +14,17 @@ export default function RandomMentoring() {
 
       <main className="flex-1 ml-45 2xl:ml-55">
         <div className="fixed top-0 left-45 2xl:left-55 right-0 z-40">
-          <div className="px-12 pt-12 bg-white">
+          <div className="px-6 2xl:px-12 pt-6 2xl:pt-12 bg-white">
             <div className="flex items-center">
               <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
                 <Link
                   to="/mentoring"
-                  className="text-[32px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+                  className="text-3xl 2xl:text-[40px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
                 >
                   멘토링
                 </Link>
                 <Divider className="flex-shrink-0" />
-                <span className="text-[40px] text-gray-1 font-bold">
+                <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">
                   랜덤 멘토링
                 </span>
               </h1>
