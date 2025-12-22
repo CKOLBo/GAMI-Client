@@ -49,7 +49,7 @@ export default function MentoringPage() {
 
       <main className="flex-1 ml-45 2xl:ml-55">
         <div className="fixed top-0 left-45 2xl:left-55 right-0 z-40">
-          <div className="px-6 2xl:px-12 pt-6 2xl:pt-12 bg-white">
+          <div className="px-7 2xl:px-12 pt-7 2xl:pt-12 bg-white">
             <div className="flex items-center">
               <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
                 <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">
@@ -66,14 +66,14 @@ export default function MentoringPage() {
 
               <div className="ml-10 2xl:ml-25 relative w-100 2xl:w-150">
                 <div className="absolute left-3 2xl:left-5 top-1/2 -translate-y-1/2 z-10">
-                  <SearchIcon />
+                  <SearchIcon className="w-5 h-4 2xl:w-6 2xl:h-6" />
                 </div>
                 <input
                   type="text"
                   placeholder="전공 또는 멘토의 이름을 입력해주세요."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-12 2xl:h-16 rounded-full bg-white-1 border border-gray-4 pl-12 pr-4 py-1 text-xl 2xl:text-[24px] text-gray-1 placeholder:text-gray-3 focus:outline-main-1 font-bold"
+                  className="w-full h-9 2xl:h-16 rounded-full bg-white-1 border border-gray-4 pl-10 pr-4 py-1 text-base 2xl:text-[24px] text-gray-1 placeholder:text-gray-3 focus:outline-main-1 font-bold"
                 />
               </div>
             </div>
@@ -81,7 +81,7 @@ export default function MentoringPage() {
           <div className="h-16 bg-[linear-gradient(180deg,#FFF_0%,rgba(255,255,255,0)_100%)]"></div>
         </div>
 
-        <div className="px-12 pt-[220px] pb-12">
+        <div className="px-7 2xl:px-12 pt-[220px] pb-12">
           {mentors.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 justify-items-center">
               {mentors.map((mentor) => (
