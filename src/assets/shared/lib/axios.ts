@@ -8,10 +8,11 @@ export const baseURL = import.meta.env.DEV
 
 export const instance = axios.create({
   baseURL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: false,
 });
 
 instance.interceptors.request.use((config) => {
