@@ -3,6 +3,7 @@ import Bold from '@/assets/svg/postWrite/Bold';
 import Link from '@/assets/svg/postWrite/Link';
 import Picture from '@/assets/svg/postWrite/Picture';
 import Button from '@/assets/components/Button/Button';
+import Sidebar from '@/assets/components/Sidebar';
 
 export default function PostWrite() {
   const [title, setTitle] = useState('');
@@ -10,7 +11,8 @@ export default function PostWrite() {
   const [fontSize, setFontSize] = useState(12);
 
   return (
-    <div className="w-full flex justify-center mt-25">
+    <div className="w-full flex ml-30 justify-center mt-25">
+      <Sidebar />
       <div className="w-full max-w-[1500px]">
         <div className="mb-20">
           <h1 className="text-gray-1 text-2xl sm:text-3xl lg:text-4xl font-bold">
