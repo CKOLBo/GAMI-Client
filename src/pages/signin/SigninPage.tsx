@@ -5,14 +5,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import Logo from '@/assets/svg/logo/Logo';
 import Show from '@/assets/svg/password/show';
 import Hide from '@/assets/svg/password/hide';
-import { instance } from '@/assets/shared/lib/axios';
+import { baseURL } from '@/assets/shared/lib/axios';
 import { setCookie } from '@/assets/shared/lib/cookie';
+import axios from 'axios';
 
 export default function SigninPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,59 +21,67 @@ export default function SigninPage() {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    const newErrors = { email: '', password: '' };
+    if (!email && !password) {
+      toast.error('이메일과 비밀번호를 입력해주세요.');
+      return;
+    }
 
     if (!email) {
-      newErrors.email = '이메일을 입력해주세요.';
+      toast.error('이메일을 입력해주세요.');
+      return;
     }
+
     if (!password) {
-      newErrors.password = '비밀번호를 입력해주세요.';
+      toast.error('비밀번호를 입력해주세요.');
+      return;
     }
 
-    setErrors(newErrors);
-
-    if (!newErrors.email && !newErrors.password) {
-      setIsLoading(true);
-      try {
-        const response = await instance.post<{
-          accessToken: string;
-          refreshToken: string;
-          accessTokenExpiresIn: string;
-          refreshTokenExpiresIn: string;
-        }>(
-          '/api/auth/signin',
-          {
-            email,
-            password,
-          },
-          {
-            validateStatus: (status) => status === 200 || status === 401,
-          }
-        );
-
-        if (response.status === 401) {
-          toast.error('이메일 또는 비밀번호가 일치하지 않습니다.');
-          return;
+    setIsLoading(true);
+    try {
+      const url = `${baseURL}/api/auth/signin`;
+      const response = await axios.post<{
+        accessToken: string;
+        refreshToken: string;
+        accessTokenExpiresIn: string;
+        refreshTokenExpiresIn: string;
+      }>(
+        url,
+        {
+          email,
+          password,
+        },
+        {
+          validateStatus: (status) => status === 200 || status === 401,
         }
+      );
 
-        const { accessToken, refreshToken } = response.data;
-
-        setCookie('accessToken', accessToken);
-        setCookie('refreshToken', refreshToken);
-
-        login(
-          {
-            id: 0,
-            email: email,
-          },
-          accessToken
-        );
-        navigate('/main');
-      } catch (error: any) {
-        toast.error('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
-      } finally {
+      if (response.status === 401) {
+        toast.error('이메일 또는 비밀번호가 일치하지 않습니다.');
         setIsLoading(false);
+        return;
       }
+
+      const { accessToken, refreshToken } = response.data;
+
+      setCookie('accessToken', accessToken);
+      setCookie('refreshToken', refreshToken);
+
+      login(
+        {
+          id: 0,
+          email: email,
+        },
+        accessToken
+      );
+      navigate('/main');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error('이메일 또는 비밀번호가 일치하지 않습니다.');
+      } else {
+        toast.error('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -112,13 +120,7 @@ export default function SigninPage() {
               {showPassword ? <Show /> : <Hide />}
             </button>
           </div>
-          <div className="h-6 mb-3 2xl:mb-4">
-            {(errors.email || errors.password) && (
-              <p className="text-xs text-main-3 text-left m-0 mt-1 2xl:mt-2">
-                {errors.email || errors.password}
-              </p>
-            )}
-          </div>
+          <div className="h-6 mb-3 2xl:mb-4"></div>
           <button
             type="submit"
             disabled={isLoading}
