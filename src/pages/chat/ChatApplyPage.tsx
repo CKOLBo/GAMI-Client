@@ -152,7 +152,7 @@ export default function ChatApplyPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto flex flex-col items-center pt-4 2xl:pt-5">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 <p className="text-base 2xl:text-lg text-gray-3">로딩 중...</p>
