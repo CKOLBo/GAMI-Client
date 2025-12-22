@@ -34,13 +34,10 @@ export function useLogin(): UseLoginReturn {
   const login = async (credentials: LoginCredentials): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await instance.post<LoginResponse>(
-        '/api/auth/signin',
-        {
-          email: credentials.email,
-          password: credentials.password,
-        }
-      );
+      const response = await instance.post<LoginResponse>('/api/auth/signin', {
+        email: credentials.email,
+        password: credentials.password,
+      });
 
       const { accessToken, refreshToken } = response.data;
 
@@ -63,7 +60,9 @@ export function useLogin(): UseLoginReturn {
         if (status === 404) {
           throw new Error('사용자 정보를 가져오는데 실패했습니다.');
         }
-        throw new Error(error.response?.data?.message || '로그인 중 오류가 발생했습니다.');
+        throw new Error(
+          error.response?.data?.message || '로그인 중 오류가 발생했습니다.'
+        );
       }
       if (error instanceof Error) {
         throw error;
