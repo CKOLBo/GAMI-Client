@@ -57,14 +57,14 @@ export default function SigninPage() {
           </Link>
         </p>
 
-        <form className="flex flex-col" onSubmit={handleSubmit}>
+        <form className="flex flex-col w-full 2xl:items-center" onSubmit={handleSubmit}>
           <input
             type="text"
             name="email"
             placeholder="이메일"
-            className="w-full h-13 2xl:h-15 px-5 border border-gray-2 rounded-xl text-sm text-gray-1 placeholder:text-gray-3 placeholder:font-medium focus:outline-none focus:border-main-1 mb-4 2xl:mb-5"
+            className="w-full 2xl:w-[376px] h-13 2xl:h-15 px-5 border border-gray-2 rounded-xl text-sm text-gray-1 placeholder:text-gray-3 placeholder:font-medium focus:outline-none focus:border-main-1 mb-4 2xl:mb-5"
           />
-          <div className="relative">
+          <div className="relative w-full 2xl:w-[376px]">
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
@@ -83,20 +83,19 @@ export default function SigninPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-2-hover border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full 2xl:w-[376px] h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-2-hover border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? '로그인' : '로그인'}
           </button>
+          <div className="mt-2 2xl:mt-3 w-full 2xl:w-[376px] text-right">
+            <Link
+              to="/password"
+              className="font-medium text-sm text-gray-1 no-underline"
+            >
+              비밀번호 찾기
+            </Link>
+          </div>
         </form>
-
-        <div className="mt-2 2xl:mt-3 text-right">
-          <Link
-            to="/password"
-            className="font-medium text-sm text-gray-1 no-underline"
-          >
-            비밀번호 찾기
-          </Link>
-        </div>
       </div>
     </div>
   );
