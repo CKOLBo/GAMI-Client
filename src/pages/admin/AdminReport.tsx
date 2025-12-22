@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import ReportModal from '@/assets/components/modal/ReportModal';
+import CheckReportModal from '@/assets/components/modal/CheckReportModal';
+import { useNavigate } from 'react-router-dom';
 
 const Search = ({ className }: { className?: string }) => (
   <svg
@@ -18,7 +19,8 @@ const Search = ({ className }: { className?: string }) => (
 );
 
 export default function AdminReport() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [reports] = useState([
     {
       id: 1,
@@ -59,7 +61,8 @@ export default function AdminReport() {
     setIsModalOpen(true);
   };
 
-  const handleReport = () => {
+  const handleReportAction = (action: 'BLOCK' | 'REJECT' | 'HOLD') => {
+    console.log(action);
     setIsModalOpen(false);
   };
 
@@ -69,7 +72,7 @@ export default function AdminReport() {
         {reports.map((report) => (
           <div
             key={report.id}
-            className="bg-[#F9F9F9] mb-8 h-[80px] rounded-lg px-12 flex items-center gap-4"
+            className="bg-[#F9F9F9] mb-8 h-20 rounded-lg px-12 flex items-center gap-4"
           >
             <span className="text-2xl font-bold shrink-0 w-[60px] text-center">
               {report.id}
@@ -93,15 +96,21 @@ export default function AdminReport() {
               {report.reason}
             </span>
 
-            <div className="shrink-0 w-[160px] pr-28 flex justify-center">
-              <button onClick={()=>handleReportClick()} className="flex cursor-pointer items-center gap-2 px-[14px] py-[10px] bg-main-1 text-white rounded-md whitespace-nowrap">
+            <div className="shrink-0 w-40 pr-28 flex justify-center">
+              <button
+                onClick={() => handleReportClick()}
+                className="flex cursor-pointer items-center gap-2 px-3.5 py-2.5 bg-main-1 text-white rounded-md whitespace-nowrap"
+              >
                 <Search className="w-5 h-5" />
                 <span className="text-xl font-semibold">추가설명</span>
               </button>
             </div>
 
             <div className="shrink-0 w-[120px] flex justify-center">
-              <button className="text-main-1 font-semibold text-2xl whitespace-nowrap">
+              <button
+                onClick={() => navigate('/post-content')}
+                className="text-main-1 font-semibold cursor-pointer text-2xl whitespace-nowrap"
+              >
                 바로가기
               </button>
             </div>
@@ -109,9 +118,9 @@ export default function AdminReport() {
         ))}
       </div>
       {isModalOpen && (
-        <ReportModal
+        <CheckReportModal
           onClose={() => setIsModalOpen(false)}
-          onReport={handleReport}
+          onAction={handleReportAction}
         />
       )}
     </div>

@@ -1,0 +1,135 @@
+import Sidebar from '@/assets/components/Sidebar';
+import Mentor from '@/assets/components/mentor/Mentor';
+import SearchIcon from '@/assets/svg/main/SearchIcon';
+import Divider from '@/assets/svg/Divider';
+import axios from 'axios';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import NotFoundImage from '@/assets/svg/mentor/NotFound.png';
+
+interface MentorData {
+  id: number;
+  name: string;
+  gender: string;
+  generation: number;
+  major: string;
+}
+
+export default function MentoringPage() {
+  const [allMentors, setAllMentors] = useState<MentorData[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get('/data/mockMentors.json')
+      .then((res) => {
+        setAllMentors(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
+  const mentors = useMemo(() => {
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    if (trimmedQuery === '') {
+      return allMentors;
+    }
+    return allMentors.filter(
+      (mentor) =>
+        mentor.name.toLowerCase().includes(trimmedQuery) ||
+        mentor.major.toLowerCase().includes(trimmedQuery)
+    );
+  }, [searchQuery, allMentors]);
+
+  return (
+    <div className="flex min-h-screen bg-white">
+      <Sidebar />
+
+      <main className="flex-1 ml-45 2xl:ml-55">
+        <div className="fixed top-0 left-45 2xl:left-55 right-0 z-40">
+          <div className="px-25 pt-25 bg-white">
+            <div className="flex items-center">
+              <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
+                <span className="text-[40px] text-gray-1 font-bold">
+                  멘토링
+                </span>
+                <Divider className="flex-shrink-0" />
+                <Link
+                  to="/mentoring-random"
+                  className="text-[32px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+                >
+                  랜덤 멘토링
+                </Link>
+              </h1>
+
+              <div className="ml-25 relative w-150">
+                <div className="absolute left-5 top-1/2 -translate-y-1/2 z-10">
+                  <SearchIcon />
+                </div>
+                <input
+                  type="text"
+                  placeholder="전공 또는 멘토의 이름을 입력해주세요."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-16 rounded-full bg-white-1 border border-gray-4 pl-16 pr-4 py-2 text-[24px] text-gray-1 placeholder:text-gray-3 focus:outline-main-1 font-bold"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="h-16 bg-[linear-gradient(180deg,#FFF_0%,rgba(255,255,255,0)_100%)]"></div>
+        </div>
+
+        <div className="px-25 pt-[220px] pb-25">
+          {mentors.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
+              {mentors.map((mentor) => (
+                <Mentor
+                  key={mentor.id}
+                  name={mentor.name}
+                  generation={mentor.generation}
+                  major={mentor.major}
+                  onApply={() => {
+                    console.log(`${mentor.name} 멘토 신청`);
+                  }}
+                />
+              ))}
+            </div>
+          ) : searchQuery.trim() !== '' ? (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] mt-[20px]">
+              <div className="mb-12 flex items-center justify-center">
+                <div className="w-64 h-64 2xl:w-80 2xl:h-80 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={NotFoundImage}
+                    alt="멘토 일러스트"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+
+              <p className="text-[16px] 2xl:text-[20px] font-bold text-gray-1 text-center mb-16">
+                일치하는 멘토를 찾지 못했어요.
+                <br />
+                랜덤 멘토링을 해볼까요?
+              </p>
+
+              <button
+                onClick={() => navigate('/mentoring-random')}
+                className="w-[152px] h-[64px] bg-main-1 text-white text-[24px] rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-1-hover border-0 cursor-pointer"
+              >
+                랜덤 멘토링
+              </button>
+            </div>
+          ) : (
+            <div className="col-span-full text-center py-20">
+              <p className="text-[32px] text-gray-3 font-bold">
+                등록된 멘토가 없습니다.
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
