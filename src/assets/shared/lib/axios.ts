@@ -15,7 +15,7 @@ export const baseURL = import.meta.env.DEV
 
 export const instance = axios.create({
   baseURL,
-  timeout: 30000,
+  timeout: 8000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -23,9 +23,15 @@ export const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-  const accessToken = getCookie('accessToken');
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+  const isAuthEndpoint =
+    config.url?.includes('/auth/signin') ||
+    config.url?.includes('/auth/signup');
+
+  if (!isAuthEndpoint) {
+    const accessToken = getCookie('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
   }
   return config;
 });
@@ -39,9 +45,18 @@ instance.interceptors.response.use(
 
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
+      _skipErrorHandler?: boolean;
     };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const isAuthEndpoint =
+        originalRequest.url?.includes('/auth/signin') ||
+        originalRequest.url?.includes('/auth/signup');
+
+      if (isAuthEndpoint) {
+        return Promise.resolve(error.response);
+      }
+
       originalRequest._retry = true;
 
       try {
