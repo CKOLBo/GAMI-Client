@@ -7,7 +7,7 @@ interface RequestItemProps {
 
 export default function RequestItem({ name, onCancel }: RequestItemProps) {
   return (
-    <div className="w-[376px] h-[60px] bg-white-1 rounded-lg flex items-center gap-4 2xl:gap-5 px-4 2xl:px-6">
+    <div className="w-[400px] h-[60px] bg-white-1 rounded-lg flex items-center gap-2 2xl:gap-3 px-2 2xl:px-3 mb-2 2xl:mb-3">
         <div className="flex-shrink-0">
           <div className="w-12 2xl:w-14 h-12 2xl:h-14 rounded-full flex items-center justify-center">
             <Profile width={40} height={40} />
