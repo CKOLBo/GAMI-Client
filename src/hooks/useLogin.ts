@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { instance } from '@/assets/shared/lib/axios';
 import { setCookie } from '@/assets/shared/lib/cookie';
-import { AxiosError } from 'axios';
 
 interface LoginResponse {
   accessToken: string;
@@ -56,9 +55,6 @@ export function useLogin(): UseLoginReturn {
         accessToken
       );
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 401) {
-        throw new Error('이메일 또는 비밀번호가 일치하지 않습니다.');
-      }
       if (error instanceof Error) {
         throw error;
       }
