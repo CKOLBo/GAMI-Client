@@ -4,6 +4,7 @@ import Comment from '@/assets/svg/post/Comment';
 import Report from '@/assets/svg/post/Report';
 import PostModal from '@/assets/components/modal/ReportModal';
 import Button from '@/assets/components/Button/Button';
+import Sidebar from '@/assets/components/Sidebar';
 
 export default function PostContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,7 +12,8 @@ export default function PostContent() {
 
   return (
     <>
-      <div className="w-full flex justify-center">
+      <Sidebar />
+      <div className="w-full ml-28 flex justify-center">
         <div className="w-full max-w-[1500px] mt-25">
           <div className="mb-8">
             <h1 className="text-[40px] font-bold text-gray-1">
@@ -70,12 +72,7 @@ export default function PostContent() {
               />
             </div>
             <div className="flex justify-end mt-12">
-              <Button
-                text="등록하기"
-                onClick={() => {
-                  /* 댓글 등록 로직 */
-                }}
-              />
+              <Button text="등록하기" onClick={() => {}} />
             </div>
           </div>
         </div>
