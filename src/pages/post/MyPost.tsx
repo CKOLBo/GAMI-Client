@@ -99,6 +99,7 @@ export default function MyPost() {
               {postData.map((post) => (
                 <Post
                   key={post.id}
+                  postId={post.id}
                   title={post.title}
                   content={post.noName ?? ''}
                   author="익명"
