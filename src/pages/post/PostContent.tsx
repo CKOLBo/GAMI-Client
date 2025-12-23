@@ -342,8 +342,9 @@ export default function PostContent() {
         </div>
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && postId && (
         <PostModal
+          postId={Number(postId)}
           onClose={() => setIsModalOpen(false)}
           onReport={() => setIsModalOpen(false)}
         />
