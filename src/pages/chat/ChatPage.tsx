@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { instance } from '@/assets/shared/lib/axios';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API_PATHS } from '@/constants/api';
 
 type MajorType =
   | 'FRONTEND'
@@ -92,6 +93,25 @@ export default function ChatPage() {
   useEffect(() => {
     fetchChatRooms();
   }, []);
+
+  const fetchMentorRequests = async () => {
+    try {
+      const response = await instance.get<MentorRequest[]>(
+        API_PATHS.MENTORING_APPLY_RECEIVED
+      );
+      if (Array.isArray(response.data)) {
+        setMentorRequests(response.data);
+      }
+    } catch (error) {
+      console.error('받은 요청 목록 로드 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (isMentorRequestModalOpen) {
+      fetchMentorRequests();
+    }
+  }, [isMentorRequestModalOpen]);
 
   const fetchChatRooms = async () => {
     setRoomsLoading(true);
@@ -279,12 +299,26 @@ export default function ChatPage() {
     }
   };
 
-  const handleAcceptMentor = (applyId: number) => {
-    console.log(`멘토 신청 수락: ${applyId}`);
+  const handleAcceptMentor = async (applyId: number) => {
+    try {
+      await instance.patch(API_PATHS.MENTORING_APPLY_UPDATE(applyId), {
+        applyStatus: 'ACCEPTED',
+      });
+      await fetchMentorRequests();
+    } catch (error) {
+      console.error('멘토 신청 수락 실패:', error);
+    }
   };
 
-  const handleRejectMentor = (applyId: number) => {
-    console.log(`멘토 신청 거절: ${applyId}`);
+  const handleRejectMentor = async (applyId: number) => {
+    try {
+      await instance.patch(API_PATHS.MENTORING_APPLY_UPDATE(applyId), {
+        applyStatus: 'REJECTED',
+      });
+      await fetchMentorRequests();
+    } catch (error) {
+      console.error('멘토 신청 거절 실패:', error);
+    }
   };
 
 
