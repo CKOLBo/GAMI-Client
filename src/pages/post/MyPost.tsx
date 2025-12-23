@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import Sidebar from '@/assets/components/Sidebar';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
@@ -9,72 +10,62 @@ import DeleteModal from '@/assets/components/modal/DeleteModal';
 import Divider from '@/assets/svg/Divider';
 import { instance } from '@/assets/shared/lib/axios';
 
-interface PostResponse {
-  id: number;
-  title: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-  memberId: number;
-  createdAt: string;
-  updatedAt: string;
-  images: string[];
-}
-
 interface MyPostType {
   id: number;
   title: string;
-  content: string;
-  author: string;
-  timeAgo: string;
-  likeCount: number;
-  commentCount: number;
+  createdAt: string;
+  updatedAt: string;
+  noName: string;
 }
 
 export default function MyPost() {
   const navigate = useNavigate();
-  const { postId } = useParams<{ postId: string }>();
 
+  const [postData, setPostData] = useState<MyPostType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [myPostData, setMyPostData] = useState<MyPostType[]>([]);
-  const [keyword, setKeyword] = useState('');
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (!postId) return;
+  const fetchMyPosts = async () => {
+    try {
+      const res = await instance.get('/api/mypost');
 
-    const fetchPostDetail = async () => {
-      try {
-        const res = await instance.get<PostResponse>(`/api/post/${postId}`);
-
-        const post = res.data;
-
-        setMyPostData([
-          {
-            id: post.id,
-            title: post.title,
-            content: post.content,
-            author: '익명',
-            timeAgo: new Date(post.createdAt).toLocaleDateString(),
-            likeCount: post.likeCount,
-            commentCount: post.commentCount,
-          },
-        ]);
-      } catch {
-        toast.error('게시글을 불러오지 못했습니다.');
+      if (!Array.isArray(res.data)) {
+        setPostData([]);
+        return;
       }
-    };
 
-    fetchPostDetail();
-  }, [postId]);
-
-  const handleDeleteClick = () => {
-    setIsModalOpen(true);
+      setPostData(res.data);
+    } catch {
+      toast.error('내가 쓴 글을 불러오지 못했습니다.');
+      setPostData([]);
+    }
   };
 
-  const handleDelete = () => {
-    setIsModalOpen(false);
-    toast.success('게시글이 삭제되었습니다.');
-    navigate('/post');
+  useEffect(() => {
+    fetchMyPosts();
+  }, []);
+
+  const handleDelete = async () => {
+    if (!selectedPostId) return;
+
+    try {
+      await instance.delete(`/api/post/${selectedPostId}`);
+      toast.success('게시글이 삭제되었습니다.');
+
+      // ✅ 삭제된 게시글을 state에서 즉시 제거
+      setPostData((prev) => prev.filter((post) => post.id !== selectedPostId));
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error('로그인이 필요합니다.');
+      } else if (error.response?.status === 403) {
+        toast.error('삭제 권한이 없습니다.');
+      } else {
+        toast.error('게시글 삭제에 실패했습니다.');
+      }
+    } finally {
+      setIsModalOpen(false);
+      setSelectedPostId(null);
+    }
   };
 
   return (
@@ -82,54 +73,62 @@ export default function MyPost() {
       <div className="flex">
         <Sidebar />
 
-        <div className="max-w-[1500px] w-full ml-80 px-4 lg:px-6">
-          <div className="flex items-center justify-between">
-            <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1 pr-25">
-              <Link
-                to="/post"
-                className="text-3xl 2xl:text-[40px] text-gray-2 font-bold hover:text-gray-1 transition-colors"
-              >
-                익명 게시판
-              </Link>
-              <Divider className="shrink-0" />
-              <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">
-                내가 쓴 글
-              </span>
-            </h1>
+        <div className="w-full flex-1">
+          <div className="max-w-[1500px] px-4 ml-80 lg:px-6">
+            <div className="flex items-center justify-between">
+              <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
+                <Link
+                  to="/post"
+                  className="text-3xl 2xl:text-[40px] text-gray-2 hover:text-gray-1 transition-colors"
+                >
+                  익명 게시판
+                </Link>
+                <Divider className="shrink-0" />
+                <span className="text-3xl 2xl:text-[40px]">내가 쓴 글</span>
+              </h1>
 
-            <PostHead
-              keyword={keyword}
-              onKeywordChange={(e) => setKeyword(e.target.value)}
-              onSearch={() => {}}
-            />
-          </div>
+              <PostHead />
+            </div>
 
-          <div className="border-t-2 border-gray-2">
-            {myPostData.map((post) => (
-              <Post
-                key={post.id}
-                title={post.title}
-                content={post.content}
-                author={post.author}
-                likeCount={post.likeCount}
-                commentCount={post.commentCount}
-                timeAgo={post.timeAgo}
-                onPostClick={() => navigate(`/post/${post.id}`)}
-                actions={[
-                  {
-                    icon: <Delete />,
-                    onClick: handleDeleteClick,
-                  },
-                ]}
-              />
-            ))}
+            <div className="border-t-2 border-gray-2">
+              {postData.length === 0 && (
+                <div className="py-20 text-center text-2xl text-gray-2">
+                  작성한 게시글이 없습니다.
+                </div>
+              )}
+
+              {postData.map((post) => (
+                <Post
+                  key={post.id}
+                  title={post.title}
+                  content={post.noName ?? ''}
+                  author="익명"
+                  likeCount={0}
+                  commentCount={0}
+                  timeAgo={new Date(post.createdAt).toLocaleDateString()}
+                  onPostClick={() => navigate(`/post-content/${post.id}`)}
+                  actions={[
+                    {
+                      icon: <Delete />,
+                      onClick: () => {
+                        setSelectedPostId(post.id);
+                        setIsModalOpen(true);
+                      },
+                    },
+                  ]}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {isModalOpen && (
         <DeleteModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedPostId(null);
+          }}
           onDelete={handleDelete}
         />
       )}
