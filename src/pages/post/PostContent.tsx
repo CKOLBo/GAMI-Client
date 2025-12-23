@@ -26,7 +26,7 @@ interface PostDetailType {
   createdAt: string;
   updatedAt: string;
   images: string[];
-  isLiked: boolean;
+  liked: boolean;
 }
 
 interface SummaryResponse {
@@ -47,7 +47,7 @@ export default function PostContent() {
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
 
-  const [isLiked, setIsLiked] = useState(false);
+  const [liked, setLiked] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
 
   const calculateTimeAgo = (createdAt: string) => {
@@ -72,7 +72,7 @@ export default function PostContent() {
         const res = await instance.get<PostDetailType>(`/api/post/${postId}`);
         setPostData(res.data);
 
-        setIsLiked(Boolean(res.data.isLiked));
+        setLiked(Boolean(res.data.liked));
       } catch {
         toast.error('게시글을 불러오는데 실패했습니다.');
       } finally {
@@ -89,17 +89,17 @@ export default function PostContent() {
     setIsLikeLoading(true);
 
     try {
-      if (isLiked) {
+      if (liked) {
         await instance.delete(`/api/post/${postId}/like`);
 
-        setIsLiked(false);
+        setLiked(false);
         setPostData((prev) =>
           prev ? { ...prev, likeCount: prev.likeCount - 1 } : prev
         );
       } else {
         await instance.post(`/api/post/${postId}/like`);
 
-        setIsLiked(true);
+        setLiked(true);
         setPostData((prev) =>
           prev ? { ...prev, likeCount: prev.likeCount + 1 } : prev
         );
@@ -236,7 +236,7 @@ export default function PostContent() {
                 }`}
                 onClick={handleLikeToggle}
               >
-                <Heart isSelect={isLiked} />
+                <Heart isSelect={liked} />
                 <span className="text-[32px] text-gray-1">
                   {postData.likeCount}
                 </span>
