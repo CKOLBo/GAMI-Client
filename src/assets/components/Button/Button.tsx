@@ -8,6 +8,7 @@ interface ButtonProps {
   color?: string;
   width?: string;
   height?: string;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -17,10 +18,12 @@ export default function Button({
   color = 'bg-main-1',
   width = 'w-38',
   height = 'h-16',
+  disabled = false,
 }: ButtonProps) {
   const navigate = useNavigate();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled) return;
     onClick?.(e);
     if (to) navigate(to);
   };
@@ -28,6 +31,7 @@ export default function Button({
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={handleClick}
       className={`
         ${color}
@@ -41,6 +45,7 @@ export default function Button({
         flex
         items-center
         justify-center
+        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
     >
       {text}
