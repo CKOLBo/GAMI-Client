@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import Heart from '@/assets/svg/Heart';
 import Comment from '@/assets/svg/post/Comment';
 import Report from '@/assets/svg/post/Report';
@@ -24,6 +26,7 @@ interface PostDetailType {
   createdAt: string;
   updatedAt: string;
   images: string[];
+  isLiked: boolean;
 }
 
 interface SummaryResponse {
@@ -33,13 +36,19 @@ interface SummaryResponse {
 
 export default function PostContent() {
   const { postId } = useParams<{ postId: string }>();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postData, setPostData] = useState<PostDetailType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const [comment, setComment] = useState('');
+
   const [summary, setSummary] = useState<string | null>(null);
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
 
   const calculateTimeAgo = (createdAt: string) => {
     const now = new Date();
@@ -60,10 +69,12 @@ export default function PostContent() {
 
       setIsLoading(true);
       try {
-        const res = await instance.get(`/api/post/${postId}`);
+        const res = await instance.get<PostDetailType>(`/api/post/${postId}`);
         setPostData(res.data);
+
+        setIsLiked(Boolean(res.data.isLiked));
       } catch {
-        alert('게시글을 불러오는데 실패했습니다.');
+        toast.error('게시글을 불러오는데 실패했습니다.');
       } finally {
         setIsLoading(false);
       }
@@ -71,6 +82,38 @@ export default function PostContent() {
 
     fetchPostDetail();
   }, [postId]);
+
+  const handleLikeToggle = async () => {
+    if (!postId || !postData || isLikeLoading) return;
+
+    setIsLikeLoading(true);
+
+    try {
+      if (isLiked) {
+        await instance.delete(`/api/post/${postId}/like`);
+
+        setIsLiked(false);
+        setPostData((prev) =>
+          prev ? { ...prev, likeCount: prev.likeCount - 1 } : prev
+        );
+      } else {
+        await instance.post(`/api/post/${postId}/like`);
+
+        setIsLiked(true);
+        setPostData((prev) =>
+          prev ? { ...prev, likeCount: prev.likeCount + 1 } : prev
+        );
+      }
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error('로그인이 필요합니다.');
+      } else {
+        toast.error('좋아요 처리에 실패했습니다.');
+      }
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
 
   const handleAISummary = async () => {
     if (!postId) return;
@@ -83,26 +126,8 @@ export default function PostContent() {
         `/api/post/summary/${postId}`
       );
       setSummary(res.data.summary);
-    } catch (error: any) {
-      console.error('AI 요약 에러 상세:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-      });
-
-      let errorMessage = 'AI 요약을 불러오는데 실패했습니다.';
-
-      if (error.response?.status === 409) {
-        errorMessage =
-          error.response?.data?.message ||
-          'AI 요약을 생성할 수 없는 게시글입니다. 게시글 내용이 너무 짧거나 요약이 불가능한 형식일 수 있습니다.';
-      } else if (error.response?.status === 404) {
-        errorMessage = '게시글을 찾을 수 없습니다.';
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      }
-
-      alert(errorMessage);
+    } catch {
+      toast.error('AI 요약을 불러오는데 실패했습니다.');
       setShowSummary(false);
     } finally {
       setIsSummaryLoading(false);
@@ -121,7 +146,7 @@ export default function PostContent() {
         prev ? { ...prev, commentCount: prev.commentCount + 1 } : prev
       );
     } catch {
-      alert('댓글 등록 실패');
+      toast.error('댓글 등록 실패');
     }
   };
 
@@ -156,28 +181,6 @@ export default function PostContent() {
             </ReactMarkdown>
           </div>
 
-          {postData.images?.length > 0 && (
-            <div className="flex flex-col gap-6 mb-28">
-              {postData.images.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`post-image-${idx}`}
-                  className="
-                    max-w-[720px]
-                    max-h-[480px]
-                    w-auto
-                    h-auto
-                    object-contain
-                    rounded-xl
-                    border
-                    border-gray-2
-                  "
-                />
-              ))}
-            </div>
-          )}
-
           <div className="flex gap-12 mb-34">
             <div className="border rounded-full p-4 w-18 h-18 border-gray-2">
               <img src={Gemini} alt="Gemini" width="44" height="44" />
@@ -185,7 +188,7 @@ export default function PostContent() {
 
             {!showSummary ? (
               <div
-                className="rounded-[20px] shadow-GAMI pt-6 pl-8 w-[464px] h-[140px] cursor-pointer hover:shadow-lg transition-shadow"
+                className="rounded-[20px] shadow-GAMI pt-6 pl-8 w-[464px] h-[140px] cursor-pointer"
                 onClick={handleAISummary}
               >
                 <p className="text-gray-3 font-bold text-xl pb-8">
@@ -201,23 +204,16 @@ export default function PostContent() {
             ) : (
               <div className="rounded-[20px] shadow-GAMI p-8 w-full max-w-[800px]">
                 {isSummaryLoading ? (
-                  <div className="flex items-center gap-3">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-1"></div>
-                    <p className="text-gray-1 font-bold text-2xl leading-sm items-center flex gap-2">
-                      <img src={GeminiText} width="132" /> 가 요약하는 중...
-                    </p>
+                  <div className="flex items-center gap-2">
+                    <img src={GeminiText} width="132" />
+                    <span className="text-gray-1 font-bold text-2xl">
+                      가 요약하는 중...
+                    </span>
                   </div>
                 ) : (
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <h3 className="text-gray-1 font-bold text-2xl leading-sm items-center flex gap-2">
-                        <img src={GeminiText} width="132" />가 요약했어요
-                      </h3>
-                    </div>
-                    <p className="text-gray-3 text-lg leading-relaxed whitespace-pre-wrap">
-                      {summary}
-                    </p>
-                  </div>
+                  <p className="text-gray-3 text-lg whitespace-pre-wrap">
+                    {summary}
+                  </p>
                 )}
               </div>
             )}
@@ -232,9 +228,18 @@ export default function PostContent() {
             </div>
 
             <div className="flex gap-18">
-              <div className="flex items-center gap-4 cursor-default">
-                <Heart isSelect={false} />
-                <span className="text-[32px]">{postData.likeCount}</span>
+              <div
+                className={`flex items-center gap-4 ${
+                  isLikeLoading
+                    ? 'cursor-not-allowed opacity-50'
+                    : 'cursor-pointer'
+                }`}
+                onClick={handleLikeToggle}
+              >
+                <Heart isSelect={isLiked} />
+                <span className="text-[32px] text-gray-1">
+                  {postData.likeCount}
+                </span>
               </div>
 
               <button onClick={() => setIsModalOpen(true)}>
