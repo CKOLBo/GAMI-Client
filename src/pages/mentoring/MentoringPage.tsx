@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NotFoundImage from '@/assets/svg/mentor/NotFound.png';
 import { toast } from 'react-toastify';
 import { instance } from '@/assets/shared/lib/axios';
+import axios from 'axios';
 import { useMentorApply } from '@/hooks/useMentorApply';
 
 interface MentorData {
@@ -59,7 +60,22 @@ export default function MentoringPage() {
         setCurrentMemberId(memberResponse.data.memberId);
       } catch (err) {
         console.error('데이터 조회 실패:', err);
-        toast.error('데이터를 불러오는데 실패했습니다.');
+        
+        if (axios.isAxiosError(err)) {
+          if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
+            toast.error('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+          } else if (err.code === 'ERR_NETWORK' || !err.response) {
+            toast.error('네트워크 연결을 확인해주세요.');
+          } else if (err.response?.status === 401) {
+            toast.error('인증이 필요합니다.');
+          } else if (err.response?.status === 500) {
+            toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          } else {
+            toast.error('데이터를 불러오는데 실패했습니다.');
+          }
+        } else {
+          toast.error('데이터를 불러오는데 실패했습니다.');
+        }
       } finally {
         setIsLoading(false);
       }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Mentor from '@/assets/svg/mentor/Mentor.png';
 import { useState, useRef } from 'react';
 import { instance } from '@/assets/shared/lib/axios';
+import axios from 'axios';
 import ModalWrapper from '@/assets/shared/Modal';
 import { toast } from 'react-toastify';
 import Profile from '@/assets/svg/profile/Profile';
@@ -45,6 +46,7 @@ export default function RandomMentoring() {
           params: {
             _t: timestamp,
           },
+          timeout: 30000,
         }
       );
 
@@ -57,9 +59,12 @@ export default function RandomMentoring() {
       if (recommendedMentorIds.includes(mentorId)) {
         retryCountRef.current += 1;
 
-        if (retryCountRef.current > 10) {
+        if (retryCountRef.current > 20) {
+          setIsMatchingModalOpen(false);
+          toast.error('새로운 멘토를 찾을 수 없습니다. 잠시 후 다시 시도해주세요.');
           setRecommendedMentorIds([]);
           retryCountRef.current = 0;
+          return;
         }
 
         if (isCancelledRef.current) {
@@ -81,21 +86,27 @@ export default function RandomMentoring() {
       setRecommendedMentorIds((prev) => [...prev, mentorId]);
       setIsMatchingModalOpen(false);
       setMatchedMentor(response.data);
+      retryCountRef.current = 0;
     } catch (err: unknown) {
       if (isCancelledRef.current) {
         return;
       }
       setIsMatchingModalOpen(false);
-      if (
-        err &&
-        typeof err === 'object' &&
-        'response' in err &&
-        err.response &&
-        typeof err.response === 'object' &&
-        'status' in err.response &&
-        err.response.status === 401
-      ) {
-        toast.error('인증이 필요합니다.');
+      
+      if (axios.isAxiosError(err)) {
+        if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
+          toast.error('요청 시간이 초과되었습니다. 다시 시도해주세요.');
+        } else if (err.code === 'ERR_NETWORK' || !err.response) {
+          toast.error('네트워크 연결을 확인해주세요.');
+        } else if (err.response?.status === 401) {
+          toast.error('인증이 필요합니다. 다시 로그인해주세요.');
+        } else if (err.response?.status === 404) {
+          toast.error('멘토를 찾을 수 없습니다.');
+        } else if (err.response?.status === 500) {
+          toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        } else {
+          toast.error('멘토를 찾는데 실패했습니다.');
+        }
       } else {
         toast.error('멘토를 찾는데 실패했습니다.');
       }
