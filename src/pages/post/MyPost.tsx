@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@/assets/components/Button/Button';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
@@ -7,6 +7,7 @@ import Delete from '@/assets/svg/post/Delete';
 import DeleteModal from '@/assets/components/modal/DeleteModal';
 import axios from 'axios';
 import Sidebar from '@/assets/components/Sidebar';
+import Divider from '@/assets/svg/Divider';
 
 interface MyPostType {
   id: number;
@@ -44,15 +45,29 @@ export default function MyPost() {
 
   return (
     <>
-      <div className="w-full ml-30">
+      <div className="flex">
         <Sidebar />
-        <div className="max-w-[1500px] mx-auto px-4 lg:px-6">
-          <PostHead>
-            <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-6">
-              <Button text="글 쓰기" to="/post-write" />
-              <Button text="게시판" to="/post" />
-            </div>
-          </PostHead>
+        <div className="max-w-[1500px] w-full ml-80 px-4 lg:px-6">
+          <div className="flex">
+            <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1 pr-25">
+              <Link
+                to="/post"
+                className="text-3xl 2xl:text-[40px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+              >
+                익명 게시판
+              </Link>
+              <Divider className="shrink-0" />
+              <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">
+                내가 쓴 글
+              </span>
+            </h1>
+            <PostHead>
+              <div className="flex pl-[410px]">
+                <Button text="글 쓰기" to="/post-write" />
+              </div>
+            </PostHead>
+          </div>
+
           <div className="border-t-2 border-gray-2">
             {myPostData.map((post) => (
               <Post
