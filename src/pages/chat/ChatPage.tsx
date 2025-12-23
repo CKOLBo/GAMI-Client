@@ -1,27 +1,46 @@
 import Sidebar from '@/assets/components/Sidebar';
 import Logo from '@/assets/svg/logo/Logo';
 import Profile from '@/assets/svg/profile/Profile';
-import BellIcon from '@/assets/svg/common/BellIcon';
 import SearchIcon from '@/assets/svg/main/SearchIcon';
 import Divider from '@/assets/svg/Divider';
 import MentorRequestModal from '@/assets/components/modal/MentorRequestModal';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { instance } from '@/assets/shared/lib/axios';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+
+type MajorType =
+  | 'FRONTEND'
+  | 'BACKEND'
+  | 'IOS'
+  | 'AI'
+  | 'ANDROID'
+  | 'DESIGN'
+  | 'DEVOPS'
+  | 'GAME_DEVELOP'
+  | 'CLOUD_COMPUTING'
+  | 'IT_NETWORK'
+  | 'MOBILE_ROBOTICS'
+  | 'CYBER_SECURITY'
+  | 'FLUTTER';
+
+type RoomStatusType = 'ACTIVE' | 'ENDED';
+
+type MessageType = 'CHAT' | 'USER_LEFT' | 'ROOM_ENDED' | 'SYSTEM';
 
 interface ChatItem {
   id: number;
   name: string;
   lastMessage: string;
-  major: string;
+  major: MajorType;
   generation: number;
 }
 
 interface ChatRoomDetail {
   roomId: number;
   name: string;
-  major: string;
+  major: MajorType;
   generation: number;
 }
 
@@ -31,6 +50,7 @@ interface ChatMessage {
   createdAt: string;
   senderId: number;
   senderName: string;
+  messageType?: MessageType;
 }
 
 interface ChatMessagesResponse {
@@ -38,7 +58,7 @@ interface ChatMessagesResponse {
   messages: ChatMessage[];
   nextCursor: number;
   hasMore: boolean;
-  roomStatus: string;
+  roomStatus: RoomStatusType;
   currentMemberLeft: boolean;
 }
 
@@ -83,6 +103,9 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('채팅방 목록 로드 실패:', error);
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        alert('인증이 필요합니다. 다시 로그인해주세요.');
+      }
     } finally {
       setRoomsLoading(false);
     }
@@ -126,6 +149,13 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('채팅방 정보 로드 실패:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert('인증이 필요합니다. 다시 로그인해주세요.');
+        } else if (error.response?.status === 404) {
+          alert('채팅방을 찾을 수 없습니다.');
+        }
+      }
       setMessages([]);
     } finally {
       setLoading(false);
@@ -155,6 +185,13 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('메시지 추가 로드 실패:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert('인증이 필요합니다. 다시 로그인해주세요.');
+        } else if (error.response?.status === 404) {
+          alert('채팅방을 찾을 수 없습니다.');
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -202,6 +239,17 @@ export default function ChatPage() {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('메시지 전송 실패:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert('인증이 필요합니다. 다시 로그인해주세요.');
+        } else if (error.response?.status === 404) {
+          alert('채팅방을 찾을 수 없습니다.');
+        } else {
+          alert('메시지 전송에 실패했습니다. 다시 시도해주세요.');
+        }
+      } else {
+        alert('메시지 전송에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 
@@ -218,7 +266,17 @@ export default function ChatPage() {
       fetchChatRooms();
     } catch (error) {
       console.error('채팅방 나가기 실패:', error);
-      alert('채팅방 나가기에 실패했습니다. 다시 시도해주세요.');
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert('인증이 필요합니다. 다시 로그인해주세요.');
+        } else if (error.response?.status === 404) {
+          alert('채팅방을 찾을 수 없습니다.');
+        } else {
+          alert('채팅방 나가기에 실패했습니다. 다시 시도해주세요.');
+        }
+      } else {
+        alert('채팅방 나가기에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 
@@ -230,9 +288,6 @@ export default function ChatPage() {
     console.log(`멘토 신청 거절: ${applyId}`);
   };
 
-  const handleBellClick = () => {
-    setIsMentorRequestModalOpen(true);
-  };
 
   return (
     <div className="flex min-h-screen">
@@ -251,13 +306,6 @@ export default function ChatPage() {
                   요청
                 </Link>
               </h1>
-              <button
-                onClick={handleBellClick}
-                className="relative p-1 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent"
-                type="button"
-              >
-                <BellIcon className="text-gray-3 pointer-events-none" />
-              </button>
             </div>
             <div className="relative">
               <div className="absolute left-5 top-1/2 -translate-y-1/2 z-10">

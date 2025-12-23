@@ -5,6 +5,7 @@ interface MentorProps {
   generation: number;
   major: string;
   onApply?: () => void;
+  isApplied?: boolean;
 }
 
 export default function Mentor({
@@ -12,6 +13,7 @@ export default function Mentor({
   generation,
   major,
   onApply,
+  isApplied = false,
 }: MentorProps) {
   const isEmpty = !name && generation === 0 && !major;
 
@@ -57,6 +59,13 @@ export default function Mentor({
 
       {isEmpty ? (
         <div className="absolute bottom-4 right-4 rounded-[10px] bg-gray-4 px-8 py-4 h-[48px] w-[120px] animate-pulse"></div>
+      ) : isApplied ? (
+        <button
+          disabled
+          className="absolute bottom-4 right-4 rounded-[10px] bg-gray-4 px-8 py-4 text-[24px] text-gray-3 font-bold cursor-not-allowed"
+        >
+          신청 완료
+        </button>
       ) : (
         <button
           onClick={onApply}

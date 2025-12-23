@@ -5,7 +5,8 @@ import Divider from '@/assets/svg/Divider';
 import RequestItem from '@/assets/components/chat/RequestItem';
 import MentorRequestModal from '@/assets/components/modal/MentorRequestModal';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { instance } from '@/assets/shared/lib/axios';
+import { API_PATHS } from '@/constants/api';
 import { Link } from 'react-router-dom';
 
 interface ApplyRequest {
@@ -28,8 +29,8 @@ export default function ChatApplyPage() {
     const fetchSentRequests = async () => {
       setLoading(true);
       try {
-        const response = await axios.get<ApplyRequest[]>(
-          '/api/mentoring/apply/sent'
+        const response = await instance.get<ApplyRequest[]>(
+          API_PATHS.MENTORING_APPLY_SENT
         );
         if (Array.isArray(response.data)) {
           setSentRequests(response.data);
@@ -44,20 +45,20 @@ export default function ChatApplyPage() {
     fetchSentRequests();
   }, []);
 
-  useEffect(() => {
-    const fetchReceivedRequests = async () => {
-      try {
-        const response = await axios.get<ApplyRequest[]>(
-          '/api/mentoring/apply/received'
-        );
-        if (Array.isArray(response.data)) {
-          setReceivedRequests(response.data);
-        }
-      } catch (error) {
-        console.error('받은 요청 목록 로드 실패:', error);
+  const fetchReceivedRequests = async () => {
+    try {
+      const response = await instance.get<ApplyRequest[]>(
+        API_PATHS.MENTORING_APPLY_RECEIVED
+      );
+      if (Array.isArray(response.data)) {
+        setReceivedRequests(response.data);
       }
-    };
+    } catch (error) {
+      console.error('받은 요청 목록 로드 실패:', error);
+    }
+  };
 
+  useEffect(() => {
     if (isMentorRequestModalOpen) {
       fetchReceivedRequests();
     }
@@ -65,7 +66,7 @@ export default function ChatApplyPage() {
 
   const handleCancelRequest = async (applyId: number) => {
     try {
-      await axios.patch(`/api/mentoring/apply/${applyId}`, {
+      await instance.patch(API_PATHS.MENTORING_APPLY_UPDATE(applyId), {
         applyStatus: 'REJECTED',
       });
       setSentRequests((prev) => prev.filter((req) => req.applyId !== applyId));
@@ -81,12 +82,10 @@ export default function ChatApplyPage() {
 
   const handleAcceptMentor = async (applyId: number) => {
     try {
-      await axios.patch(`/api/mentoring/apply/${applyId}`, {
+      await instance.patch(API_PATHS.MENTORING_APPLY_UPDATE(applyId), {
         applyStatus: 'ACCEPTED',
       });
-      setReceivedRequests((prev) =>
-        prev.filter((req) => req.applyId !== applyId)
-      );
+      await fetchReceivedRequests();
       alert('멘토링 신청을 수락했습니다.');
     } catch (error) {
       console.error('멘토 신청 수락 실패:', error);
@@ -96,12 +95,10 @@ export default function ChatApplyPage() {
 
   const handleRejectMentor = async (applyId: number) => {
     try {
-      await axios.patch(`/api/mentoring/apply/${applyId}`, {
+      await instance.patch(API_PATHS.MENTORING_APPLY_UPDATE(applyId), {
         applyStatus: 'REJECTED',
       });
-      setReceivedRequests((prev) =>
-        prev.filter((req) => req.applyId !== applyId)
-      );
+      await fetchReceivedRequests();
       alert('멘토링 신청을 거절했습니다.');
     } catch (error) {
       console.error('멘토 신청 거절 실패:', error);
