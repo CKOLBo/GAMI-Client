@@ -37,6 +37,8 @@ export default function PasswordPage() {
       });
 
       setIsCodeSent(true);
+      setIsCodeVerified(false);
+      setCode('');
       toast.success('인증 코드가 발송되었습니다. 이메일을 확인해주세요.');
     } catch (error: unknown) {
       if (error instanceof TokenRefreshError) {
@@ -206,7 +208,11 @@ export default function PasswordPage() {
                   type="button"
                   onClick={handleVerifyCode}
                   disabled={isLoading || isCodeVerified}
-                  className="min-w-[90px] h-13 2xl:h-15 bg-main-1 text-white rounded-[10px] 2xl:rounded-[12px] text-sm font-semibold cursor-pointer transition-all duration-300 hover:bg-main-1-hover outline-none disabled:bg-green-500 disabled:cursor-not-allowed"
+                  className={`min-w-[90px] h-13 2xl:h-15 rounded-[10px] 2xl:rounded-[12px] text-sm font-semibold cursor-pointer transition-all duration-300 outline-none ${
+                    isCodeVerified
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : 'bg-main-1 text-white hover:bg-main-1-hover disabled:bg-gray-300 disabled:cursor-not-allowed'
+                  }`}
                 >
                   {isCodeVerified
                     ? '인증완료'
@@ -222,6 +228,7 @@ export default function PasswordPage() {
                 placeholder="새 비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={!isCodeVerified}
               />
             </div>
 
@@ -230,6 +237,7 @@ export default function PasswordPage() {
                 placeholder="비밀번호 확인"
                 value={confirmPw}
                 onChange={(e) => setConfirmPw(e.target.value)}
+                disabled={!isCodeVerified}
               />
             </div>
 
@@ -240,7 +248,7 @@ export default function PasswordPage() {
               disabled={isLoading || !isCodeVerified}
               className="w-full 2xl:w-[376px] h-13 2xl:h-15 bg-main-2 text-white text-base rounded-[10px] 2xl:rounded-[12px] transition-all duration-300 font-bold hover:bg-main-2-hover border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? '비밀번호 변경' : '비밀번호 변경'}
+              {isLoading ? '변경 중...' : '비밀번호 변경'}
             </button>
           </form>
         </div>
