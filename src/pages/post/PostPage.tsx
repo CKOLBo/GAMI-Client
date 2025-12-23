@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import Sidebar from '@/assets/components/Sidebar';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
 import PostModal from '@/assets/components/modal/ReportModal';
-import Sidebar from '@/assets/components/Sidebar';
 import Report from '@/assets/svg/post/Report';
-import { instance } from '@/assets/shared/lib/axios';
 import Divider from '@/assets/svg/Divider';
+import { instance } from '@/assets/shared/lib/axios';
 
 interface PostType {
   id: number;
@@ -21,33 +20,39 @@ interface PostType {
 }
 
 export default function PostPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [postData, setPostData] = useState<PostType[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [keyword, setKeyword] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchPosts = () => {
     instance
       .get('/api/post', {
         params: {
           page,
           size: 10,
           sort: 'createdAt,desc',
+          ...(keyword.trim() && { keyword: keyword.trim() }),
         },
       })
-      .then((response) => {
-        setPostData(response.data.content);
-        setTotalPages(response.data.totalPages);
+      .then((res) => {
+        setPostData(res.data.content);
+        setTotalPages(res.data.totalPages);
       })
       .catch(() => {
         toast.error('게시글 목록을 불러오지 못했습니다.');
       });
-  }, [page]);
+  };
 
-  const handleReportClick = () => {
-    setIsModalOpen(true);
+  useEffect(() => {
+    fetchPosts();
+  }, [page, keyword]);
+
+  const handleSearch = () => {
+    setPage(0);
   };
 
   const handleReport = () => {
@@ -61,23 +66,31 @@ export default function PostPage() {
 
       <div className="w-full flex-1">
         <div className="max-w-[1500px] px-4 ml-80 lg:px-6">
-          <div className="flex">
-            <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1 pr-25">
-              <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">
-                익명 게시판
-              </span>
+          <div className="flex items-center justify-between">
+            <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1">
+              <span className="text-3xl 2xl:text-[40px]">익명 게시판</span>
               <Divider className="shrink-0" />
               <Link
                 to="/my-post"
-                className="text-3xl 2xl:text-[40px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+                className="text-3xl 2xl:text-[40px] text-gray-2 hover:text-gray-1 transition-colors"
               >
                 내가 쓴 글
               </Link>
             </h1>
-            <PostHead />
+            <PostHead
+              keyword={keyword}
+              onKeywordChange={(e) => setKeyword(e.target.value)}
+              onSearch={handleSearch}
+            />
           </div>
 
           <div className="border-t-2 border-gray-2">
+            {postData.length === 0 && (
+              <div className="py-20 text-center text-2xl text-gray-2">
+                검색 결과가 없습니다.
+              </div>
+            )}
+
             {postData.map((post) => (
               <Post
                 key={post.id}
@@ -91,18 +104,15 @@ export default function PostPage() {
                 actions={[
                   {
                     icon: <Report />,
-                    onClick: handleReportClick,
+                    onClick: () => setIsModalOpen(true),
                   },
                 ]}
               />
             ))}
           </div>
-          <div className="flex justify-center gap-4 py-10 text-2xl text-gray-1 font-bold">
-            <button
-              disabled={page === 0}
-              onClick={() => setPage((prev) => prev - 1)}
-              className="cursor-pointer"
-            >
+
+          <div className="flex justify-center gap-6 py-10 text-2xl font-bold">
+            <button disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
               이전
             </button>
 
@@ -112,8 +122,7 @@ export default function PostPage() {
 
             <button
               disabled={page + 1 >= totalPages}
-              onClick={() => setPage((prev) => prev + 1)}
-              className="cursor-pointer"
+              onClick={() => setPage((p) => p + 1)}
             >
               다음
             </button>
