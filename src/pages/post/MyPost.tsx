@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Sidebar from '@/assets/components/Sidebar';
 import Post from '@/assets/components/post/Post';
 import PostHead from '@/assets/components/post/PostHead';
 import Delete from '@/assets/svg/post/Delete';
 import DeleteModal from '@/assets/components/modal/DeleteModal';
-import Sidebar from '@/assets/components/Sidebar';
 import Divider from '@/assets/svg/Divider';
 import { instance } from '@/assets/shared/lib/axios';
-import { toast } from 'react-toastify';
 
 interface PostResponse {
   id: number;
@@ -37,6 +37,7 @@ export default function MyPost() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [myPostData, setMyPostData] = useState<MyPostType[]>([]);
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     if (!postId) return;
@@ -58,7 +59,7 @@ export default function MyPost() {
             commentCount: post.commentCount,
           },
         ]);
-      } catch (error) {
+      } catch {
         toast.error('게시글을 불러오지 못했습니다.');
       }
     };
@@ -80,8 +81,9 @@ export default function MyPost() {
     <>
       <div className="flex">
         <Sidebar />
+
         <div className="max-w-[1500px] w-full ml-80 px-4 lg:px-6">
-          <div className="flex">
+          <div className="flex items-center justify-between">
             <h1 className="flex items-center gap-4 text-[40px] font-bold text-gray-1 pr-25">
               <Link
                 to="/post"
@@ -94,7 +96,12 @@ export default function MyPost() {
                 내가 쓴 글
               </span>
             </h1>
-            <PostHead />
+
+            <PostHead
+              keyword={keyword}
+              onKeywordChange={(e) => setKeyword(e.target.value)}
+              onSearch={() => {}}
+            />
           </div>
 
           <div className="border-t-2 border-gray-2">
