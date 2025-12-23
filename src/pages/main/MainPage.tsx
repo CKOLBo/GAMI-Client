@@ -13,10 +13,14 @@ export default function MainPage() {
   const { user } = useAuth();
   const userName = user?.name || 'OOO';
   const [posts, setPosts] = useState<PostType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
         const response = await instance.get('/api/post', {
           params: {
             page: 0,
@@ -27,6 +31,9 @@ export default function MainPage() {
         setPosts(response.data.content);
       } catch (err) {
         console.error('게시글 조회 실패:', err);
+        setError('게시글을 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -94,27 +101,39 @@ export default function MainPage() {
             게시글
           </h2>
           <div className="grid grid-cols-3 gap-8 2xl:gap-12">
-            {posts.length > 0
-              ? posts.map((post) => (
-                  <Post
-                    key={post.id}
-                    title={post.title}
-                    content={post.content}
-                    commentCount={post.commentCount}
-                    likeCount={post.likeCount}
-                    postId={post.id}
-                  />
-                ))
-              : Array.from({ length: 3 }).map((_, index) => (
-                  <Post
-                    key={`empty-${index}`}
-                    title=""
-                    content=""
-                    commentCount={0}
-                    likeCount={0}
-                    postId={0}
-                  />
-                ))}
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <Post
+                  key={`loading-${index}`}
+                  title=""
+                  content=""
+                  commentCount={0}
+                  likeCount={0}
+                  postId={0}
+                />
+              ))
+            ) : error ? (
+              <div className="col-span-3 flex items-center justify-center py-12">
+                <p className="text-lg 2xl:text-xl text-gray-3">{error}</p>
+              </div>
+            ) : posts.length > 0 ? (
+              posts.map((post) => (
+                <Post
+                  key={post.id}
+                  title={post.title}
+                  content={post.content}
+                  commentCount={post.commentCount}
+                  likeCount={post.likeCount}
+                  postId={post.id}
+                />
+              ))
+            ) : (
+              <div className="col-span-3 flex items-center justify-center py-12">
+                <p className="text-lg 2xl:text-xl text-gray-3">
+                  게시글이 없습니다.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
