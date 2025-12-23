@@ -36,7 +36,6 @@ export default function MainPost({
         </h2>
 
         <p className="font-bold text-gray-3 line-clamp-3 break-all">
-          <span className="font-bold text-gray-1">익명 : </span>
           {content}
         </p>
       </div>
