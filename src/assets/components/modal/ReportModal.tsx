@@ -2,13 +2,20 @@ import { useState } from 'react';
 import ModalWrapper from '@/assets/shared/Modal';
 import Button from '@/assets/components/Button/Button';
 import Arrow from '@/assets/svg/Arrow';
+import { instance } from '@/assets/shared/lib/axios';
+import { toast } from 'react-toastify';
 
 interface ReportModalProps {
+  postId: number;
   onClose: () => void;
   onReport: () => void;
 }
 
-export default function ReportModal({ onClose, onReport }: ReportModalProps) {
+export default function ReportModal({
+  postId,
+  onClose,
+  onReport,
+}: ReportModalProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState('');
   const [additionalText, setAdditionalText] = useState('');
@@ -22,9 +29,43 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
     '기타',
   ];
 
+  const reportTypeMap: Record<string, string> = {
+    '광고·홍보·스팸': 'SPAM',
+    '욕설·비하·혐오 표현': 'AVERSION',
+    '개인정보 노출': 'EXPOSURE',
+    '음란·불쾌한 내용': 'LEWD',
+    '게시판 목적과 맞지 않는 내용': 'INAPPROPRIATE',
+    기타: 'ETC',
+  };
+
   const handleReasonSelect = (reason: string) => {
     setSelectedReason(reason);
     setIsDropdownOpen(false);
+  };
+
+  const handleReportSubmit = async () => {
+    if (!selectedReason) {
+      toast.error('신고 사유를 선택해주세요.');
+      return;
+    }
+
+    try {
+      await instance.post('/api/report', {
+        postId,
+        reportType: reportTypeMap[selectedReason],
+        reason: selectedReason,
+        reasonDetail: additionalText,
+      });
+
+      toast.success('신고가 접수되었습니다.');
+      onReport();
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error('로그인이 필요합니다.');
+      } else {
+        toast.error('신고 처리 중 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
@@ -33,6 +74,7 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
         <h2 className="text-[32px] text-gray-1 font-bold mb-13">
           게시글 신고하기
         </h2>
+
         <p className="mb-7 text-gray-1 text-2xl font-semibold">
           문제가 되는 이유를 선택해 주세요. 허위 신고 시 이용이 제한될 수
           있어요.
@@ -43,14 +85,14 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className={`w-94 px-6 py-4 border cursor-pointer border-gray-2 text-left font-medium text-xl flex justify-between items-center bg-white
-    ${isDropdownOpen ? 'rounded-t-lg border-b-0 pb-4.25' : 'rounded-lg'}
-  `}
+                ${isDropdownOpen ? 'rounded-t-lg border-b-0 pb-4.25' : 'rounded-lg'}
+              `}
             >
               <span className={selectedReason ? 'text-gray-1' : 'text-gray-3'}>
                 {selectedReason || '신고 사유를 선택해주세요.'}
               </span>
               <div
-                className={`w-6 h-6 flex items-center justify-center  ${
+                className={`w-6 h-6 flex items-center justify-center ${
                   isDropdownOpen ? 'rotate-180' : 'rotate-0'
                 }`}
               >
@@ -59,7 +101,7 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute z-10 w-94 mt-0 bg-white border border-gray-2 border-t-0 rounded-b-lg max-h-80  ">
+              <div className="absolute z-10 w-94 bg-white border border-gray-2 border-t-0 rounded-b-lg">
                 {reportReasons.map((reason) => (
                   <button
                     key={reason}
@@ -98,7 +140,7 @@ export default function ReportModal({ onClose, onReport }: ReportModalProps) {
             취소
           </button>
 
-          <Button text="신고하기" onClick={onReport} />
+          <Button text="신고하기" onClick={handleReportSubmit} />
         </div>
       </div>
     </ModalWrapper>
