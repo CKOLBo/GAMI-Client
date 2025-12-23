@@ -23,10 +23,21 @@ export default function PostPage() {
   const [postData, setPostData] = useState<PostType[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [keyword, setKeyword] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [keyword, setKeyword] = useState('');
+  const [debouncedKeyword, setDebouncedKeyword] = useState('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword.trim());
+      setPage(0);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [keyword]);
 
   const fetchPosts = () => {
     instance
@@ -35,7 +46,7 @@ export default function PostPage() {
           page,
           size: 10,
           sort: 'createdAt,desc',
-          ...(keyword.trim() && { keyword: keyword.trim() }),
+          ...(debouncedKeyword && { keyword: debouncedKeyword }),
         },
       })
       .then((res) => {
@@ -49,9 +60,10 @@ export default function PostPage() {
 
   useEffect(() => {
     fetchPosts();
-  }, [page, keyword]);
+  }, [page, debouncedKeyword]);
 
   const handleSearch = () => {
+    setDebouncedKeyword(keyword.trim());
     setPage(0);
   };
 
@@ -77,6 +89,7 @@ export default function PostPage() {
                 내가 쓴 글
               </Link>
             </h1>
+
             <PostHead
               keyword={keyword}
               onKeywordChange={(e) => setKeyword(e.target.value)}
