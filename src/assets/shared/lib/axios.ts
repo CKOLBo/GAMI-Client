@@ -86,6 +86,9 @@ instance.interceptors.response.use(
       } catch {
         deleteCookie('accessToken');
         deleteCookie('refreshToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+
         throw new TokenRefreshError(
           'Token refresh failed. Please login again.'
         );

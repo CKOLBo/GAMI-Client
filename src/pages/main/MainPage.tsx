@@ -3,14 +3,15 @@ import Post from '@/assets/components/MainPost';
 import FindMentor from '@/assets/svg/main/FindMentor.png';
 import FireWorks from '@/assets/svg/main/FireWorks.png';
 import RightIcon from '@/assets/svg/main/RightIcon';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState, useEffect } from 'react';
-import { instance } from '@/assets/shared/lib/axios';
+import { instance, TokenRefreshError } from '@/assets/shared/lib/axios';
 import type { Post as PostType } from '@/assets/shared/types';
 
 export default function MainPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const userName = user?.name || 'OOO';
   const [posts, setPosts] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +31,10 @@ export default function MainPage() {
         });
         setPosts(response.data.content);
       } catch (err) {
+        if (err instanceof TokenRefreshError) {
+          navigate('/signin');
+          return;
+        }
         console.error('게시글 조회 실패:', err);
         setError('게시글을 불러오는 중 오류가 발생했습니다.');
       } finally {
