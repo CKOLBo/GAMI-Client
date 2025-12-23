@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { instance, TokenRefreshError } from '@/assets/shared/lib/axios';
 import Sidebar from '@/assets/components/Sidebar';
@@ -25,6 +26,7 @@ const majorToInterestMap: Record<string, string> = {
 };
 
 export default function MyPage() {
+  const navigate = useNavigate();
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditingCategory, setIsEditingCategory] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +60,7 @@ export default function MyPage() {
       } catch (err) {
         if (err instanceof TokenRefreshError) {
           toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+          navigate('/signin');
         } else {
           toast.error('프로필 조회에 실패했습니다.');
         }
