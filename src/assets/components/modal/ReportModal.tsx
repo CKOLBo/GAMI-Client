@@ -89,17 +89,13 @@ export default function ReportModal({
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className={`w-94 px-6 py-4 border cursor-pointer border-gray-2 text-left font-medium text-xl flex justify-between items-center bg-white
-                ${isDropdownOpen ? 'rounded-t-lg border-b-0 pb-4.25' : 'rounded-lg'}
-              `}
+              className={`w-94 px-6 py-4 border cursor-pointer border-gray-2 text-left font-medium text-xl flex justify-between items-center bg-white${isDropdownOpen ? 'rounded-t-lg border-b-0 pb-4.25' : 'rounded-lg'}`}
             >
               <span className={selectedReason ? 'text-gray-1' : 'text-gray-3'}>
                 {selectedReason || '신고 사유를 선택해주세요.'}
               </span>
               <div
-                className={`w-6 h-6 flex items-center justify-center ${
-                  isDropdownOpen ? 'rotate-180' : 'rotate-0'
-                }`}
+                className={`w-6 h-6 flex items-center justify-center ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
               >
                 <Arrow />
               </div>
