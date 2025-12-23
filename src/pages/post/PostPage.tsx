@@ -107,6 +107,7 @@ export default function PostPage() {
             {postData.map((post) => (
               <Post
                 key={post.id}
+                postId={post.id}
                 title={post.title}
                 content={post.content}
                 author="익명"
