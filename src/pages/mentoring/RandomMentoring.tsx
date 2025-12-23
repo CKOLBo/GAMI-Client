@@ -114,11 +114,6 @@ export default function RandomMentoring() {
   };
 
   const handleRetry = () => {
-    if (matchedMentor) {
-      setRecommendedMentorIds((prev) =>
-        prev.filter((id) => id !== matchedMentor.memberId)
-      );
-    }
     setMatchedMentor(null);
     if (retryTimeoutRef.current) {
       clearTimeout(retryTimeoutRef.current);
