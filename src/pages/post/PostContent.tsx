@@ -7,6 +7,7 @@ import PostModal from '@/assets/components/modal/ReportModal';
 import Button from '@/assets/components/Button/Button';
 import Sidebar from '@/assets/components/Sidebar';
 import Gemini from '@/assets/svg/post/Gemini.png';
+import GeminiText from '@/assets/svg/post/GeminiText.png';
 import Arrow from '@/assets/svg/Arrow';
 import { instance } from '@/assets/shared/lib/axios';
 
@@ -25,12 +26,20 @@ interface PostDetailType {
   images: string[];
 }
 
+interface SummaryResponse {
+  postId: number;
+  summary: string;
+}
+
 export default function PostContent() {
   const { postId } = useParams<{ postId: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postData, setPostData] = useState<PostDetailType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [comment, setComment] = useState('');
+  const [summary, setSummary] = useState<string | null>(null);
+  const [isSummaryLoading, setIsSummaryLoading] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   const calculateTimeAgo = (createdAt: string) => {
     const now = new Date();
@@ -62,6 +71,43 @@ export default function PostContent() {
 
     fetchPostDetail();
   }, [postId]);
+
+  const handleAISummary = async () => {
+    if (!postId) return;
+
+    setIsSummaryLoading(true);
+    setShowSummary(true);
+
+    try {
+      const res = await instance.get<SummaryResponse>(
+        `/api/post/summary/${postId}`
+      );
+      setSummary(res.data.summary);
+    } catch (error: any) {
+      console.error('AI 요약 에러 상세:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+
+      let errorMessage = 'AI 요약을 불러오는데 실패했습니다.';
+
+      if (error.response?.status === 409) {
+        errorMessage =
+          error.response?.data?.message ||
+          'AI 요약을 생성할 수 없는 게시글입니다. 게시글 내용이 너무 짧거나 요약이 불가능한 형식일 수 있습니다.';
+      } else if (error.response?.status === 404) {
+        errorMessage = '게시글을 찾을 수 없습니다.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      alert(errorMessage);
+      setShowSummary(false);
+    } finally {
+      setIsSummaryLoading(false);
+    }
+  };
 
   const handleCommentSubmit = async () => {
     if (!comment.trim() || !postId) return;
@@ -137,17 +183,44 @@ export default function PostContent() {
               <img src={Gemini} alt="Gemini" width="44" height="44" />
             </div>
 
-            <div className="rounded-[20px] shadow-GAMI pt-6 pl-8 w-[464px] h-[140px]">
-              <p className="text-gray-3 font-bold text-xl pb-8">
-                AI를 활용 해 게시글을 요약해보세요!
-              </p>
-              <div className="flex gap-1 cursor-pointer">
-                <h2 className="text-gray-1 font-bold text-2xl">
-                  AI로 요약하기
-                </h2>
-                <Arrow className="w-7 h-7" />
+            {!showSummary ? (
+              <div
+                className="rounded-[20px] shadow-GAMI pt-6 pl-8 w-[464px] h-[140px] cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={handleAISummary}
+              >
+                <p className="text-gray-3 font-bold text-xl pb-8">
+                  AI를 활용 해 게시글을 요약해보세요!
+                </p>
+                <div className="flex gap-1">
+                  <h2 className="text-gray-1 font-bold text-2xl">
+                    AI로 요약하기
+                  </h2>
+                  <Arrow className="w-7 h-7" />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="rounded-[20px] shadow-GAMI p-8 w-full max-w-[800px]">
+                {isSummaryLoading ? (
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-1"></div>
+                    <p className="text-gray-1 font-bold text-2xl leading-sm items-center flex gap-2">
+                      <img src={GeminiText} width="132" /> 가 요약하는 중...
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <h3 className="text-gray-1 font-bold text-2xl leading-sm items-center flex gap-2">
+                        <img src={GeminiText} width="132" />가 요약했어요
+                      </h3>
+                    </div>
+                    <p className="text-gray-3 text-lg leading-relaxed whitespace-pre-wrap">
+                      {summary}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-between mb-14 pb-14 border-b-2 border-gray-2">
