@@ -42,6 +42,7 @@ export default function PasswordPage() {
       toast.success('인증 코드가 발송되었습니다. 이메일을 확인해주세요.');
     } catch (error: unknown) {
       if (error instanceof TokenRefreshError) {
+        navigate('/signin');
         return;
       }
       console.error('인증 코드 발송 실패:', error);
@@ -98,6 +99,7 @@ export default function PasswordPage() {
       toast.success('이메일 인증이 완료되었습니다.');
     } catch (error: unknown) {
       if (error instanceof TokenRefreshError) {
+        navigate('/signin');
         return;
       }
       console.error('인증 코드 검증 실패:', error);
@@ -152,6 +154,7 @@ export default function PasswordPage() {
       navigate('/signin');
     } catch (error: unknown) {
       if (error instanceof TokenRefreshError) {
+        navigate('/signin');
         return;
       }
       console.error('비밀번호 변경 실패:', error);

@@ -89,13 +89,6 @@ instance.interceptors.response.use(
         localStorage.removeItem('user');
         localStorage.removeItem('token');
 
-        if (
-          typeof window !== 'undefined' &&
-          window.location.pathname !== '/signin'
-        ) {
-          window.location.href = '/signin';
-        }
-
         throw new TokenRefreshError(
           'Token refresh failed. Please login again.'
         );

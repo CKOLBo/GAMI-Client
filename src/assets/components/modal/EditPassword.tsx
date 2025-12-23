@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { instance, TokenRefreshError } from '@/assets/shared/lib/axios';
 import ModalWrapper from '@/assets/shared/Modal';
@@ -10,6 +11,7 @@ interface EditPasswordProps {
 }
 
 export default function EditPassword({ onClose }: EditPasswordProps) {
+  const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -47,6 +49,8 @@ export default function EditPassword({ onClose }: EditPasswordProps) {
       onClose();
     } catch (err: unknown) {
       if (err instanceof TokenRefreshError) {
+        onClose();
+        navigate('/signin');
         return;
       }
       if (err && typeof err === 'object' && 'response' in err) {
