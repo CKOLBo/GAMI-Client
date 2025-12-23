@@ -53,11 +53,18 @@ export default function MyPost() {
       toast.success('게시글이 삭제되었습니다.');
 
       setPostData((prev) => prev.filter((post) => post.id !== selectedPostId));
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        toast.error('로그인이 필요합니다.');
-      } else if (error.response?.status === 403) {
-        toast.error('삭제 권한이 없습니다.');
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'response' in error) {
+        const status = (error as { response?: { status?: number } }).response
+          ?.status;
+
+        if (status === 401) {
+          toast.error('로그인이 필요합니다.');
+        } else if (status === 403) {
+          toast.error('삭제 권한이 없습니다.');
+        } else {
+          toast.error('게시글 삭제에 실패했습니다.');
+        }
       } else {
         toast.error('게시글 삭제에 실패했습니다.');
       }
