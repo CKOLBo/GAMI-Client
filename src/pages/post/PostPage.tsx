@@ -30,6 +30,8 @@ export default function PostPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const [reportPostId, setReportPostId] = useState<number | null>(null);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedKeyword(keyword.trim());
@@ -118,7 +120,10 @@ export default function PostPage() {
                 actions={[
                   {
                     icon: <Report />,
-                    onClick: () => setIsModalOpen(true),
+                    onClick: () => {
+                      setReportPostId(post.id);
+                      setIsModalOpen(true);
+                    },
                   },
                 ]}
               />
@@ -148,10 +153,14 @@ export default function PostPage() {
           </div>
         </div>
 
-        {isModalOpen && (
+        {isModalOpen && reportPostId && (
           <PostModal
+            postId={reportPostId}
             onClose={() => setIsModalOpen(false)}
-            onReport={handleReport}
+            onReport={() => {
+              setIsModalOpen(false);
+              setReportPostId(null);
+            }}
           />
         )}
       </div>
