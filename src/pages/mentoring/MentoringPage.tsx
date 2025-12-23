@@ -8,6 +8,7 @@ import NotFoundImage from '@/assets/svg/mentor/NotFound.png';
 import { toast } from 'react-toastify';
 import { instance } from '@/assets/shared/lib/axios';
 import { API_PATHS } from '@/constants/api';
+import axios from 'axios';
 
 interface MentorData {
   memberId: number;
@@ -79,7 +80,19 @@ export default function MentoringPage() {
         }
       } catch (err) {
         console.error('데이터 조회 실패:', err);
-        toast.error('데이터를 불러오는데 실패했습니다.');
+        if (axios.isAxiosError(err)) {
+          if (err.response?.status === 401) {
+            toast.error('인증이 필요합니다.');
+          } else if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') {
+            toast.error('요청 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
+          } else if (err.response?.status === 500) {
+            toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          } else {
+            toast.error('데이터를 불러오는데 실패했습니다.');
+          }
+        } else {
+          toast.error('데이터를 불러오는데 실패했습니다.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -96,6 +109,11 @@ export default function MentoringPage() {
       }
     } catch (error) {
       console.error('보낸 신청 목록 조회 실패:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          toast.error('인증이 필요합니다.');
+        }
+      }
     }
   };
 
@@ -150,16 +168,29 @@ export default function MentoringPage() {
       
       setSentApplies((prev) => [...prev, newApply]);
       toast.success('신청을 했어요');
-    } catch (err: any) {
-      const status = err.response?.status;
-      
-      if (status === 401) {
-        toast.error('인증이 필요합니다.');
-      } else if (status === 404) {
-        toast.error('멘토를 찾을 수 없습니다.');
-      } else if (status === 409) {
-        toast.error('이미 신청한 멘토링입니다.');
-        await fetchSentApplies();
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        
+        if (status === 401) {
+          toast.error('인증이 필요합니다.');
+        } else if (status === 404) {
+          toast.error('멘토를 찾을 수 없습니다.');
+        } else if (status === 409) {
+          toast.error('이미 신청한 멘토링입니다.');
+          try {
+            await fetchSentApplies();
+          } catch (fetchError) {
+            console.error('신청 목록 갱신 실패:', fetchError);
+          }
+        } else if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') {
+          toast.error('요청 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
+        } else if (status === 500) {
+          toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        } else {
+          console.error('멘토링 신청 실패:', err);
+          toast.error('신청에 실패했습니다.');
+        }
       } else {
         console.error('멘토링 신청 실패:', err);
         toast.error('신청에 실패했습니다.');
