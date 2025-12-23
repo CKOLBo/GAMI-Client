@@ -61,7 +61,7 @@ export default function Post({
         </div>
       </div>
 
-      <div className="flex items-center lg:mr-20 xl:mr-40 mb-4 lg:mb-0">
+      <div className="flex items-center lg:mr-10 xl:mr-20 mb-4 lg:mb-0">
         <div className="flex flex-row gap-4 sm:gap-6 lg:gap-9 xl:gap-11">
           <button
             className="flex items-center cursor-pointer gap-4"
