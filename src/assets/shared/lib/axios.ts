@@ -51,10 +51,11 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       const isAuthEndpoint =
         originalRequest.url?.includes('/auth/signin') ||
-        originalRequest.url?.includes('/auth/signup');
+        originalRequest.url?.includes('/auth/signup') ||
+        originalRequest.url?.includes('/auth/reissue');
 
       if (isAuthEndpoint) {
-        return Promise.resolve(error.response);
+        return Promise.reject(error);
       }
 
       originalRequest._retry = true;

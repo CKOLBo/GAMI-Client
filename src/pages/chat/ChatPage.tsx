@@ -5,9 +5,9 @@ import BellIcon from '@/assets/svg/common/BellIcon';
 import SearchIcon from '@/assets/svg/main/SearchIcon';
 import Divider from '@/assets/svg/Divider';
 import MentorRequestModal from '@/assets/components/modal/MentorRequestModal';
-import { useState } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import axios from 'axios';
+import { instance } from '@/assets/shared/lib/axios';
 import { Link } from 'react-router-dom';
 
 interface ChatItem {
@@ -43,57 +43,74 @@ interface ChatMessagesResponse {
 }
 
 const mentorRequests = [
-  { id: 1, name: '양은준' },
-  { id: 2, name: '한국' },
-  { id: 3, name: '양은준' },
-  { id: 4, name: '한국' },
-  { id: 5, name: '양은준' },
-  { id: 6, name: '한국' },
+  { applyId: 1, name: '양은준', applyStatus: 'PENDING' },
+  { applyId: 2, name: '한국', applyStatus: 'PENDING' },
+  { applyId: 3, name: '양은준', applyStatus: 'PENDING' },
+  { applyId: 4, name: '한국', applyStatus: 'PENDING' },
+  { applyId: 5, name: '양은준', applyStatus: 'PENDING' },
+  { applyId: 6, name: '한국', applyStatus: 'PENDING' },
 ];
 
-const chatList: ChatItem[] = [
-  {
-    id: 1,
-    name: '한국',
-    lastMessage: '안녕하세요! 멘토링 관련해서 질문이 있습니다.',
-    major: 'FRONTEND',
-    generation: 9,
-  },
-  {
-    id: 2,
-    name: '문강현',
-    lastMessage: 'React 컴포넌트 설계에 대해 조언을 구하고 싶어요.',
-    major: 'FRONTEND',
-    generation: 8,
-  },
-  {
-    id: 3,
-    name: '양은준',
-    lastMessage: 'Next.js 프로젝트 구조에 대한 멘토링이 필요합니다.',
-    major: 'FRONTEND',
-    generation: 9,
-  },
-];
 
 export default function ChatPage() {
   const { user } = useAuth();
+  const [chatList, setChatList] = useState<ChatItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   const [roomDetail, setRoomDetail] = useState<ChatRoomDetail | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [roomsLoading, setRoomsLoading] = useState(false);
   const [messageInput, setMessageInput] = useState('');
   const [isMentorRequestModalOpen, setIsMentorRequestModalOpen] =
     useState(false);
+  const [nextCursor, setNextCursor] = useState<number | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const currentUserId = user?.id ?? null;
+
+  useEffect(() => {
+    fetchChatRooms();
+  }, []);
+
+  const fetchChatRooms = async () => {
+    setRoomsLoading(true);
+    try {
+      const response = await instance.get<ChatItem[]>('/api/chat/rooms');
+      if (Array.isArray(response.data)) {
+        setChatList(response.data);
+      }
+    } catch (error) {
+      console.error('채팅방 목록 로드 실패:', error);
+    } finally {
+      setRoomsLoading(false);
+    }
+  };
+
+  const filteredChatList = useMemo(() => {
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    if (trimmedQuery === '') {
+      return chatList;
+    }
+    return chatList.filter(
+      (chat) =>
+        chat.name.toLowerCase().includes(trimmedQuery) ||
+        chat.major.toLowerCase().includes(trimmedQuery) ||
+        chat.lastMessage.toLowerCase().includes(trimmedQuery)
+    );
+  }, [searchQuery, chatList]);
 
   const handleChatClick = async (roomId: number) => {
     setSelectedRoomId(roomId);
     setLoading(true);
+    setNextCursor(null);
+    setHasMore(false);
 
     try {
       const [roomResponse, messagesResponse] = await Promise.all([
-        axios.get<ChatRoomDetail>(`/api/chat/${roomId}`),
-        axios.get<ChatMessagesResponse>(`/api/chat/${roomId}/messages`),
+        instance.get<ChatRoomDetail>(`/api/chat/${roomId}`),
+        instance.get<ChatMessagesResponse>(`/api/chat/${roomId}/messages`),
       ]);
 
       setRoomDetail(roomResponse.data);
@@ -102,12 +119,42 @@ export default function ChatPage() {
         Array.isArray(messagesResponse.data.messages)
       ) {
         setMessages(messagesResponse.data.messages);
+        setNextCursor(messagesResponse.data.nextCursor);
+        setHasMore(messagesResponse.data.hasMore);
       } else {
         setMessages([]);
       }
     } catch (error) {
       console.error('채팅방 정보 로드 실패:', error);
       setMessages([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMoreMessages = async () => {
+    if (!selectedRoomId || !nextCursor || !hasMore || loading) return;
+
+    setLoading(true);
+    try {
+      const response = await instance.get<ChatMessagesResponse>(
+        `/api/chat/${selectedRoomId}/messages`,
+        {
+          params: { cursor: nextCursor },
+        }
+      );
+
+      if (
+        response.data &&
+        Array.isArray(response.data.messages) &&
+        response.data.messages.length > 0
+      ) {
+        setMessages((prev) => [...response.data.messages, ...prev]);
+        setNextCursor(response.data.nextCursor);
+        setHasMore(response.data.hasMore);
+      }
+    } catch (error) {
+      console.error('메시지 추가 로드 실패:', error);
     } finally {
       setLoading(false);
     }
@@ -135,23 +182,52 @@ export default function ChatPage() {
     if (!messageInput.trim() || !selectedRoomId) return;
 
     try {
-      await axios.post(`/api/chat/${selectedRoomId}/messages`, {
+      await instance.post(`/api/chat/${selectedRoomId}/messages`, {
         message: messageInput,
       });
       setMessageInput('');
+
+      const messagesResponse = await instance.get<ChatMessagesResponse>(
+        `/api/chat/${selectedRoomId}/messages`
+      );
+      if (
+        messagesResponse.data &&
+        Array.isArray(messagesResponse.data.messages)
+      ) {
+        setMessages(messagesResponse.data.messages);
+        setNextCursor(messagesResponse.data.nextCursor);
+        setHasMore(messagesResponse.data.hasMore);
+      }
+
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('메시지 전송 실패:', error);
     }
   };
 
-  const handleExit = () => {
-    setSelectedRoomId(null);
-    setRoomDetail(null);
-    setMessages([]);
+  const handleExit = async () => {
+    if (!selectedRoomId) return;
+
+    try {
+      await instance.delete(`/api/chat/rooms/${selectedRoomId}/leave`);
+      setSelectedRoomId(null);
+      setRoomDetail(null);
+      setMessages([]);
+      setNextCursor(null);
+      setHasMore(false);
+      fetchChatRooms();
+    } catch (error) {
+      console.error('채팅방 나가기 실패:', error);
+      alert('채팅방 나가기에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
-  const handleAcceptMentor = (id: number) => {
-    console.log(`멘토 신청 수락: ${id}`);
+  const handleAcceptMentor = (applyId: number) => {
+    console.log(`멘토 신청 수락: ${applyId}`);
+  };
+
+  const handleRejectMentor = (applyId: number) => {
+    console.log(`멘토 신청 거절: ${applyId}`);
   };
 
   const handleBellClick = () => {
@@ -163,14 +239,14 @@ export default function ChatPage() {
       <Sidebar />
       <div className="flex-1 ml-45 2xl:ml-55 flex min-h-screen">
         <div className="w-96 2xl:w-[480px] border-r border-gray-2 bg-white flex flex-col min-h-screen">
-          <div className="px-6 2xl:px-8 pt-6 2xl:pt-8 pb-4 2xl:pb-5">
+          <div className="px-7 2xl:px-15 pt-7 2xl:pt-15 pb-4 2xl:pb-5">
             <div className="flex items-center justify-between mb-4 2xl:mb-5">
               <h1 className="flex items-center gap-4 text-[40px] font-bold">
-                <span className="text-[40px] text-gray-1 font-bold">채팅</span>
+                <span className="text-3xl 2xl:text-[40px] text-gray-1 font-bold">채팅</span>
                 <Divider className="flex-shrink-0" />
                 <Link
                   to="/chat-apply"
-                  className="text-[32px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
+                  className="text-3xl 2xl:text-[40px] text-gray-2 font-bold hover:text-gray-1 transition-colors cursor-pointer"
                 >
                   요청
                 </Link>
@@ -188,16 +264,22 @@ export default function ChatPage() {
                 <SearchIcon />
               </div>
               <input
-                type="text"
-                placeholder="검색"
-                className="w-full h-12 2xl:h-14 rounded-full bg-white-1 border border-gray-4 pl-12 2xl:pl-14 pr-4 py-2 text-base 2xl:text-lg text-gray-1 placeholder:text-gray-3 focus:outline-main-1 font-bold"
-              />
+                  type="text"
+                  placeholder="검색"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-11 2xl:h-14 rounded-full bg-white-1 border border-gray-4 pl-14 2xl:pl-14 pr-4 py-1 text-base 2xl:text-[24px] text-gray-1 placeholder:text-gray-3 focus:outline-main-1 font-bold"
+                />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto">
-            {chatList.length > 0 ? (
-              chatList.map((chat) => (
+            {roomsLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-base 2xl:text-lg text-gray-3">로딩 중...</p>
+              </div>
+            ) : filteredChatList.length > 0 ? (
+              filteredChatList.map((chat) => (
                 <div
                   key={chat.id}
                   onClick={() => handleChatClick(chat.id)}
@@ -222,6 +304,12 @@ export default function ChatPage() {
                   </div>
                 </div>
               ))
+            ) : searchQuery.trim() !== '' ? (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-base 2xl:text-lg text-gray-3">
+                  검색 결과가 없습니다
+                </p>
+              </div>
             ) : (
               <div className="flex items-center justify-center h-full">
                 <p className="text-base 2xl:text-lg text-gray-3">
@@ -265,8 +353,17 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 2xl:px-8 py-4 2xl:py-6">
-              {loading ? (
+            <div
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto px-6 2xl:px-8 py-4 2xl:py-6"
+              onScroll={(e) => {
+                const target = e.target as HTMLDivElement;
+                if (target.scrollTop === 0 && hasMore && !loading) {
+                  loadMoreMessages();
+                }
+              }}
+            >
+              {loading && messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <p className="text-base 2xl:text-lg text-gray-3">
                     로딩 중...
@@ -274,6 +371,17 @@ export default function ChatPage() {
                 </div>
               ) : Array.isArray(messages) && messages.length > 0 ? (
                 <div className="space-y-4">
+                  {hasMore && (
+                    <div className="flex justify-center">
+                      <button
+                        onClick={loadMoreMessages}
+                        disabled={loading}
+                        className="text-sm text-gray-3 hover:text-gray-1 disabled:opacity-50"
+                      >
+                        {loading ? '로딩 중...' : '이전 메시지 더보기'}
+                      </button>
+                    </div>
+                  )}
                   {messages.map((message, index) => {
                     const isMyMessage = message.senderId === currentUserId;
                     const prevMessage = index > 0 ? messages[index - 1] : null;
@@ -322,6 +430,7 @@ export default function ChatPage() {
                       </div>
                     );
                   })}
+                  <div ref={messagesEndRef} />
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-full">
@@ -375,6 +484,7 @@ export default function ChatPage() {
         <MentorRequestModal
           onClose={() => setIsMentorRequestModalOpen(false)}
           onAccept={handleAcceptMentor}
+          onReject={handleRejectMentor}
           requests={mentorRequests}
         />
       )}
