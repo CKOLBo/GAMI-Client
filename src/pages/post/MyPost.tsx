@@ -52,7 +52,6 @@ export default function MyPost() {
       await instance.delete(`/api/post/${selectedPostId}`);
       toast.success('게시글이 삭제되었습니다.');
 
-      // ✅ 삭제된 게시글을 state에서 즉시 제거
       setPostData((prev) => prev.filter((post) => post.id !== selectedPostId));
     } catch (error: any) {
       if (error.response?.status === 401) {
