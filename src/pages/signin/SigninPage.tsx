@@ -57,7 +57,10 @@ export default function SigninPage() {
           </Link>
         </p>
 
-        <form className="flex flex-col w-full 2xl:items-center" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col w-full 2xl:items-center"
+          onSubmit={handleSubmit}
+        >
           <input
             type="text"
             name="email"
