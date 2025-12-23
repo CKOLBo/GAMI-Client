@@ -2,9 +2,9 @@ import Button from '../Button/Button';
 import InputSearch from '../Input/InputSearch';
 
 interface PostHeadProps {
-  keyword: string;
-  onKeywordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearch: () => void;
+  keyword?: string;
+  onKeywordChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch?: () => void;
 }
 
 export default function PostHead({
@@ -19,7 +19,11 @@ export default function PostHead({
           <InputSearch
             value={keyword}
             onChange={onKeywordChange}
-            onEnter={onSearch}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && onSearch) {
+                onSearch();
+              }
+            }}
           />
         </div>
 
