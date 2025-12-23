@@ -134,8 +134,13 @@ export default function PostContent() {
           prev ? { ...prev, likeCount: prev.likeCount + 1 } : prev
         );
       }
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        (error as { response?: { status?: number } }).response?.status === 401
+      ) {
         toast.error('로그인이 필요합니다.');
       } else {
         toast.error('좋아요 처리에 실패했습니다.');
@@ -180,8 +185,13 @@ export default function PostContent() {
       );
 
       fetchComments();
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        (error as { response?: { status?: number } }).response?.status === 401
+      ) {
         toast.error('로그인이 필요합니다.');
       } else {
         toast.error('댓글 등록에 실패했습니다.');
@@ -198,8 +208,13 @@ export default function PostContent() {
         `/api/post/${postId}/comment`
       );
       setComments(res.data);
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        (error as { response?: { status?: number } }).response?.status === 401
+      ) {
         toast.error('로그인이 필요합니다.');
       } else {
         toast.error('댓글을 불러오는데 실패했습니다.');
