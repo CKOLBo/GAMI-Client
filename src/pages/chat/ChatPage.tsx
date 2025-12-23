@@ -5,10 +5,11 @@ import BellIcon from '@/assets/svg/common/BellIcon';
 import SearchIcon from '@/assets/svg/main/SearchIcon';
 import Divider from '@/assets/svg/Divider';
 import MentorRequestModal from '@/assets/components/modal/MentorRequestModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { instance } from '@/assets/shared/lib/axios';
 
 interface ChatItem {
   id: number;
@@ -42,14 +43,18 @@ interface ChatMessagesResponse {
   currentMemberLeft: boolean;
 }
 
-const mentorRequests = [
-  { id: 1, name: '양은준' },
-  { id: 2, name: '한국' },
-  { id: 3, name: '양은준' },
-  { id: 4, name: '한국' },
-  { id: 5, name: '양은준' },
-  { id: 6, name: '한국' },
-];
+interface ReceivedMentorRequest {
+  applyId: number;
+  menteeId: number;
+  name: string;
+  applyStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  createdAt: string;
+}
+
+interface MentorRequestForModal {
+  id: number;
+  name: string;
+}
 
 const chatList: ChatItem[] = [
   {
@@ -84,7 +89,31 @@ export default function ChatPage() {
   const [messageInput, setMessageInput] = useState('');
   const [isMentorRequestModalOpen, setIsMentorRequestModalOpen] =
     useState(false);
+  const [mentorRequests, setMentorRequests] = useState<MentorRequestForModal[]>(
+    []
+  );
   const currentUserId = user?.id ?? null;
+
+  useEffect(() => {
+    const fetchReceivedRequests = async () => {
+      try {
+        const response = await instance.get<ReceivedMentorRequest[]>(
+          '/api/mentoring/apply/received'
+        );
+        const pendingRequests = response.data
+          .filter((req) => req.applyStatus === 'PENDING')
+          .map((req) => ({
+            id: req.applyId,
+            name: req.name,
+          }));
+        setMentorRequests(pendingRequests);
+      } catch (err) {
+        console.error('받은 멘토링 신청 목록 조회 실패:', err);
+      }
+    };
+
+    fetchReceivedRequests();
+  }, []);
 
   const handleChatClick = async (roomId: number) => {
     setSelectedRoomId(roomId);
@@ -151,7 +180,8 @@ export default function ChatPage() {
   };
 
   const handleAcceptMentor = (id: number) => {
-    console.log(`멘토 신청 수락: ${id}`);
+    const updatedRequests = mentorRequests.filter((req) => req.id !== id);
+    setMentorRequests(updatedRequests);
   };
 
   const handleBellClick = () => {
