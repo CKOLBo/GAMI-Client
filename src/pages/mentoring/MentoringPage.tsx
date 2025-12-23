@@ -36,11 +36,13 @@ export default function MentoringPage() {
   const [allMentors, setAllMentors] = useState<MentorData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const [mentorsResponse, memberResponse] = await Promise.all([
           instance.get<MentorListResponse>('/api/mentoring/mentor/all', {
             params: {
@@ -56,6 +58,8 @@ export default function MentoringPage() {
       } catch (err) {
         console.error('데이터 조회 실패:', err);
         toast.error('데이터를 불러오는데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -166,7 +170,19 @@ export default function MentoringPage() {
         </div>
 
         <div className="px-7 2xl:px-12 pt-[120px] 2xl:pt-[220px] pb-12">
-          {mentors.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 justify-items-center">
+              {Array.from({ length: 9 }).map((_, index) => (
+                <Mentor
+                  key={`loading-${index}`}
+                  name=""
+                  generation={0}
+                  major=""
+                  onApply={undefined}
+                />
+              ))}
+            </div>
+          ) : mentors.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 justify-items-center">
               {mentors.map((mentor) => (
                 <Mentor
