@@ -90,10 +90,11 @@ export default function PostPage() {
             ))}
           </div>
 
-          <div className="flex justify-center gap-4 py-6">
+          <div className="flex justify-center gap-4 py-6 text-2xl text-gray-1 font-bold">
             <button
               disabled={page === 0}
               onClick={() => setPage((prev) => prev - 1)}
+              className="cursor-pointer"
             >
               이전
             </button>
@@ -105,6 +106,7 @@ export default function PostPage() {
             <button
               disabled={page + 1 >= totalPages}
               onClick={() => setPage((prev) => prev + 1)}
+              className="cursor-pointer"
             >
               다음
             </button>
