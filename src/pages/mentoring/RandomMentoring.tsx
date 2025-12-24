@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import Profile from '@/assets/svg/profile/Profile';
 import X from '@/assets/svg/X';
 import { useMentorApply } from '@/hooks/useMentorApply';
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 
 interface RandomMentorResponse {
   memberId: number;
@@ -26,10 +26,38 @@ export default function RandomMentoring() {
   const [recommendedMentorIds, setRecommendedMentorIds] = useState<number[]>(
     []
   );
+  const [matchingDots, setMatchingDots] = useState(0);
+  const recommendedMentorIdsRef = useRef<number[]>([]);
   const isCancelledRef = useRef(false);
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryCountRef = useRef(0);
+  const matchingDotsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { apply: applyMentor } = useMentorApply();
+
+  useEffect(() => {
+    recommendedMentorIdsRef.current = recommendedMentorIds;
+  }, [recommendedMentorIds]);
+
+  useEffect(() => {
+    if (isMatchingModalOpen) {
+      setMatchingDots(0);
+      matchingDotsIntervalRef.current = setInterval(() => {
+        setMatchingDots((prev) => (prev + 1) % 4);
+      }, 500);
+    } else {
+      if (matchingDotsIntervalRef.current) {
+        clearInterval(matchingDotsIntervalRef.current);
+        matchingDotsIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (matchingDotsIntervalRef.current) {
+        clearInterval(matchingDotsIntervalRef.current);
+        matchingDotsIntervalRef.current = null;
+      }
+    };
+  }, [isMatchingModalOpen]);
 
   const handleRandomSearch = async (isRetry = false) => {
     if (!isRetry) {
@@ -38,66 +66,40 @@ export default function RandomMentoring() {
       retryCountRef.current = 0;
     }
 
-    try {
-      const timestamp = new Date().getTime();
-      const response = await instance.get<RandomMentorResponse>(
-        '/api/mentoring/random',
-        {
-          params: {
-            _t: timestamp,
-          },
-        }
-      );
+    const minWaitTime = 1500;
+    let apiError: unknown = null;
+    let apiResponse: AxiosResponse<RandomMentorResponse> | null = null;
 
-      if (isCancelledRef.current) {
-        return;
-      }
+    const apiPromise = instance
+      .get<RandomMentorResponse>('/api/mentoring/random')
+      .then((res: AxiosResponse<RandomMentorResponse>) => {
+        apiResponse = res;
+      })
+      .catch((err: unknown) => {
+        apiError = err;
+      });
+    
+    const timerPromise = new Promise<void>((resolve) => setTimeout(resolve, minWaitTime));
 
-      const mentorId = response.data.memberId;
+    await Promise.all([apiPromise, timerPromise]);
 
-      if (recommendedMentorIds.includes(mentorId)) {
-        retryCountRef.current += 1;
+    if (isCancelledRef.current) {
+      return;
+    }
 
-        if (retryCountRef.current > 10) {
-          setRecommendedMentorIds([]);
-          retryCountRef.current = 0;
-        }
-
-        if (isCancelledRef.current) {
-          return;
-        }
-
-        retryTimeoutRef.current = setTimeout(() => {
-          if (!isCancelledRef.current) {
-            handleRandomSearch(true);
-          }
-        }, 500);
-        return;
-      }
-
-      if (isCancelledRef.current) {
-        return;
-      }
-
-      setRecommendedMentorIds((prev) => [...prev, mentorId]);
-      setIsMatchingModalOpen(false);
-      setMatchedMentor(response.data);
-    } catch (err) {
-      if (isCancelledRef.current) {
-        return;
-      }
+    if (apiError) {
       setIsMatchingModalOpen(false);
       
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 401) {
+      if (axios.isAxiosError(apiError)) {
+        if (apiError.response?.status === 401) {
           toast.error('인증이 필요합니다.');
-        } else if (err.response?.status === 404) {
+        } else if (apiError.response?.status === 404) {
           toast.error('멘토를 찾을 수 없습니다.');
-        } else if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') {
+        } else if (apiError.code === 'ECONNABORTED' || apiError.code === 'ETIMEDOUT') {
           toast.error('요청 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
-        } else if (err.response?.status === 500) {
+        } else if (apiError.response?.status === 500) {
           toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-        } else if (!err.response) {
+        } else if (!apiError.response) {
           toast.error('네트워크 연결을 확인해주세요.');
         } else {
           toast.error('멘토를 찾는데 실패했습니다.');
@@ -105,7 +107,46 @@ export default function RandomMentoring() {
       } else {
         toast.error('멘토를 찾는데 실패했습니다.');
       }
+      return;
     }
+
+    if (!apiResponse) {
+      setIsMatchingModalOpen(false);
+      toast.error('멘토를 찾는데 실패했습니다.');
+      return;
+    }
+
+    const mentorData = (apiResponse as AxiosResponse<RandomMentorResponse>).data;
+    const mentorId = mentorData.memberId;
+
+    if (recommendedMentorIdsRef.current.includes(mentorId)) {
+      retryCountRef.current += 1;
+
+      if (retryCountRef.current > 10) {
+        setRecommendedMentorIds([]);
+        recommendedMentorIdsRef.current = [];
+        retryCountRef.current = 0;
+      }
+
+      if (isCancelledRef.current) {
+        return;
+      }
+
+      retryTimeoutRef.current = setTimeout(() => {
+        if (!isCancelledRef.current) {
+          handleRandomSearch(true);
+        }
+      }, 500);
+      return;
+    }
+
+    if (isCancelledRef.current) {
+      return;
+    }
+
+    setRecommendedMentorIds((prev) => [...prev, mentorId]);
+    setIsMatchingModalOpen(false);
+    setMatchedMentor(mentorData);
   };
 
   const handleCancel = () => {
@@ -123,6 +164,8 @@ export default function RandomMentoring() {
 
   const handleRetry = () => {
     setMatchedMentor(null);
+    setRecommendedMentorIds([]);
+    recommendedMentorIdsRef.current = [];
     if (retryTimeoutRef.current) {
       clearTimeout(retryTimeoutRef.current);
       retryTimeoutRef.current = null;
@@ -204,7 +247,9 @@ export default function RandomMentoring() {
       {isMatchingModalOpen && (
         <ModalWrapper className="w-[542px] px-10 py-10">
           <div className="flex flex-col">
-            <h2 className="text-2xl font-bold text-gray-1 mb-6">매칭중...</h2>
+            <h2 className="text-2xl font-bold text-gray-1 mb-6">
+              매칭 중{'.'.repeat(matchingDots)}
+            </h2>
             <p className="text-2xl text-gray-1 mb-14 font-semibold">
               당신과 잘 맞는 멘토를 찾는 중이에요.
               <br />

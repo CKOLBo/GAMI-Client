@@ -95,6 +95,7 @@ export default function ChatPage() {
   const stompClientRef = useRef<Client | null>(null);
   const roomSubscriptionRef = useRef<any>(null);
   const isSubscribedRef = useRef<boolean>(false);
+  const isConnectingRef = useRef<boolean>(false);
 
   useEffect(() => {
     fetchChatRooms();
@@ -161,32 +162,137 @@ export default function ChatPage() {
       return;
     }
 
+    if (isConnectingRef.current) {
+      console.log('WebSocket 연결이 이미 진행 중입니다.');
+      return;
+    }
+
+    if (stompClientRef.current) {
+      if (stompClientRef.current.connected) {
+        console.log('WebSocket이 이미 연결되어 있습니다.');
+        return;
+      }
+      
+      if (stompClientRef.current.active) {
+        console.log('WebSocket 클라이언트가 이미 활성화되어 있습니다.');
+        return;
+      }
+
+      try {
+        if (roomSubscriptionRef.current) {
+          try {
+            roomSubscriptionRef.current.unsubscribe();
+          } catch (e) {
+            console.warn('구독 해제 오류:', e);
+          }
+          roomSubscriptionRef.current = null;
+        }
+        stompClientRef.current.deactivate();
+      } catch (e) {
+        console.warn('기존 클라이언트 정리 중 오류:', e);
+      }
+      stompClientRef.current = null;
+    }
+
+    isConnectingRef.current = true;
+
     const backendUrl = import.meta.env.DEV
       ? 'https://port-0-gami-server-mj0rdvda8d11523e.sel3.cloudtype.app'
       : baseURL;
     const wsUrl = `${backendUrl}/ws`;
+    
+    let connectionTimeoutId: ReturnType<typeof setTimeout> | null = null;
+    
     const socket = new SockJS(wsUrl, null, {
       transports: ['websocket', 'xhr-streaming', 'xhr-polling'],
     });
+    
+    const isDev = import.meta.env.DEV;
+    
+    socket.onopen = () => {
+      // 성공적인 연결은 로그 없이 처리
+    };
+    
+    socket.onerror = (error) => {
+      console.error('❌ SockJS 오류:', error);
+      isConnectingRef.current = false;
+      if (connectionTimeoutId) {
+        clearTimeout(connectionTimeoutId);
+      }
+    };
+    
+    socket.onclose = (event) => {
+      if (isDev) {
+        console.log('🔌 SockJS 연결 종료:', event.code, event.reason);
+      }
+      isConnectingRef.current = false;
+      if (connectionTimeoutId) {
+        clearTimeout(connectionTimeoutId);
+      }
+    };
+    
     const client = new Client({
       webSocketFactory: () => socket as any,
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
-      reconnectDelay: 5000,
+      reconnectDelay: 0,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       connectionTimeout: 10000,
-      logRawCommunication: true,
-      debug: (str) => {
-        console.log('STOMP:', str);
+      logRawCommunication: false,
+      debug: isDev
+        ? (str) => {
+            // 성공적인 연결 과정 로그는 숨김
+            const successMessages = [
+              'Opening Web Socket',
+              'Web Socket Opened',
+              '>>> CONNECT',
+              '<<< CONNECTED',
+              'connected to server',
+              'Client has been marked inactive'
+            ];
+            
+            const isSuccessMessage = successMessages.some(msg => str.includes(msg));
+            
+            // 오류나 경고만 표시
+            if (!isSuccessMessage && (str.includes('error') || str.includes('Error') || str.includes('ERROR') || str.includes('failed') || str.includes('Failed'))) {
+              console.error('STOMP:', str);
+            } else if (!isSuccessMessage && (str.includes('warn') || str.includes('Warn') || str.includes('WARNING'))) {
+              console.warn('STOMP:', str);
+            }
+          }
+        : undefined,
+      beforeConnect: () => {
+        if (!isConnectingRef.current || stompClientRef.current !== client) {
+          if (isDev) {
+            console.warn('⚠️ 연결이 이미 진행 중이거나 다른 클라이언트가 존재합니다.');
+          }
+          try {
+            client.deactivate();
+          } catch (e) {
+            if (isDev) {
+              console.warn('클라이언트 비활성화 오류:', e);
+            }
+          }
+          return;
+        }
       },
       onDisconnect: () => {
-        console.log('STOMP 연결 해제됨');
+        if (isDev) {
+          console.log('STOMP 연결 해제됨');
+        }
         isSubscribedRef.current = false;
+        isConnectingRef.current = false;
+        if (connectionTimeoutId) {
+          clearTimeout(connectionTimeoutId);
+        }
       },
-      onConnect: (frame) => {
-        console.log('✅ WebSocket 연결 성공', frame);
+      onConnect: () => {
+        isConnectingRef.current = false;
+        if (connectionTimeoutId) {
+          clearTimeout(connectionTimeoutId);
+        }
         
         if (selectedRoomId) {
           setTimeout(() => {
@@ -196,20 +302,23 @@ export default function ChatPage() {
       },
       onWebSocketError: (event) => {
         console.error('WebSocket 오류:', event);
+        isConnectingRef.current = false;
       },
       onStompError: (frame) => {
         console.error('❌ STOMP 오류:', frame);
+        isConnectingRef.current = false;
         const errorMessage = frame.headers['message'] || frame.headers['error'] || '알 수 없는 오류';
         console.error('오류 메시지:', errorMessage);
         
         if (errorMessage.includes('Failed to send message')) {
-          console.warn('서버 연결 문제가 발생했습니다.');
+          if (isDev) {
+            console.warn('서버 연결 문제가 발생했습니다.');
+          }
           isSubscribedRef.current = false;
           
           if (selectedRoomId && stompClientRef.current) {
             setTimeout(() => {
               if (stompClientRef.current?.connected) {
-                console.log('구독 재시도 중...');
                 subscribeToRoom(selectedRoomId);
               }
             }, 1000);
@@ -217,20 +326,36 @@ export default function ChatPage() {
         }
       },
       onWebSocketClose: () => {
-        console.log('WebSocket 연결 종료');
+        if (isDev) {
+          console.log('WebSocket 연결 종료');
+        }
         isSubscribedRef.current = false;
+        isConnectingRef.current = false;
         
-        if (selectedRoomId) {
+        if (selectedRoomId && !stompClientRef.current?.active) {
           setTimeout(() => {
-            console.log('WebSocket 재연결 시도...');
             connectWebSocket();
           }, 2000);
         }
       },
     });
 
-    client.activate();
+    connectionTimeoutId = setTimeout(() => {
+      if (!client.connected && isConnectingRef.current) {
+        console.warn('⚠️ WebSocket 연결 타임아웃 (10초)');
+        isConnectingRef.current = false;
+        try {
+          client.deactivate();
+        } catch (e) {
+          if (isDev) {
+            console.warn('타임아웃 후 클라이언트 비활성화 오류:', e);
+          }
+        }
+      }
+    }, 10000);
+
     stompClientRef.current = client;
+    client.activate();
   };
 
   const disconnectWebSocket = () => {
@@ -243,9 +368,14 @@ export default function ChatPage() {
       roomSubscriptionRef.current = null;
     }
 
+    isSubscribedRef.current = false;
+    isConnectingRef.current = false;
+
     if (stompClientRef.current) {
       try {
-        stompClientRef.current.deactivate();
+        if (stompClientRef.current.connected || stompClientRef.current.active) {
+          stompClientRef.current.deactivate();
+        }
       } catch (e) {
         console.warn('WebSocket 연결 해제 오류:', e);
       }
@@ -254,8 +384,12 @@ export default function ChatPage() {
   };
 
   const subscribeToRoom = (roomId: number, retryCount = 0) => {
+    const isDev = import.meta.env.DEV;
+    
     if (!stompClientRef.current) {
-      console.warn('WebSocket 클라이언트가 없습니다.');
+      if (isDev) {
+        console.warn('WebSocket 클라이언트가 없습니다.');
+      }
       if (retryCount < 5) {
         setTimeout(() => subscribeToRoom(roomId, retryCount + 1), 500);
       }
@@ -263,7 +397,9 @@ export default function ChatPage() {
     }
 
     if (!stompClientRef.current.connected) {
-      console.warn('WebSocket이 연결되지 않았습니다. 재시도 중...');
+      if (isDev) {
+        console.warn('WebSocket이 연결되지 않았습니다. 재시도 중...');
+      }
       if (retryCount < 5) {
         setTimeout(() => subscribeToRoom(roomId, retryCount + 1), 500);
       }
@@ -274,7 +410,9 @@ export default function ChatPage() {
       try {
         roomSubscriptionRef.current.unsubscribe();
       } catch (e) {
-        console.warn('이전 구독 해제 오류:', e);
+        if (isDev) {
+          console.warn('이전 구독 해제 오류:', e);
+        }
       }
       roomSubscriptionRef.current = null;
     }
@@ -282,7 +420,9 @@ export default function ChatPage() {
     isSubscribedRef.current = false;
 
     const topic = `/topic/room/${roomId}`;
-    console.log('🔔 구독 시도:', topic);
+    if (isDev) {
+      console.log('🔔 구독 시도:', topic);
+    }
 
     try {
       roomSubscriptionRef.current = stompClientRef.current.subscribe(
@@ -290,7 +430,9 @@ export default function ChatPage() {
         (message: IMessage) => {
           try {
             const msg = JSON.parse(message.body) as ChatMessage;
-            console.log('📨 메시지 수신:', msg);
+            if (isDev) {
+              console.log('📨 메시지 수신:', msg);
+            }
             setMessages((prev) => [...prev, msg]);
             setTimeout(() => {
               messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -302,7 +444,9 @@ export default function ChatPage() {
       );
 
       isSubscribedRef.current = true;
-      console.log('✅ 구독 완료:', topic, '구독 ID:', roomSubscriptionRef.current?.id);
+      if (isDev) {
+        console.log('✅ 구독 완료:', topic);
+      }
     } catch (e) {
       console.error('구독 실패:', e);
       isSubscribedRef.current = false;
@@ -314,6 +458,44 @@ export default function ChatPage() {
     setLoading(true);
     setNextCursor(null);
     setHasMore(false);
+
+    const token = getCookie('accessToken');
+    
+    // 토큰 만료 시간 확인
+    const checkTokenExpiry = (token: string) => {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const exp = payload.exp * 1000; // JWT exp는 초 단위
+        const now = Date.now();
+        const isExpired = now >= exp;
+        const timeUntilExpiry = exp - now;
+        return {
+          isExpired,
+          expiresAt: new Date(exp),
+          timeUntilExpiry: timeUntilExpiry > 0 ? Math.floor(timeUntilExpiry / 1000) : 0, // 초 단위
+        };
+      } catch (e) {
+        return null;
+      }
+    };
+    
+    if (import.meta.env.DEV && token) {
+      const tokenInfo = checkTokenExpiry(token);
+      console.log('채팅방 접근 시도:', {
+        roomId,
+        hasToken: !!token,
+        tokenPreview: token ? `${token.substring(0, 20)}...` : '없음',
+        tokenExpiry: tokenInfo ? {
+          isExpired: tokenInfo.isExpired,
+          expiresAt: tokenInfo.expiresAt.toLocaleString('ko-KR'),
+          timeUntilExpiry: tokenInfo.isExpired ? '만료됨' : `${tokenInfo.timeUntilExpiry}초 남음`,
+        } : '토큰 파싱 실패',
+      });
+      
+      if (tokenInfo?.isExpired) {
+        console.warn('⚠️ 토큰이 만료되었습니다!');
+      }
+    }
 
     try {
       const [roomResponse, messagesResponse] = await Promise.all([
@@ -337,10 +519,62 @@ export default function ChatPage() {
     } catch (error) {
       console.error('채팅방 정보 로드 실패:', error);
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
+        const status = error.response?.status;
+        const errorMessage = error.response?.data?.message || error.message;
+        
+        const authHeader = error.config?.headers?.Authorization || error.config?.headers?.authorization;
+        const responseData = error.response?.data;
+        const serverMessage = responseData?.message || responseData?.error || errorMessage;
+        
+        console.error('에러 상세:', {
+          status,
+          message: errorMessage,
+          serverMessage,
+          url: error.config?.url,
+          hasAuthHeader: !!authHeader,
+          authHeaderPreview: authHeader ? (typeof authHeader === 'string' ? `${authHeader.substring(0, 30)}...` : '있음') : '없음',
+          responseData,
+          fullHeaders: error.config?.headers,
+        });
+        
+        if (status === 401) {
           alert('인증이 필요합니다. 다시 로그인해주세요.');
-        } else if (error.response?.status === 404) {
+        } else if (status === 403) {
+          // 토큰 만료 확인
+          const token = getCookie('accessToken');
+          let tokenExpired = false;
+          if (token) {
+            try {
+              const payload = JSON.parse(atob(token.split('.')[1]));
+              const exp = payload.exp * 1000;
+              tokenExpired = Date.now() >= exp;
+            } catch (e) {
+              // 토큰 파싱 실패
+            }
+          }
+          
+          const detailMessage = serverMessage || '이 채팅방에 접근할 권한이 없습니다.';
+          const alertMessage = tokenExpired 
+            ? '토큰이 만료되었습니다. 다시 로그인해주세요.'
+            : `접근 권한이 없습니다.\n${detailMessage}`;
+          
+          alert(alertMessage);
+          console.error('403 오류 상세:', {
+            serverResponse: responseData,
+            serverMessage,
+            tokenExpired,
+            possibleReasons: tokenExpired 
+              ? ['토큰이 만료되었습니다 - 다시 로그인 필요']
+              : [
+                  '해당 채팅방의 멤버가 아닐 수 있습니다',
+                  '서버 측 권한 체크 실패',
+                  '토큰은 유효하지만 권한이 부족합니다'
+                ]
+          });
+        } else if (status === 404) {
           alert('채팅방을 찾을 수 없습니다.');
+        } else {
+          alert(`채팅방 정보를 불러오는데 실패했습니다. (${status || '알 수 없는 오류'})`);
         }
       }
       setMessages([]);
@@ -373,9 +607,12 @@ export default function ChatPage() {
     } catch (error) {
       console.error('메시지 추가 로드 실패:', error);
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
+        const status = error.response?.status;
+        if (status === 401) {
           alert('인증이 필요합니다. 다시 로그인해주세요.');
-        } else if (error.response?.status === 404) {
+        } else if (status === 403) {
+          alert('이 채팅방에 접근할 권한이 없습니다.');
+        } else if (status === 404) {
           alert('채팅방을 찾을 수 없습니다.');
         }
       }
@@ -419,13 +656,14 @@ export default function ChatPage() {
     }
 
     if (!isSubscribedRef.current || !roomSubscriptionRef.current) {
-      console.warn('구독 상태 확인:', {
-        isSubscribed: isSubscribedRef.current,
-        subscription: roomSubscriptionRef.current ? '있음' : '없음'
-      });
+      if (import.meta.env.DEV) {
+        console.warn('구독 상태 확인:', {
+          isSubscribed: isSubscribedRef.current,
+          subscription: roomSubscriptionRef.current ? '있음' : '없음'
+        });
+      }
       
       if (selectedRoomId) {
-        console.log('구독 재시도 중...');
         subscribeToRoom(selectedRoomId);
       }
       
@@ -444,13 +682,15 @@ export default function ChatPage() {
       message: message,
     });
 
-    console.log('📤 메시지 전송:', { 
-      destination, 
-      message, 
-      token: token ? '있음' : '없음',
-      subscribed: isSubscribedRef.current,
-      subscriptionId: roomSubscriptionRef.current?.id
-    });
+    if (import.meta.env.DEV) {
+      console.log('📤 메시지 전송:', { 
+        destination, 
+        message, 
+        token: token ? '있음' : '없음',
+        subscribed: isSubscribedRef.current,
+        subscriptionId: roomSubscriptionRef.current?.id
+      });
+    }
 
     try {
       if (!stompClientRef.current.connected) {
@@ -467,7 +707,6 @@ export default function ChatPage() {
         skipContentLengthHeader: true,
       });
 
-      console.log('✅ 메시지 전송 완료');
       setMessageInput('');
     } catch (error) {
       console.error('❌ 메시지 전송 오류:', error);
