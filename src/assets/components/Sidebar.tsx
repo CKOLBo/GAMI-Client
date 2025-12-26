@@ -21,7 +21,7 @@ interface MenuItem {
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const handleLogoutClick = () => {
@@ -68,6 +68,9 @@ export default function Sidebar() {
       subPaths: ['/post', '/post-write'],
     },
     { path: '/my-page', label: '마이페이지', icon: ProfileIcon },
+    ...(user?.role === 'ROLE_ADMIN'
+      ? [{ path: '/admin', label: '관리자', icon: HomeIcon }]
+      : []),
   ];
 
   const isMenuActive = (item: MenuItem): boolean => {
