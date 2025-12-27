@@ -15,7 +15,7 @@ interface UserInfo {
   id: number;
   email: string;
   name?: string;
-  role?: string;
+  role?: string | string[];
 }
 
 interface LoginCredentials {
@@ -27,6 +27,23 @@ interface UseLoginReturn {
   login: (credentials: LoginCredentials) => Promise<void>;
   isLoading: boolean;
 }
+
+const decodeJWT = (token: string): any => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('JWT 디코딩 실패:', error);
+    return null;
+  }
+};
 
 export function useLogin(): UseLoginReturn {
   const { login: setAuthUser } = useAuth();
@@ -42,6 +59,8 @@ export function useLogin(): UseLoginReturn {
 
       const { accessToken, refreshToken } = response.data;
 
+      const decodedToken = decodeJWT(accessToken);
+
       setCookie('accessToken', accessToken);
       setCookie('refreshToken', refreshToken);
 
@@ -51,7 +70,21 @@ export function useLogin(): UseLoginReturn {
         },
       });
 
-      setAuthUser(userResponse.data, accessToken);
+      const userData = userResponse.data;
+      
+      const roleFromToken = decodedToken?.auth || decodedToken?.role || decodedToken?.roles || decodedToken?.authorities || decodedToken?.authority || 
+                           decodedToken?.Role || decodedToken?.ROLE || decodedToken?.userRole || decodedToken?.memberRole;
+      const roleFromAPI = (userData as any).role || (userData as any).roles || (userData as any).authorities ||
+                         (userData as any).Role || (userData as any).ROLE || (userData as any).userRole || (userData as any).memberRole;
+      const role = roleFromToken || roleFromAPI;
+      
+      const finalUserData = {
+        ...userData,
+        id: (userData as any).id || (userData as any).memberId,
+        role: role,
+      };
+
+      setAuthUser(finalUserData, accessToken);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
