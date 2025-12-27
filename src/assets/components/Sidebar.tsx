@@ -9,6 +9,7 @@ import ChatIcon from '@/assets/svg/sidebar/ChatIcon';
 import PostIcon from '@/assets/svg/sidebar/PostIcon';
 import ProfileIcon from '@/assets/svg/sidebar/ProfileIcon';
 import LogoutIcon from '@/assets/svg/sidebar/LogoutIcon';
+import AdminIcon from '@/assets/svg/sidebar/AdminIcon';
 import LogoutModal from '@/assets/components/modal/LogoutModal';
 
 interface MenuItem {
@@ -88,7 +89,7 @@ export default function Sidebar() {
       subPaths: ['/post', '/post-write'],
     },
     { path: '/my-page', label: '마이페이지', icon: ProfileIcon },
-    ...(isAdmin() ? [{ path: '/admin', label: '관리자', icon: HomeIcon }] : []),
+    ...(isAdmin() ? [{ path: '/admin', label: '관리자', icon: AdminIcon }] : []),
   ];
 
   const isMenuActive = (item: MenuItem): boolean => {
