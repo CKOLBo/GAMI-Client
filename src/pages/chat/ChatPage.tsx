@@ -140,6 +140,14 @@ export default function ChatPage() {
     }
   }, [chatList.length, searchParams]);
 
+  useEffect(() => {
+    if (!loading && messages.length > 0 && messagesContainerRef.current) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+      }, 100);
+    }
+  }, [messages, loading]);
+
   const fetchMentorRequests = async () => {
     try {
       const response = await instance.get<MentorRequest[]>(
@@ -1071,6 +1079,13 @@ export default function ChatPage() {
                       : null;
                     const showDate = currentDate !== prevDate;
 
+                    // 이전 메시지의 발신자 확인
+                    const prevSenderId = prevMessage ? (prevMessage.senderId != null ? Number(prevMessage.senderId) : null) : null;
+                    const prevIsMyMessage = prevSenderId !== null && myUserId !== null && prevSenderId === myUserId;
+                    
+                    // 상대 이름 표시 조건: 상대 메시지이고, 이전 메시지가 없거나 이전 메시지가 내 메시지인 경우
+                    const showSenderName = !isMyMessage && (!prevMessage || prevIsMyMessage);
+
                     // 시간 비교 함수 (같은 분 단위면 같은 시간으로 간주)
                     const getTimeKey = (dateString: string) => {
                       const date = new Date(dateString);
@@ -1099,11 +1114,11 @@ export default function ChatPage() {
                           className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'}`}
                         >
                           <div
-                            className={`flex flex-col max-w-[70%] ${
+                            className={`flex flex-col max-w-[480px] ${
                               isMyMessage ? 'items-end' : 'items-start'
                             }`}
                           >
-                          {!isMyMessage && (
+                          {showSenderName && (
                             <span className="text-sm font-semibold text-gray-1 mb-1">
                               {message.senderName}
                             </span>
@@ -1120,8 +1135,9 @@ export default function ChatPage() {
                                   ? 'bg-main-1 text-white'
                                   : 'bg-white-1 text-gray-1'
                               }`}
+                              style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
                             >
-                              <p className="text-base whitespace-normal break-words">{message.message}</p>
+                              <p className="text-base whitespace-normal break-words" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>{message.message}</p>
                             </div>
                             {!isMyMessage && showTime && (
                               <span className="text-xs text-gray-3 whitespace-nowrap">
