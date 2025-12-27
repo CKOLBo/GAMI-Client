@@ -89,7 +89,9 @@ export default function Sidebar() {
       subPaths: ['/post', '/post-write'],
     },
     { path: '/my-page', label: '마이페이지', icon: ProfileIcon },
-    ...(isAdmin() ? [{ path: '/admin', label: '관리자', icon: AdminIcon }] : []),
+    ...(isAdmin()
+      ? [{ path: '/admin', label: '관리자', icon: AdminIcon }]
+      : []),
   ];
 
   const isMenuActive = (item: MenuItem): boolean => {
