@@ -71,13 +71,27 @@ export function useLogin(): UseLoginReturn {
       });
 
       const userData = userResponse.data;
-      
-      const roleFromToken = decodedToken?.auth || decodedToken?.role || decodedToken?.roles || decodedToken?.authorities || decodedToken?.authority || 
-                           decodedToken?.Role || decodedToken?.ROLE || decodedToken?.userRole || decodedToken?.memberRole;
-      const roleFromAPI = (userData as any).role || (userData as any).roles || (userData as any).authorities ||
-                         (userData as any).Role || (userData as any).ROLE || (userData as any).userRole || (userData as any).memberRole;
+
+      const roleFromToken =
+        decodedToken?.auth ||
+        decodedToken?.role ||
+        decodedToken?.roles ||
+        decodedToken?.authorities ||
+        decodedToken?.authority ||
+        decodedToken?.Role ||
+        decodedToken?.ROLE ||
+        decodedToken?.userRole ||
+        decodedToken?.memberRole;
+      const roleFromAPI =
+        (userData as any).role ||
+        (userData as any).roles ||
+        (userData as any).authorities ||
+        (userData as any).Role ||
+        (userData as any).ROLE ||
+        (userData as any).userRole ||
+        (userData as any).memberRole;
       const role = roleFromToken || roleFromAPI;
-      
+
       const finalUserData = {
         ...userData,
         id: (userData as any).id || (userData as any).memberId,
