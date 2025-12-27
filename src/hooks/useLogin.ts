@@ -12,10 +12,30 @@ interface LoginResponse {
 }
 
 interface UserInfo {
-  id: number;
+  id?: number;
+  memberId?: number;
   email: string;
   name?: string;
   role?: string | string[];
+  roles?: string | string[];
+  authorities?: string | string[];
+  Role?: string | string[];
+  ROLE?: string | string[];
+  userRole?: string | string[];
+  memberRole?: string | string[];
+}
+
+interface JWTPayload {
+  auth?: string | string[];
+  role?: string | string[];
+  roles?: string | string[];
+  authorities?: string | string[];
+  authority?: string | string[];
+  Role?: string | string[];
+  ROLE?: string | string[];
+  userRole?: string | string[];
+  memberRole?: string | string[];
+  [key: string]: unknown;
 }
 
 interface LoginCredentials {
@@ -28,7 +48,7 @@ interface UseLoginReturn {
   isLoading: boolean;
 }
 
-const decodeJWT = (token: string): any => {
+const decodeJWT = (token: string): JWTPayload | null => {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -83,18 +103,18 @@ export function useLogin(): UseLoginReturn {
         decodedToken?.userRole ||
         decodedToken?.memberRole;
       const roleFromAPI =
-        (userData as any).role ||
-        (userData as any).roles ||
-        (userData as any).authorities ||
-        (userData as any).Role ||
-        (userData as any).ROLE ||
-        (userData as any).userRole ||
-        (userData as any).memberRole;
+        userData.role ||
+        userData.roles ||
+        userData.authorities ||
+        userData.Role ||
+        userData.ROLE ||
+        userData.userRole ||
+        userData.memberRole;
       const role = roleFromToken || roleFromAPI;
 
       const finalUserData = {
         ...userData,
-        id: (userData as any).id || (userData as any).memberId,
+        id: userData.id || userData.memberId || 0,
         role: role,
       };
 
