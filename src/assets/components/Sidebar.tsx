@@ -51,21 +51,10 @@ export default function Sidebar() {
   const isAdmin = (): boolean => {
     if (!user?.role) return false;
 
-    const role = user.role;
+    const ADMIN_ROLES = ['ROLE_ADMIN', 'ADMIN', 'ROLE_ROLE_ADMIN'];
+    const userRoles = Array.isArray(user.role) ? user.role : [user.role];
 
-    if (Array.isArray(role)) {
-      return role.some(
-        (r) => r === 'ROLE_ADMIN' || r === 'ADMIN' || r === 'ROLE_ROLE_ADMIN'
-      );
-    }
-
-    if (typeof role === 'string') {
-      return (
-        role === 'ROLE_ADMIN' || role === 'ADMIN' || role === 'ROLE_ROLE_ADMIN'
-      );
-    }
-
-    return false;
+    return userRoles.some((role) => ADMIN_ROLES.includes(role));
   };
 
   const menuItems: MenuItem[] = [

@@ -87,7 +87,9 @@ export function useLogin(): UseLoginReturn {
         'userRole',
         'memberRole',
       ];
-      const roleFromToken = tokenRoleKeys.map((key) => decodedToken?.[key]).find((r) => r);
+      const roleFromToken = tokenRoleKeys
+        .map((key) => decodedToken?.[key])
+        .find((r) => r);
 
       const apiRoleKeys = [
         'role',
@@ -98,7 +100,9 @@ export function useLogin(): UseLoginReturn {
         'userRole',
         'memberRole',
       ];
-      const roleFromAPI = apiRoleKeys.map((key) => (userData as any)[key]).find((r) => r);
+      const roleFromAPI = apiRoleKeys
+        .map((key) => (userData as any)[key])
+        .find((r) => r);
 
       const role = roleFromToken || roleFromAPI;
 
